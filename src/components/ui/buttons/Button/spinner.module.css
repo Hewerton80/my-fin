@@ -1,0 +1,4 @@
+.root {
+  @apply after:absolute after:h-5 after:w-5 after:animate-spin
+    after:rounded-full after:border-b-2 after:border-l-2 after:border-white;
+}

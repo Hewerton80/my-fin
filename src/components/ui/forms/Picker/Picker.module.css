@@ -1,0 +1,12 @@
+.root :global(.select__control) {
+  @apply hidden;
+}
+.root :global(.select__menu) {
+  @apply static m-0 border-none rounded-none;
+}
+.root :global(.select__menu-list) {
+  @apply py-0;
+}
+.root :global(.select__option) {
+  @apply px-4 py-1 text-body-text;
+}

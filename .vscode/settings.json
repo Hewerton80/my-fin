@@ -1,0 +1,6 @@
+{
+  "editor.formatOnSave": true,
+  "editor.rulers": [90],
+  "editor.maxTokenizationLineLength": 9000000,
+  "typescript.tsdk": "node_modules\\typescript\\lib"
+}

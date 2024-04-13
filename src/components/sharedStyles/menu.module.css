@@ -1,0 +1,20 @@
+.root {
+  @apply flex flex-col py-3 z-50 bg-white dark:bg-dark-card
+  outline-none shadow-lg rounded;
+}
+:global(.dark) .root {
+  @apply bg-dark-body;
+}
+.item {
+  @apply flex items-center px-6 py-2 text-sm sm:text-base cursor-pointer gap-3
+    hover:text-primary hover:bg-light outline-none;
+}
+:global(.dark) .item {
+  @apply hover:text-light hover:bg-dark-card/60;
+}
+.separator {
+  @apply h-[1px] bg-primary  my-1 mx-4;
+}
+:global(.dark) .separator {
+  @apply bg-light;
+}

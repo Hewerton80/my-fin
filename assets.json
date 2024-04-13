@@ -1,0 +1,40 @@
+{
+  "colors": {
+    "gray": {
+      "100": "#f8f9fa",
+      "200": "#e9ecef",
+      "300": "#dee2e6",
+      "400": "#ced4da",
+      "500": "#adb5bd",
+      "600": "#6c757d",
+      "700": "#495057",
+      "800": "#343a40",
+      "900": "#212529"
+    },
+    "primary": "#7c3aed",
+    "secondary": "#a02cfa",
+    "success": "#2bc155",
+    "info": "#1976d2",
+    "warning": "#ffbc11",
+    "danger": "#f94687",
+    "light": "#f9fafb",
+    "dark": "#b1b1b1",
+    "body-text": "#030712",
+    "body": "#f9f9f9",
+    "card": "#fefefe",
+    "dark-body": "#09090b",
+    "dark-card": "#2a2a4a",
+    "heading": "#3d4465",
+    "link": "#1e3fb4",
+    "border": "#e6e6e6",
+    "dark-border": "#333a54",
+    "row-table": "#f2f2f2"
+  },
+  "screens": {
+    "sm": "576px",
+    "md": "768px",
+    "lg": "992px",
+    "xl": "1200px",
+    "2xl": "1440px"
+  }
+}

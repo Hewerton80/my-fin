@@ -1,0 +1,9 @@
+.root:global(.Toastify__toast-container) :global(.Toastify__toast) {
+  @apply bg-success;
+}
+.root:global(.Toastify__toast-container) :global(.Toastify__toast-body) {
+  @apply text-white py-0;
+}
+.root:global(.Toastify__toast-container) :global(.Toastify__progress-bar) {
+  background: theme("colors.white");
+}

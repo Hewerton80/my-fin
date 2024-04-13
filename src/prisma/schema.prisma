@@ -1,0 +1,97 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "mysql"
+    url      = env("DATABASE_URL")
+}
+
+enum PaymantType {
+    CREDIT_CARD
+    DEBIT_CARD
+    CASH
+    PIX
+}
+
+model User {
+    id            String       @id @default(cuid())
+    email         String       @unique
+    name          String
+    password      String
+    avatarBgColor String
+    createdAt     DateTime     @default(now())
+    Expense       Expense[]
+    CreditCard    CreditCard[]
+}
+
+model Expense {
+    id                   String               @id @default(cuid())
+    name                 String
+    description          String?
+    amount               Float?
+    isPaid               Boolean              @default(false)
+    dueDate              DateTime
+    registrationDate     DateTime             @default(now())
+    creditCardId         String?
+    userId               String
+    user                 User                 @relation(fields: [userId], references: [id])
+    paymentType          PaymantType
+    creditCard           CreditCard?          @relation(fields: [creditCardId], references: [id])
+    expenseSubCategories ExpenseSubCategory[]
+    subCategories        SubCategory[]
+    createdAt            DateTime             @default(now())
+    TransitionHistory    TransitionHistory[]
+}
+
+model CreditCard {
+    id               String    @id @default(cuid())
+    name             String
+    dueDate          DateTime
+    registrationDate DateTime  @default(now())
+    createdAt        DateTime  @default(now())
+    userId           String
+    user             User      @relation(fields: [userId], references: [id])
+    expenses         Expense[]
+}
+
+model Category {
+    id            String        @id @default(cuid())
+    name          String
+    description   String?
+    createdAt     DateTime      @default(now())
+    SubCategories SubCategory[]
+}
+
+model SubCategory {
+    id                 String               @id @default(cuid())
+    name               String
+    description        String?
+    category           Category             @relation(fields: [categoryId], references: [id])
+    categoryId         String
+    createdAt          DateTime             @default(now())
+    ExpenseSubCategory ExpenseSubCategory[]
+    Expense            Expense?             @relation(fields: [expenseId], references: [id])
+    expenseId          String?
+}
+
+model ExpenseSubCategory {
+    expenseId     String
+    subCategoryId String
+    createdAt     DateTime    @default(now())
+    expense       Expense     @relation(fields: [expenseId], references: [id])
+    subCategory   SubCategory @relation(fields: [subCategoryId], references: [id])
+
+    @@id([expenseId, subCategoryId])
+}
+
+model TransitionHistory {
+    id        String   @id @default(cuid())
+    name      String
+    expenseId String
+    expense   Expense  @relation(fields: [expenseId], references: [id])
+    createdAt DateTime @default(now())
+}
