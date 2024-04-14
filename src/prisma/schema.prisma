@@ -17,6 +17,12 @@ enum PaymantType {
     PIX
 }
 
+enum Frequency {
+    DAILY
+    MONTHLY
+    YEARLY
+}
+
 model User {
     id            String       @id @default(cuid())
     email         String       @unique
@@ -24,38 +30,46 @@ model User {
     password      String
     avatarBgColor String
     createdAt     DateTime     @default(now())
-    Expense       Expense[]
-    CreditCard    CreditCard[]
+    expenses      Expense[]
+    creditCards   CreditCard[]
 }
 
 model Expense {
     id                   String               @id @default(cuid())
     name                 String
     description          String?
+    iconName             String?
     amount               Float?
     isPaid               Boolean              @default(false)
-    dueDate              DateTime
-    registrationDate     DateTime             @default(now())
+    dueDate              DateTime?
+    registrationDate     DateTime?            @default(now())
+    dueDay               Int?
+    registrationDay      Int?
     creditCardId         String?
     userId               String
+    isRecurrent          Boolean
+    frequency            Frequency?
+    totalInstallments    Int?
+    paidInstallments     Int?
     user                 User                 @relation(fields: [userId], references: [id])
     paymentType          PaymantType
     creditCard           CreditCard?          @relation(fields: [creditCardId], references: [id])
     expenseSubCategories ExpenseSubCategory[]
     subCategories        SubCategory[]
     createdAt            DateTime             @default(now())
-    TransitionHistory    TransitionHistory[]
+    transitionHistory    TransitionHistory[]
 }
 
 model CreditCard {
-    id               String    @id @default(cuid())
-    name             String
-    dueDate          DateTime
-    registrationDate DateTime  @default(now())
-    createdAt        DateTime  @default(now())
-    userId           String
-    user             User      @relation(fields: [userId], references: [id])
-    expenses         Expense[]
+    id              String    @id @default(cuid())
+    iconName        String?
+    name            String
+    dueDay          Int
+    registrationDay Int
+    createdAt       DateTime  @default(now())
+    userId          String
+    user            User      @relation(fields: [userId], references: [id])
+    expenses        Expense[]
 }
 
 model Category {
@@ -63,7 +77,7 @@ model Category {
     name          String
     description   String?
     createdAt     DateTime      @default(now())
-    SubCategories SubCategory[]
+    subCategories SubCategory[]
 }
 
 model SubCategory {
@@ -73,8 +87,8 @@ model SubCategory {
     category           Category             @relation(fields: [categoryId], references: [id])
     categoryId         String
     createdAt          DateTime             @default(now())
-    ExpenseSubCategory ExpenseSubCategory[]
-    Expense            Expense?             @relation(fields: [expenseId], references: [id])
+    expenseSubCategory ExpenseSubCategory[]
+    expense            Expense?             @relation(fields: [expenseId], references: [id])
     expenseId          String?
 }
 
@@ -91,6 +105,7 @@ model ExpenseSubCategory {
 model TransitionHistory {
     id        String   @id @default(cuid())
     name      String
+    amount    Float?
     expenseId String
     expense   Expense  @relation(fields: [expenseId], references: [id])
     createdAt DateTime @default(now())
