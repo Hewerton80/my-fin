@@ -1,11 +1,6 @@
 "use client";
 import { useAuth } from "@/hooks/api/useAuth";
-import {
-  BASE_PATHS,
-  INavItem,
-  getAvaliableNavItems,
-  navItems,
-} from "@/shared/navItems";
+import { navItems } from "@/shared/navItems";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -21,19 +16,19 @@ export const SideBarItems = forwardRef((_, ref?: any) => {
   const { loggedUser } = useAuth();
   const { showOnlyIcons } = useSideBar();
 
-  const avaliableNavItems = useMemo<INavItem[]>(() => {
-    return getAvaliableNavItems(loggedUser);
-  }, [loggedUser]);
+  // const avaliableNavItems = useMemo<INavItem[]>(() => {
+  //   return getAvaliableNavItems(loggedUser);
+  // }, [loggedUser]);
 
   return (
     <ul
       ref={ref}
       className={twMerge(
-        "flex flex-col w-full py-4 gap-y-2.5",
-        showOnlyIcons ? "pt-4 pr-3.5 pl-3.5" : "pl-0 md:pl-6 pr-0"
+        "flex flex-col w-full gap-y-1",
+        showOnlyIcons ? "p-2" : "p-2"
       )}
     >
-      {avaliableNavItems.map(({ title, icon, path, basePath }, i) => {
+      {navItems.map(({ title, icon, path, basePath }, i) => {
         const isActive = currentPath.startsWith(`/${basePath}`);
         return (
           <li key={`${title}-${i}`} className="flex w-full">
@@ -41,22 +36,21 @@ export const SideBarItems = forwardRef((_, ref?: any) => {
               // onClick={() => setShowSideBar(false)}
               href={path}
               className={twMerge(
-                "flex items-center w-full gap-4 font-medium relative whitespace-nowrap",
-                "hover:text-link duration-100 ease-linear rounded-[0.625rem]",
-                showOnlyIcons ? "p-3.5" : "p-5",
+                "flex items-center w-full gap-4 relative h-9 px-3",
+                "whitespace-nowrap font-medium text-sm",
+                "dark:text-light text-dark-card ",
+                "text-text-acent duration-100 ease-linear rounded-md hover:bg-acent",
+                "dark:hover:bg-muted",
+                showOnlyIcons ? "" : "w-full",
                 isActive &&
                   twMerge(
-                    "text-link bg-link/10 after:absolute after:bg-link",
-                    "dark:text-white dark:bg-dark-body after:dark:bg-white",
-                    "after:right-0 after:h-full after:w-1.5 after:rounded-md",
-                    showOnlyIcons ? "after:hidden" : "after:block"
+                    "text-light bg-text-acent hover:bg-text-acent/70",
+                    "dark:text-light dark:bg-muted dark:hover:bg-muted/70"
                   )
               )}
             >
-              <span className="text-2xl">{icon}</span>
-              <span className={showOnlyIcons ? "hidden" : "block"}>
-                {title}
-              </span>
+              <span className="text-base">{icon}</span>
+              {!showOnlyIcons && <span>{title}</span>}
             </Link>
           </li>
         );
@@ -79,7 +73,8 @@ export function Sidebar() {
       <aside
         className={twMerge(
           "bg-card dark:bg-dark-card dark:md:bg-dark-card/70 shadow-sm",
-          "duration-100 ease-linear overflow-hidden"
+          "duration-100 ease-linear overflow-hidden",
+          "border-r border-border dark:border-dark-border"
         )}
       >
         <Resizable
@@ -88,7 +83,10 @@ export function Sidebar() {
             "border-card dark:border-dark-card/70"
           )}
           enable={{ right: !showOnlyIcons }}
-          size={{ width: showOnlyIcons ? 80 : sideBarWidth, height: "100vh" }}
+          size={{
+            width: showOnlyIcons ? 56 : sideBarWidth,
+            height: "100vh",
+          }}
           onResizeStart={() => setResizingSideBar(true)}
           onResizeStop={(e, direction, ref, d) => {
             setResizingSideBar(false);
@@ -103,7 +101,7 @@ export function Sidebar() {
           )}
         >
           <div className="flex items-center px-6 gap-3 h-20 w-full">
-            <Image
+            {/* <Image
               src="/images/logo-1.png"
               alt="logo"
               width={52}
@@ -121,7 +119,7 @@ export function Sidebar() {
               width={108}
               height={24}
               priority
-            />
+            /> */}
           </div>
           <nav className="flex w-full h-full">
             <SideBarItems />

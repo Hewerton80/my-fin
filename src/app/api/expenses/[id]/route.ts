@@ -1,6 +1,6 @@
 import prisma from "@/lib/prisma";
 import { CONSTANTS } from "@/shared/constants";
-import { getTrainingWithComputedFields } from "@/types/Training";
+import { getTrainingWithComputedFields } from "@/types/Expense";
 import { verifyIfUserIsTeacher } from "@/lib/auth";
 import { NextRequest, NextResponse } from "next/server";
 import { Prisma } from "@prisma/client";

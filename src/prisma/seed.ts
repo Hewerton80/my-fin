@@ -186,12 +186,13 @@ export async function main() {
     {
       data: {
         name: "Aluguel",
+        iconName: "🏠",
         amount: 450,
         userId: createdUser.id,
         paymentType: "PIX",
-        isRecurrent: true,
-        registrationDay: 1,
-        dueDay: 5,
+        frequency: "MONTHLY",
+        registrationDate: new Date("2024-05-01T00:00:01"),
+        dueDate: new Date("2024-05-05T23:59:00"),
         subCategories: {
           connect: { id: subCategoryRentId },
         },
@@ -203,7 +204,6 @@ export async function main() {
         amount: 100,
         userId: createdUser.id,
         paymentType: "PIX",
-        isRecurrent: false,
         isPaid: true,
         subCategories: {
           connect: { id: subCategoryInfoProdictGitfitCardId },
@@ -216,7 +216,9 @@ export async function main() {
         amount: 16.99,
         userId: createdUser.id,
         paymentType: "CREDIT_CARD",
-        isRecurrent: false,
+        registrationDate: new Date("2024-04-29T00:00:01"),
+        dueDate: new Date("2024-05-04T23:59:00"),
+        creditCardId: creditCardNubankId,
         subCategories: {
           connect: [{ id: subCategoryIfooId }, { id: subCategoryRestaurantId }],
         },

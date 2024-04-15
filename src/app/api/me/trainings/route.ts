@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { verifyJWT } from "@/lib/auth";
 import { CONSTANTS } from "@/shared/constants";
-import { getTrainingsWithComputedFields } from "@/types/Training";
+import { getTrainingsWithComputedFields } from "@/types/Expense";
 
 export async function GET(request: NextRequest) {
   const { payload, error } = await verifyJWT(request);

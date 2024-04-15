@@ -13,7 +13,7 @@ import {
   UserRolesNamesType,
   UserWithComputedFields,
 } from "@/types/User";
-import { isUndefined } from "@/shared/isType";
+import { isNumber, isUndefined } from "@/shared/isType";
 import Link from "next/link";
 import { useMemo } from "react";
 import { MdEdit } from "react-icons/md";
@@ -21,62 +21,81 @@ import { orderByUserOptions, usersRolesOptions } from "@/shared/pickerOptions";
 import { Picker } from "@/components/ui/forms/Picker";
 import { Input } from "@/components/ui/forms/Input";
 import { HorizontalScrollView } from "@/components/ui/navigation/HorizontalScrollView";
-
+import { ExpernseWithComputedFields } from "@/types/Expense";
+import { useGetExpenses } from "@/hooks/api/useExpense";
+import { getCurrencyFormat } from "@/shared/getCurrencyFormat";
+import { format } from "date-fns/format";
+import { getExpenseBadge } from "@/shared/statusExpenseBadge";
+import { Badge } from "@/components/ui/dataDisplay/Badge";
 type UsersPageProps = keyof UserWithComputedFields;
 
 export default function UsersPage() {
-  const {
-    users,
-    isLoadingUsers,
-    usersError,
-    usersQueryParams,
-    refetchUsers,
-    changeUserFilter,
-    goToPage,
-  } = useGetUsers();
+  // const {
+  //   users,
+  //   isLoadingUsers,
+  //   usersError,
+  //   usersQueryParams,
+  //   refetchUsers,
+  //   changeUserFilter,
+  //   goToPage,
+  // } = useGetUsers();
+  const { expenses, isLoadingExpenses, expensesError, refetchExpenses } =
+    useGetExpenses();
 
-  const cols = useMemo<IColmunDataTable<UserWithComputedFields>[]>(
+  const cols = useMemo<IColmunDataTable<ExpernseWithComputedFields>[]>(
     () => [
       {
         label: "Nome",
         field: "name",
+        onParse: (expernse) => (
+          <>
+            {expernse?.iconName ? `${expernse?.iconName} ` : ""}
+            {expernse?.name}
+          </>
+        ),
       },
       {
-        label: "Email",
-        field: "email",
+        label: "Amount",
+        field: "amount",
+        onParse: (expernse) =>
+          isNumber(expernse?.amount)
+            ? getCurrencyFormat(expernse?.amount!)
+            : "-",
       },
       {
-        label: "Funções",
-        field: "roles",
-        onParse: (value) =>
-          value?.roles
-            ?.map((role) => UserRole[role as UserRolesNamesType])
-            ?.join(", "),
+        label: "Categories",
+        field: "subCategories",
+        onParse: (expernse) =>
+          expernse?.subCategories?.length
+            ? expernse?.subCategories
+                ?.map((subCategory) => subCategory?.name)
+                ?.join(", ")
+            : "-",
+      },
+      {
+        label: "Credit Card",
+        field: "creditCard",
+        onParse: (expernse) => expernse?.creditCard?.name || "-",
+      },
+      {
+        label: "Frequency",
+        field: "frequency",
+        onParse: (expernse) =>
+          expernse?.frequency ? expernse?.frequency?.toLocaleLowerCase() : "-",
+      },
+      {
+        label: "Due Date",
+        field: "dueDate",
+        onParse: (expernse) =>
+          expernse?.dueDate
+            ? format(new Date(expernse?.dueDate), "dd/MM/yyyy")
+            : "-",
       },
       {
         label: "Status",
-        field: "isActive",
-        onParse: (value) => (value?.isActive ? "Ativo" : "Inativo"),
-      },
-      {
-        label: "",
-        field: "actions",
-        onParse: (value) => (
-          <div className="flex" key={`${value?.id}-action`}>
-            {value?.id && (
-              <IconButton
-                className="ml-auto"
-                key="0 - 1"
-                asChild
-                icon={
-                  <Link href={`/admin/users/${value?.id}/edit`}>
-                    <MdEdit />
-                  </Link>
-                }
-              />
-            )}
-          </div>
-        ),
+        field: "status",
+        onParse: (expernse) =>
+          expernse?.status ? getExpenseBadge(expernse?.status) : "-",
       },
     ],
     []
@@ -85,7 +104,7 @@ export default function UsersPage() {
   return (
     <Card.Root>
       <Card.Header>
-        <Card.Title>Usuários</Card.Title>
+        <Card.Title>Expenses</Card.Title>
         <Card.Actions>
           <Button asChild>
             <Link href="/admin/users/create">Adicionar usuário</Link>
@@ -93,7 +112,7 @@ export default function UsersPage() {
         </Card.Actions>
       </Card.Header>
       <Card.Body>
-        <div className="flex items-center gap-2 sm:gap-2 flex-wrap">
+        {/* <div className="flex items-center gap-2 sm:gap-2 flex-wrap">
           <HorizontalScrollView>
             <Picker
               label="Status"
@@ -128,20 +147,20 @@ export default function UsersPage() {
               placeholder="Pesquisar"
             />
           </div>
-        </div>
+        </div> */}
         <DataTable
           columns={cols}
-          data={users?.docs}
-          onTryAgainIfError={refetchUsers}
-          isError={Boolean(usersError)}
-          isLoading={isLoadingUsers || isUndefined(users)}
-          paginationConfig={{
-            currentPage: users?.currentPage || 1,
-            totalPages: users?.lastPage || 1,
-            perPage: users?.perPage || 25,
-            totalRecords: users?.total || 1,
-            onChangePage: goToPage,
-          }}
+          data={expenses}
+          onTryAgainIfError={refetchExpenses}
+          isError={Boolean(expensesError)}
+          isLoading={isLoadingExpenses || isUndefined(expenses)}
+          // paginationConfig={{
+          //   currentPage: users?.currentPage || 1,
+          //   totalPages: users?.lastPage || 1,
+          //   perPage: users?.perPage || 25,
+          //   totalRecords: users?.total || 1,
+          //   onChangePage: goToPage,
+          // }}
         />
       </Card.Body>
     </Card.Root>

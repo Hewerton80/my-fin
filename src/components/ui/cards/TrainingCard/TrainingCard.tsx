@@ -1,5 +1,5 @@
 "use client";
-import { TrainingWithComputedFields } from "@/types/Training";
+import { TrainingWithComputedFields } from "@/types/Expense";
 import { Button } from "../../buttons/Button";
 import { Badge } from "../../dataDisplay/Badge";
 import { twMerge } from "tailwind-merge";

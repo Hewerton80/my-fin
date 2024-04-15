@@ -19,9 +19,9 @@ export function ProfilePopover() {
   const { logout, loggedUser } = useAuth();
   const { theme, setTheme } = useTheme();
 
-  if (!loggedUser) {
-    return <></>;
-  }
+  // if (!loggedUser) {
+  //   return <></>;
+  // }
 
   return (
     <Menubar.Root>
@@ -29,21 +29,25 @@ export function ProfilePopover() {
         <Menubar.Trigger asChild>
           <div className="flex gap-2 sm:gap-4 items-center cursor-pointer max-w-[220px]">
             <Avatar
-              username={loggedUser?.name}
-              bgColor={loggedUser?.avatarBgColor}
+              // username={loggedUser?.name}
+              // bgColor={loggedUser?.avatarBgColor}
+              username="Lá ele"
+              bgColor="#1976d2"
               color={
-                loggedUser?.avatarBgColor
-                  ? getContrastColor(loggedUser?.avatarBgColor)
-                  : colors.black
+                // loggedUser?.avatarBgColor
+                //   ? getContrastColor(loggedUser?.avatarBgColor)
+                //   :
+                colors.black
               }
             />
             <div className="flex flex-col">
               <strong className="text-black dark:text-white text-sm sm:text-base line-clamp-1">
-                {loggedUser?.name}
+                Lá ele
+                {/* {loggedUser?.name} */}
               </strong>
-              <p className="text-xs text-body-text dark:text-white line-clamp-1">
+              {/* <p className="text-xs text-body-text dark:text-white line-clamp-1">
                 {loggedUser?.roles?.map((role) => UserRole[role]).join(", ")}
-              </p>
+              </p> */}
             </div>
           </div>
         </Menubar.Trigger>

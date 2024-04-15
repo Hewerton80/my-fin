@@ -12,8 +12,8 @@ export function PrivatePagesTamplate({ children }: IPrivatePagesTamplateProps) {
     <>
       <div
         className={twMerge(
-          "flex h-screen overflow-y-hidden",
-          "dark:bg-[url('/images/bg-dark.svg')] bg-cover bg-no-repeat"
+          "flex h-screen overflow-y-hidden"
+          // "dark:bg-[url('/images/bg-dark.svg')] bg-cover bg-no-repeat"
         )}
       >
         <Sidebar />

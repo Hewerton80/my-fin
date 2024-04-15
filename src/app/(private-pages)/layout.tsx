@@ -10,34 +10,33 @@ import { handleErrorMessage } from "@/shared/handleErrorMessage";
 export default function AppLayout({ children }: { children: ReactNode }) {
   const { showAlert } = useAlertModal();
   const { handleSetContextLoggedUser, logout, isLogged } = useAuth();
-  const { me, meError } = useGetMe();
+  // const { me, meError } = useGetMe();
 
-  useEffect(() => {
-    if (isLogged) return;
-    if (me) {
-      console.log({ me });
-      handleSetContextLoggedUser(me);
-    }
-  }, [me, isLogged, handleSetContextLoggedUser]);
+  // useEffect(() => {
+  //   if (isLogged) return;
+  //   if (me) {
+  //     console.log({ me });
+  //     handleSetContextLoggedUser(me);
+  //   }
+  // }, [me, isLogged, handleSetContextLoggedUser]);
 
-  useEffect(() => {
-    if (meError) {
-      showAlert({
-        title: "Erro ao recuperar informações",
-        description: handleErrorMessage(meError),
-        variant: "info",
-        onClose: logout,
-      });
-    }
-  }, [meError, logout, showAlert]);
+  // useEffect(() => {
+  //   if (meError) {
+  //     showAlert({
+  //       title: "Erro ao recuperar informações",
+  //       description: handleErrorMessage(meError),
+  //       variant: "info",
+  //       onClose: logout,
+  //     });
+  //   }
+  // }, [meError, logout, showAlert]);
 
-  if (meError) {
-    return <></>;
-  }
-  // console.log({ isLogged });
-  if (!isLogged) {
-    return <SplashScreen />;
-  }
+  // if (meError) {
+  //   return <></>;
+  // }
+  // if (!isLogged) {
+  //   return <SplashScreen />;
+  // }
 
   return (
     <>

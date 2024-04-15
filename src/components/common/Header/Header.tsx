@@ -22,7 +22,12 @@ export function Header() {
   }, []);
 
   return (
-    <header className="bg-card dark:bg-dark-card/70 h-20 shadow-sm">
+    <header
+      className={twMerge(
+        "bg-card dark:bg-dark-card/70 h-20 shadow-sm",
+        "border-b border-border dark:border-dark-border"
+      )}
+    >
       <div className="flex items-center h-full px-4 sm:px-8">
         <Popover.Root open={showPopoverMenu} onOpenChange={setShowPopoverMenu}>
           <Popover.Trigger asChild>

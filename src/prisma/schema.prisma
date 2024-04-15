@@ -42,12 +42,9 @@ model Expense {
     amount               Float?
     isPaid               Boolean              @default(false)
     dueDate              DateTime?
-    registrationDate     DateTime?            @default(now())
-    dueDay               Int?
-    registrationDay      Int?
+    registrationDate     DateTime?
     creditCardId         String?
     userId               String
-    isRecurrent          Boolean
     frequency            Frequency?
     totalInstallments    Int?
     paidInstallments     Int?
