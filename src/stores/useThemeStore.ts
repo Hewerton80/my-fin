@@ -12,7 +12,7 @@ interface Actions {
 }
 
 export const useThemeStore = create<State & Actions>((set) => ({
-  theme: "light",
+  theme: "dark",
   toggleTheme: () => {
     set((state) => ({
       theme: state.theme === "light" ? "dark" : "light",

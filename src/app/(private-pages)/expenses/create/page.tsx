@@ -1,6 +1,5 @@
-"use client";
-import { UserForm } from "@/components/screens/UserForm";
+import { ExpenseForm } from "../components/ExpenseForm";
 
 export default function CreateUsersPage() {
-  return <UserForm />;
+  return <ExpenseForm />;
 }

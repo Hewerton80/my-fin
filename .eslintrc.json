@@ -2,6 +2,7 @@
   "extends": "next/core-web-vitals",
   "rules": {
     "react/display-name": "off",
-    "postcss(unknownAtRules)": "off"
+    "postcss(unknownAtRules)": "off",
+    "no-unused-vars": "warn"
   }
 }

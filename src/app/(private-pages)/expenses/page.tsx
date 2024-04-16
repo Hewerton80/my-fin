@@ -27,6 +27,7 @@ import { getCurrencyFormat } from "@/shared/getCurrencyFormat";
 import { format } from "date-fns/format";
 import { getExpenseBadge } from "@/shared/statusExpenseBadge";
 import { Badge } from "@/components/ui/dataDisplay/Badge";
+
 type UsersPageProps = keyof UserWithComputedFields;
 
 export default function UsersPage() {
@@ -39,8 +40,13 @@ export default function UsersPage() {
   //   changeUserFilter,
   //   goToPage,
   // } = useGetUsers();
-  const { expenses, isLoadingExpenses, expensesError, refetchExpenses } =
-    useGetExpenses();
+  const {
+    expenses,
+    isLoadingExpenses,
+    expensesError,
+    goToPage,
+    refetchExpenses,
+  } = useGetExpenses();
 
   const cols = useMemo<IColmunDataTable<ExpernseWithComputedFields>[]>(
     () => [
@@ -107,7 +113,7 @@ export default function UsersPage() {
         <Card.Title>Expenses</Card.Title>
         <Card.Actions>
           <Button asChild>
-            <Link href="/admin/users/create">Adicionar usuário</Link>
+            <Link href="/expenses/create">Adicionar usuário</Link>
           </Button>
         </Card.Actions>
       </Card.Header>
@@ -150,17 +156,17 @@ export default function UsersPage() {
         </div> */}
         <DataTable
           columns={cols}
-          data={expenses}
+          data={expenses?.docs}
           onTryAgainIfError={refetchExpenses}
           isError={Boolean(expensesError)}
           isLoading={isLoadingExpenses || isUndefined(expenses)}
-          // paginationConfig={{
-          //   currentPage: users?.currentPage || 1,
-          //   totalPages: users?.lastPage || 1,
-          //   perPage: users?.perPage || 25,
-          //   totalRecords: users?.total || 1,
-          //   onChangePage: goToPage,
-          // }}
+          paginationConfig={{
+            currentPage: expenses?.currentPage || 1,
+            totalPages: expenses?.lastPage || 1,
+            perPage: expenses?.perPage || 25,
+            totalRecords: expenses?.total || 1,
+            onChangePage: goToPage,
+          }}
         />
       </Card.Body>
     </Card.Root>

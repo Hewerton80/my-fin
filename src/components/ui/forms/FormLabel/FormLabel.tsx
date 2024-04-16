@@ -14,7 +14,8 @@ export function FormLabel({
   return (
     <label
       className={twMerge(
-        "mb-1 text-sm sm:text-base font-bold whitespace-nowrap",
+        "mb-2 text-sm text-body-text dark:text-light",
+        "font-medium whitespace-nowrap",
         required && "after:content-['*'] after:text-danger",
         className
       )}

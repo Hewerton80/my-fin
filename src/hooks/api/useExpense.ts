@@ -3,6 +3,8 @@ import { useAxios } from "../utils/useAxios";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { ExpernseWithComputedFields } from "@/types/Expense";
+import { IPaginatedDocs } from "@/lib/prismaHelpers";
+import { parseJsonToSearchParams } from "@/shared/parseJsonToSearchParams";
 
 export function useGetExpenses() {
   const { apiBase } = useAxios();
@@ -42,7 +44,7 @@ export function useGetExpenses() {
   } = useQuery({
     queryFn: () =>
       apiBase
-        .get<ExpernseWithComputedFields[]>("/expenses")
+        .get<IPaginatedDocs<ExpernseWithComputedFields>>("/expenses")
         //   .get<IPaginatedDocs<ExpenseWithComputedFields>>("/expenses", {
         //      params: removeEmptyKeys(expensesQueryParamsDebounced),
         //   })
@@ -93,15 +95,15 @@ export function useGetExpenses() {
     setStudentsQueryParamsDebounced({ ...expensesQueryParams });
   }, [expensesQueryParams]);
 
-  //   const goToPage = useCallback(
-  //     (page: number) => {
-  //       const newQueryParams = { ...expensesQueryParams, currentPage: page };
-  //       setStudentsQueryParamsDebounced(newQueryParams);
-  //       setStudentsQueryParams(newQueryParams);
-  //       router.push(parseJsonToSearchParams(newQueryParams));
-  //     },
-  //     [expensesQueryParams, router]
-  //   );
+  const goToPage = useCallback(
+    (page: number) => {
+      const newQueryParams = { ...expensesQueryParams, currentPage: page };
+      setStudentsQueryParamsDebounced(newQueryParams);
+      setStudentsQueryParams(newQueryParams);
+      router.push(parseJsonToSearchParams(newQueryParams));
+    },
+    [expensesQueryParams, router]
+  );
 
   return {
     expenses,
@@ -109,7 +111,7 @@ export function useGetExpenses() {
     expensesError,
     // expensesQueryParams,
     refetchExpenses,
-    // goToPage,
+    goToPage,
     // changeExpenseFilter,
   };
 }
