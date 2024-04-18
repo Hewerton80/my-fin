@@ -4,23 +4,24 @@ import { FormLabel } from "@/components/ui/forms/FormLabel";
 import { FormHelperText } from "@/components/ui/forms/FormHelperText";
 import style from "@/components/sharedStyles/textField.module.css";
 
-interface InputProps extends Omit<ComponentPropsWithRef<"input">, "className"> {
+interface TextareaProps
+  extends Omit<ComponentPropsWithRef<"textarea">, "className"> {
   formControlClassName?: string;
-  inputClassName?: string;
+  textareaClassName?: string;
   label?: string;
   error?: string;
 }
 
-export const Input = forwardRef(
+export const Textarea = forwardRef(
   (
     {
       formControlClassName,
-      inputClassName,
+      textareaClassName,
       label,
       error,
       required,
       ...restProps
-    }: InputProps,
+    }: TextareaProps,
     ref?: any
   ) => {
     return (
@@ -30,14 +31,13 @@ export const Input = forwardRef(
             {label}
           </FormLabel>
         )}
-        <input
+        <textarea
           ref={ref}
           required={required}
           className={twMerge(
             style.root,
-            "h-10",
             error && "border-danger/60 focus-visible:border-danger",
-            inputClassName
+            textareaClassName
           )}
           {...restProps}
         />

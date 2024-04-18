@@ -9,7 +9,7 @@ import { twMerge } from "tailwind-merge";
 import { Slot } from "@radix-ui/react-slot";
 import { Resizable } from "re-resizable";
 import { useSideBar } from "@/hooks/utils/useSideBar";
-
+import style from "@/components/sharedStyles/menu.module.css";
 export const SideBarItems = forwardRef((_, ref?: any) => {
   const currentPath = usePathname();
 
@@ -21,33 +21,14 @@ export const SideBarItems = forwardRef((_, ref?: any) => {
   // }, [loggedUser]);
 
   return (
-    <ul
-      ref={ref}
-      className={twMerge(
-        "flex flex-col w-full gap-y-1",
-        showOnlyIcons ? "p-2" : "p-2"
-      )}
-    >
+    <ul ref={ref} className="flex flex-col w-full space-y-1 p-2">
       {navItems.map(({ title, icon, path, basePath }, i) => {
         const isActive = currentPath.startsWith(`/${basePath}`);
         return (
           <li key={`${title}-${i}`} className="flex w-full">
             <Link
-              // onClick={() => setShowSideBar(false)}
               href={path}
-              className={twMerge(
-                "flex items-center w-full gap-4 relative h-9 px-3",
-                "whitespace-nowrap font-medium text-sm",
-                "dark:text-light text-dark-card ",
-                "text-text-acent duration-100 ease-linear rounded-md hover:bg-acent",
-                "dark:hover:bg-muted",
-                showOnlyIcons ? "" : "w-full",
-                isActive &&
-                  twMerge(
-                    "text-light bg-text-acent hover:bg-text-acent/70",
-                    "dark:text-light dark:bg-muted dark:hover:bg-muted/70"
-                  )
-              )}
+              className={twMerge(style.item, isActive && style["is-active"])}
             >
               <span className="text-base">{icon}</span>
               {!showOnlyIcons && <span>{title}</span>}

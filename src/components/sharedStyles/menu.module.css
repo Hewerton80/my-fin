@@ -1,16 +1,20 @@
 .root {
-  @apply flex flex-col py-3 z-50 bg-white dark:bg-dark-card
+  @apply flex flex-col py-3 z-50 bg-card dark:bg-dark-card
   outline-none shadow-lg rounded;
 }
 :global(.dark) .root {
-  @apply bg-dark-body;
+  @apply bg-dark-card;
 }
 .item {
-  @apply flex items-center px-6 py-2 text-sm sm:text-base cursor-pointer gap-3
-    hover:text-primary hover:bg-light outline-none;
+  @apply flex items-center w-full gap-4 relative h-9 px-3
+  whitespace-nowrap font-medium text-sm text-text-acent
+   duration-100 ease-linear rounded-md hover:bg-acent;
 }
 :global(.dark) .item {
-  @apply hover:text-light hover:bg-dark-card/60;
+  @apply text-light hover:bg-muted;
+}
+:global(.dark) .item.is-active {
+  @apply text-light bg-muted hover:bg-muted/70;
 }
 .separator {
   @apply h-[1px] bg-primary  my-1 mx-4;

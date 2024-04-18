@@ -113,7 +113,7 @@ export default function UsersPage() {
         <Card.Title>Expenses</Card.Title>
         <Card.Actions>
           <Button asChild>
-            <Link href="/expenses/create">Adicionar usuário</Link>
+            <Link href="/expenses/create">Add Expense </Link>
           </Button>
         </Card.Actions>
       </Card.Header>

@@ -88,7 +88,7 @@ export function Picker({
             className={twMerge(
               menuStyle.root,
               "origin-top-left border border-border py-2",
-              "dark:border-dark-border dark:bg-dark-body",
+              "dark:border-dark-border dark:bg-dark-card",
               slideAndFade.root
             )}
           >
