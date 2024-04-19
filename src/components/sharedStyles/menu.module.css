@@ -10,6 +10,9 @@
   whitespace-nowrap font-medium text-sm text-text-acent
    duration-100 ease-linear rounded-md hover:bg-acent;
 }
+.item.is-active {
+  @apply text-item bg-text-acent hover:bg-text-acent/90;
+}
 :global(.dark) .item {
   @apply text-light hover:bg-muted;
 }

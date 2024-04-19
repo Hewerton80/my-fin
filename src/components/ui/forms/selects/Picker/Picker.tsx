@@ -2,13 +2,16 @@
 import { Button } from "@/components/ui/buttons/Button";
 import { FaChevronDown } from "react-icons/fa";
 import * as Popover from "@radix-ui/react-popover";
-import { Select, SelectOption } from "@/components/ui/forms/Select";
+import {
+  Select,
+  SelectOption,
+} from "@/components/ui/forms/selects/PrimitiveSelect";
 import { Input } from "@/components/ui/forms/Input";
 import { twMerge } from "tailwind-merge";
 import slideAndFade from "@/components/sharedStyles/slideAndFade.module.css";
 import styled from "./Picker.module.css";
 import { useCallback, useMemo, useState } from "react";
-import { CloseButton } from "../../buttons/CloseButton";
+import { CloseButton } from "../../../buttons/CloseButton";
 import menuStyle from "@/components/sharedStyles/menu.module.css";
 
 interface PickerProps {

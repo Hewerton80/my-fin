@@ -18,7 +18,7 @@ import Link from "next/link";
 import { useMemo } from "react";
 import { MdEdit } from "react-icons/md";
 import { orderByUserOptions, usersRolesOptions } from "@/shared/pickerOptions";
-import { Picker } from "@/components/ui/forms/Picker";
+import { Picker } from "@/components/ui/forms/selects/Picker";
 import { Input } from "@/components/ui/forms/Input";
 import { HorizontalScrollView } from "@/components/ui/navigation/HorizontalScrollView";
 import { ExpernseWithComputedFields } from "@/types/Expense";

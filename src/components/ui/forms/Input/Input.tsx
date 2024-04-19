@@ -35,7 +35,7 @@ export const Input = forwardRef(
           required={required}
           className={twMerge(
             style.root,
-            "h-10",
+            "h-9",
             error && "border-danger/60 focus-visible:border-danger",
             inputClassName
           )}

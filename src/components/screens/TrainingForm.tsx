@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/forms/Input";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useGetExercises } from "@/hooks/api/useExercise";
-import { Select } from "@/components/ui/forms/Select";
+import { Select } from "@/components/ui/forms/selects/PrimitiveSelect";
 import { Button } from "@/components/ui/buttons/Button";
 import { Modal } from "@/components/ui/overlay/Modal";
 import { ExerciseCard } from "@/components/ui/cards/ExerciseCard";

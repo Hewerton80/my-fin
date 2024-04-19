@@ -1,16 +1,17 @@
 "use client";
 import { Card } from "@/components/ui/cards/Card";
 import { Input } from "@/components/ui/forms/Input";
-import { MultSelect } from "@/components/ui/forms/MultSelect";
+import { MultSelect } from "@/components/ui/forms/selects/MultSelect";
+import { SelectOption } from "@/components/ui/forms/selects/type";
 import { Textarea } from "@/components/ui/forms/Textarea/Textarea";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 
 interface ExpenseFormProps {
   id?: string;
 }
 
 const categoriesOptions = [
-  { label: "Food", value: "food" },
+  { label: "Food", value: "food", icon: "🍕" },
   { label: "Transport", value: "transport" },
   { label: "Health", value: "health" },
   { label: "Education", value: "education" },
@@ -19,6 +20,7 @@ const categoriesOptions = [
 ];
 
 export function ExpenseForm({ id: expenseId }: ExpenseFormProps) {
+  const [categories, setCategories] = useState<SelectOption[]>([]);
   const isEditExpense = useMemo(() => Boolean(expenseId), [expenseId]);
   return (
     <Card.Root>
@@ -34,13 +36,14 @@ export function ExpenseForm({ id: expenseId }: ExpenseFormProps) {
             required
           />
           <MultSelect
+            value={categories}
             formControlClassName="col-span-6"
             label="Categories"
-            placeholder="..."
             options={categoriesOptions}
+            onChange={(newValues) => setCategories(newValues)}
           />
           <Textarea
-            formControlClassName="col-span-6"
+            formControlClassName="col-span-6 mb-32"
             label="Description"
             placeholder="..."
           />

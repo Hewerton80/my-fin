@@ -1,16 +1,11 @@
 .root :global(.select__control) {
-  @apply w-full rounded-md min-h-[2.75rem] 2xl:min-h-[3.5rem] border bg-white shadow-sm;
+  @apply w-full rounded-md min-h-9 shadow-sm bg-transparent
+  border border-border hover:border-border;
 }
 :global(.dark) .root :global(.select__control) {
-  @apply bg-dark-card;
+  @apply border-dark-border hover:border-border;
 }
 
-.root :global(.select__control) {
-  @apply border-border;
-}
-:global(.dark) .root :global(.select__control) {
-  @apply border-dark-border;
-}
 /* .root :global(.select__control--is-disabled) {
   @apply border-gray-40;
 } */
@@ -38,14 +33,26 @@
   @apply m-0 p-0;
 }
 .root :global(.select__placeholder) {
-  @apply mx-0 text-sm text-body-text/80;
+  @apply mx-0 text-sm text-body-text/40;
 }
-.root :is(:global(.select__input), :global(.select__single-value)) {
+:global(.dark) .root :global(.select__placeholder) {
+  @apply text-light/40;
+}
+.root
+  :is(
+    :global(.select__input),
+    :global(.select__input-container),
+    :global(.select__single-value)
+  ) {
   @apply text-sm text-body-text mx-0 p-0;
 }
 :global(.dark)
   .root
-  :is(:global(.select__input), :global(.select__single-value)) {
+  :is(
+    :global(.select__input),
+    :global(.select__input-container),
+    :global(.select__single-value)
+  ) {
   @apply text-light;
 }
 
@@ -73,16 +80,16 @@
   label: ",";
 } */
 .root :global(.select__menu) {
-  @apply mt-0.5 z-50;
+  @apply mt-1.5 z-50 p-2;
 }
 .root :global(.select__menu-list) {
-  @apply py-1;
+  @apply py-0 space-y-1;
 }
 .root :global(.select__menu-list)::-webkit-scrollbar {
   @apply bg-transparent h-2.5 w-1;
 }
 .root :global(.select__menu-list)::-webkit-scrollbar-thumb {
-  @apply rounded bg-primary;
+  @apply rounded bg-dark-card;
 }
 .root :global(.select__menu) {
   @apply overflow-hidden border border-border bg-white rounded-lg shadow-none;
@@ -91,16 +98,23 @@
   @apply border-dark-border bg-dark-card;
 }
 .root :global(.select__option) {
-  @apply text-sm cursor-pointer px-[1.375rem] text-body-text font-medium;
+  @apply cursor-pointer h-9 px-3 whitespace-nowrap
+  font-medium text-sm text-text-acent rounded-md hover:bg-acent;
 }
 :global(.dark) .root :global(.select__option) {
-  @apply text-light;
+  @apply text-light hover:bg-muted;
 }
 .root :global(.select__option--is-focused) {
-  @apply !bg-primary/10 text-primary;
+  @apply bg-acent;
+}
+:global(.dark) .root :global(.select__option--is-focused) {
+  @apply bg-muted;
 }
 .root :global(.select__option--is-selected) {
-  @apply !bg-primary/30;
+  @apply text-item bg-primary hover:bg-primary/90;
+}
+:global(.dark) .root :global(.select__option--is-selected) {
+  @apply text-light bg-muted hover:bg-muted/70;
 }
 .root :global(.select__indicators) {
   @apply hidden;

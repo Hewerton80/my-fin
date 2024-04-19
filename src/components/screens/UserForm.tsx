@@ -18,7 +18,10 @@ import { FeedBackLoading } from "@/components/ui/feedback/FeedBackLoading";
 import { isUndefined } from "@/shared/isType";
 import { FeedBackError } from "@/components/ui/feedback/FeedBackError";
 import { Checkbox } from "@/components/ui/forms/Checkbox";
-import { Select, SelectOption } from "@/components/ui/forms/Select";
+import {
+  Select,
+  SelectOption,
+} from "@/components/ui/forms/selects/PrimitiveSelect";
 import { Gender } from "@prisma/client";
 import { genderOptions } from "@/shared/pickerOptions";
 import { format as formatDate } from "date-fns";
