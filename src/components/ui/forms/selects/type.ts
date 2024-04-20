@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import { ActionMeta, SingleValue } from "react-select";
 
 export interface SelectOption {
   value?: string;
@@ -7,11 +8,9 @@ export interface SelectOption {
   options?: SelectOption[];
 }
 
-// export type SigleValueSelectOption = SingleValue<SelectOption>;
-
-// export type OnchangeSigleValue = (newValue: SigleValueSelectOption) => void;
+export type OnchangeSigleValue = (newValue: SingleValue<SelectOption>) => void;
 
 export type OnchangeMultValue = (
   newValue: SelectOption[],
-  actionMeta: any
+  actionMeta: ActionMeta<SelectOption>
 ) => void;

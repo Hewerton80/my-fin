@@ -19,7 +19,7 @@ import { useMemo } from "react";
 import { MdEdit } from "react-icons/md";
 import { orderByUserOptions, usersRolesOptions } from "@/shared/pickerOptions";
 import { Picker } from "@/components/ui/forms/selects/Picker";
-import { Input } from "@/components/ui/forms/Input";
+import { Input } from "@/components/ui/forms/inputs/Input";
 import { HorizontalScrollView } from "@/components/ui/navigation/HorizontalScrollView";
 import { ExpernseWithComputedFields } from "@/types/Expense";
 import { useGetExpenses } from "@/hooks/api/useExpense";
@@ -168,6 +168,12 @@ export default function UsersPage() {
             onChangePage: goToPage,
           }}
         />
+        <Badge variant="primary">Teste</Badge>
+        <Badge variant="info">Teste</Badge>
+        <Badge variant="danger">Teste</Badge>
+        <Badge variant="success">Teste</Badge>
+        <Badge variant="warning">Teste</Badge>
+        <Badge variant="dark">Teste</Badge>
       </Card.Body>
     </Card.Root>
   );

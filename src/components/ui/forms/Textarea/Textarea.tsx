@@ -36,7 +36,7 @@ export const Textarea = forwardRef(
           required={required}
           className={twMerge(
             style.root,
-            error && "border-danger/60 focus-visible:border-danger",
+            error && style.error,
             textareaClassName
           )}
           {...restProps}

@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/buttons/Button";
 import { Card } from "@/components/ui/cards/Card";
-import { Input } from "@/components/ui/forms/Input";
+import { Input } from "@/components/ui/forms/inputs/Input";
 import {
   IUserForm,
   useGetUser,

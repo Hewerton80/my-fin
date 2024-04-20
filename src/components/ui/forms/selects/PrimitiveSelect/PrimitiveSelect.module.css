@@ -3,7 +3,7 @@
   border border-border hover:border-border;
 }
 :global(.dark) .root :global(.select__control) {
-  @apply border-dark-border hover:border-border;
+  @apply border-dark-border hover:border-dark-border;
 }
 
 /* .root :global(.select__control--is-disabled) {
@@ -13,15 +13,12 @@
   @apply border-danger;
 }
 
-/* .root :global(.select__control--menu-is-open) {
-  @apply !border-b-transparent !rounded-bl-none !rounded-br-none;
-} */
 .root:not(.error)
   :is(
     :global(.select__control--is-focused),
     :global(.select__control--menu-is-open)
   ) {
-  @apply border-primary;
+  @apply !border-primary;
 }
 .root :global(.select__value-container) {
   @apply px-3 py-1.5  gap-1;
@@ -60,11 +57,17 @@
   @apply text-danger;
 } */
 .root :global(.select__multi-value) {
-  @apply inline-flex items-center justify-center py-1 px-2 w-fit m-0
-  text-xs font-semibold rounded-[0.625rem] bg-primary/20 gap-1;
+  @apply inline-flex items-center justify-center py-0.5 px-2.5 w-fit m-0
+  bg-primary text-xs font-semibold rounded-md gap-1;
+}
+:global(.dark) .root :global(.select__multi-value) {
+  @apply bg-primary/20;
 }
 .root :global(.select__multi-value__label) {
-  @apply p-0 text-primary;
+  @apply p-0 text-white;
+}
+:global(.dark) .root :global(.select__multi-value__label) {
+  @apply text-primary;
 }
 .root :global(.select__multi-value__remove) {
   @apply p-0 rounded-full text-white hover:text-white hover:bg-primary bg-primary;

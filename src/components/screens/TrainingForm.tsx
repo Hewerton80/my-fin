@@ -5,7 +5,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { FeedBackError } from "@/components/ui/feedback/FeedBackError";
 import { FeedBackLoading } from "@/components/ui/feedback/FeedBackLoading";
 import { isUndefined } from "@/shared/isType";
-import { Input } from "@/components/ui/forms/Input";
+import { Input } from "@/components/ui/forms/inputs/Input";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useGetExercises } from "@/hooks/api/useExercise";

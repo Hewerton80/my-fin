@@ -2,11 +2,11 @@ import { ComponentPropsWithRef } from "react";
 import { twMerge } from "tailwind-merge";
 
 const variants = {
-  primary: "bg-primary/20 text-primary",
-  info: "bg-info/20 text-info",
-  success: "bg-success/20 text-success",
-  danger: "bg-danger/20 text-danger",
-  warning: "bg-warning/20 text-warning",
+  primary: "bg-primary text-white dark:bg-primary/20 dark:text-primary",
+  info: "bg-info text-white dark:bg-info/20 dark:text-info",
+  success: "bg-success text-white dark:bg-success/20 dark:text-success",
+  danger: "bg-danger text-white dark:bg-danger/20 dark:text-danger",
+  warning: "bg-warning text-white dark:bg-warning/20 dark:text-warning",
   dark: "text-light bg-text-acent dark:text-text-acent dark:bg-light",
 };
 interface BadgeProps extends ComponentPropsWithRef<"span"> {

@@ -7,6 +7,7 @@ import styled from "./PrimitiveSelect.module.css";
 import { FormLabel } from "@/components/ui/forms/FormLabel";
 import { FormHelperText } from "@/components/ui/forms/FormHelperText";
 import { OnchangeMultValue, OnchangeSigleValue, SelectOption } from "../type";
+import { Badge } from "@/components/ui/dataDisplay/Badge";
 
 // export type SigleValueSelectOption = SingleValue<SelectOption>;
 
@@ -98,7 +99,7 @@ export const PrimitiveSelect = forwardRef(
           )}
           onChange={handleChange}
           // formatOptionLabel={(option) => (
-          //   <Badge variant="primary">{option.label}</Badge>
+          //   <Badge variant="info">{option.label}</Badge>
           // )}
           formatGroupLabel={(options) => (
             <>

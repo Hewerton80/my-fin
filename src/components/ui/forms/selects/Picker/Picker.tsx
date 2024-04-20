@@ -6,7 +6,7 @@ import {
   Select,
   SelectOption,
 } from "@/components/ui/forms/selects/PrimitiveSelect";
-import { Input } from "@/components/ui/forms/Input";
+import { Input } from "@/components/ui/forms/inputs/Input";
 import { twMerge } from "tailwind-merge";
 import slideAndFade from "@/components/sharedStyles/slideAndFade.module.css";
 import styled from "./Picker.module.css";

@@ -1,5 +1,4 @@
 import { CreditCard, Expense, SubCategory } from "@prisma/client";
-import { removeElementsRepeated } from "@/shared/array";
 import { isAfter } from "date-fns/isAfter";
 import { isBefore } from "date-fns/isBefore";
 
@@ -24,11 +23,6 @@ export const getExpenseWitchComputedFields = ({
   if (expense?.isPaid) {
     status = ExpenseStatus.PAID;
   } else if (expense?.dueDate && isAfter(now, expense?.dueDate)) {
-    console.log({
-      now,
-      dueDate: expense?.dueDate,
-      isAfter: isAfter(now, expense?.dueDate),
-    });
     status = ExpenseStatus.OVERDUE;
   } else if (
     expense?.registrationDate &&

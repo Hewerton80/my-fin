@@ -5,6 +5,28 @@ import { useQuery } from "@tanstack/react-query";
 import { ExpernseWithComputedFields } from "@/types/Expense";
 import { IPaginatedDocs } from "@/lib/prismaHelpers";
 import { parseJsonToSearchParams } from "@/shared/parseJsonToSearchParams";
+import { z } from "zod";
+import { SelectOption } from "@/components/ui/forms/selects";
+import { CONSTANTS } from "@/shared/constants";
+
+const { VALIDATION_ERROR_MESSAGES } = CONSTANTS;
+
+const baseExpenseSchema = z.object({
+  name: z.string().min(1, VALIDATION_ERROR_MESSAGES.REQUIRED_FIELDS),
+  categoriesOptions: z
+    .array(z.object({ label: z.string(), value: z.string() }))
+    .optional(),
+  description: z.string().optional(),
+  amount: z.number().optional(),
+  frequency: z.string().min(1, VALIDATION_ERROR_MESSAGES.REQUIRED_FIELDS),
+});
+export const createExpenseSchema = baseExpenseSchema;
+type InferBaseExpenseFormSchema = z.infer<typeof baseExpenseSchema>;
+type InferCreateExpenseFormSchema = z.infer<typeof createExpenseSchema>;
+export type ExpenseFormValues = InferBaseExpenseFormSchema &
+  InferCreateExpenseFormSchema & {
+    categoriesOptions: SelectOption[];
+  };
 
 export function useGetExpenses() {
   const { apiBase } = useAxios();

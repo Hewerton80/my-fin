@@ -7,3 +7,6 @@
   @apply border-dark-border autofill:!bg-dark-card text-light
   placeholder:text-light/40 focus-visible:border-primary;
 }
+.root.error {
+  @apply border-danger/60 focus-visible:border-danger;
+}
