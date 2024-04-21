@@ -14,11 +14,15 @@ export interface MultSelectSelectProps
 }
 
 export const MultSelect = forwardRef(
-  ({ onChange, ...restProps }: MultSelectSelectProps, ref?: any) => {
+  (
+    { onChange, isSearchable = true, ...restProps }: MultSelectSelectProps,
+    ref?: any
+  ) => {
     return (
       <PrimitiveSelect
         onChangeMultValue={onChange}
         isMulti
+        isSearchable={isSearchable}
         ref={ref}
         {...restProps}
       />

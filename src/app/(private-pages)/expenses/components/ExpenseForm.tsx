@@ -13,6 +13,8 @@ import { Frequency } from "@prisma/client";
 import { capitalizeFisrtLetter } from "@/shared/string";
 import { useGetCategories } from "@/hooks/api/useCategory";
 import { Switch } from "@/components/ui/forms/Switch";
+import { Select } from "@/components/ui/forms/selects/Select";
+import { getRange } from "@/shared/getRange";
 interface ExpenseFormProps {
   id?: string;
 }
@@ -30,16 +32,32 @@ export function ExpenseForm({ id: expenseId }: ExpenseFormProps) {
       amount: undefined,
       isRepeat: false,
       frequency: "",
+      hasInstallments: true,
+      numberOfInstallments: undefined,
     },
     mode: "onTouched",
     resolver: zodResolver(createExpenseSchema),
   });
-  const { isRepeat } = useWatch({ control });
+  const { isRepeat, frequency, hasInstallments } = useWatch({ control });
 
   useEffect(() => {
-    const subscription = watch((value, { name, type }) => {
-      if (name === "isRepeat" && value.isRepeat) {
+    const subscription = watch((value, { name }) => {
+      if (name === "isRepeat") {
         setValue("frequency", "", {
+          shouldDirty: true,
+          shouldValidate: true,
+          shouldTouch: true,
+        });
+      }
+      if (name === "frequency") {
+        setValue("hasInstallments", value.frequency ? true : false, {
+          shouldDirty: true,
+          shouldValidate: true,
+          shouldTouch: true,
+        });
+      }
+      if (name === "hasInstallments") {
+        setValue("numberOfInstallments", undefined, {
           shouldDirty: true,
           shouldValidate: true,
           shouldTouch: true,
@@ -75,7 +93,7 @@ export function ExpenseForm({ id: expenseId }: ExpenseFormProps) {
         <Card.Title>{isEditExpense ? "Edit" : "Create"} Expense</Card.Title>
       </Card.Header>
       <Card.Body>
-        <div className="grid grid-cols-12 gap-4">
+        <div className="grid grid-cols-12 gap-6 pb-80">
           <Controller
             control={control}
             name="name"
@@ -141,6 +159,7 @@ export function ExpenseForm({ id: expenseId }: ExpenseFormProps) {
                 onCheckedChange={onChange}
                 formControlClassName="col-span-12"
                 label="Repeat?"
+                required
               />
             )}
           />
@@ -155,6 +174,7 @@ export function ExpenseForm({ id: expenseId }: ExpenseFormProps) {
                   label="Frequency"
                   onValueChange={onChange}
                   error={fieldState?.error?.message}
+                  required
                 >
                   {Object.keys(Frequency).map((key) => (
                     <Radio.Item
@@ -164,6 +184,47 @@ export function ExpenseForm({ id: expenseId }: ExpenseFormProps) {
                     />
                   ))}
                 </Radio.Root>
+              )}
+            />
+          )}
+          {frequency && (
+            <Controller
+              control={control}
+              name="hasInstallments"
+              render={({ field: { value, onChange, ...restFields } }) => (
+                <Switch
+                  {...restFields}
+                  checked={value}
+                  onCheckedChange={onChange}
+                  formControlClassName="col-span-12"
+                  label="Are there installments?"
+                  required
+                />
+              )}
+            />
+          )}
+          {hasInstallments && (
+            <Controller
+              control={control}
+              name="numberOfInstallments"
+              render={({
+                field: { value, onChange, ...restField },
+                fieldState,
+              }) => (
+                <Select
+                  {...restField}
+                  isClearable
+                  value={String(value || "")}
+                  formControlClassName="col-span-6"
+                  label="Number of installments"
+                  onChange={(option) => onChange(Number(option?.value))}
+                  options={getRange(12).map((i) => ({
+                    label: `${i + 1}x`,
+                    value: String(i + 1),
+                  }))}
+                  error={fieldState.error?.message}
+                  required
+                />
               )}
             />
           )}

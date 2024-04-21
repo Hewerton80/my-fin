@@ -60,6 +60,7 @@ export const PrimitiveSelect = forwardRef(
       required,
       placeholder = "Search...",
       isMulti,
+      isSearchable = false,
       onChangeSingleOption,
       onChangeMultValue,
       ...restProps
@@ -74,7 +75,6 @@ export const PrimitiveSelect = forwardRef(
         if (isMulti) {
           onChangeMultValue?.(newValue as SelectOption[], actionMeta);
         } else {
-          console.log({ newValue });
           onChangeSingleOption?.(newValue as SingleValue<SelectOption>);
         }
       },
@@ -108,6 +108,7 @@ export const PrimitiveSelect = forwardRef(
             </>
           )}
           isMulti={isMulti}
+          isSearchable={isSearchable}
           isLoading={isLoading}
           options={isLoading ? [] : options}
           noOptionsMessage={() => (

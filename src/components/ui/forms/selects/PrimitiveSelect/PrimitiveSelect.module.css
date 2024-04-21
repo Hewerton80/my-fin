@@ -72,16 +72,9 @@
 .root :global(.select__multi-value__remove) {
   @apply p-0 rounded-full text-white hover:text-white hover:bg-primary bg-primary;
 }
-/* .root :global(.select__multi-value) {
-  @apply mr-1;
-} */
-/* .root
-  :global(.select__multi-value):has(+ :global(.select__multi-value))::after {
-  label: ",";
-} */
-/* .root :global(.select__multi-value) + :global(.select__multi-value)::before {
-  label: ",";
-} */
+.root :global(.select__group) {
+  @apply py-0;
+}
 .root :global(.select__menu) {
   @apply mt-1.5 z-50 p-2;
 }

@@ -8,6 +8,7 @@ import { parseJsonToSearchParams } from "@/shared/parseJsonToSearchParams";
 import { z } from "zod";
 import { SelectOption } from "@/components/ui/forms/selects";
 import { CONSTANTS } from "@/shared/constants";
+import { isNumber } from "@/shared/isType";
 
 const { VALIDATION_ERROR_MESSAGES } = CONSTANTS;
 
@@ -19,7 +20,12 @@ const baseExpenseSchema = z.object({
   description: z.string().optional(),
   amount: z.number().optional(),
   isRepeat: z.boolean(),
-  frequency: z.string().min(1, VALIDATION_ERROR_MESSAGES.REQUIRED_FIELDS),
+  frequency: z
+    .string()
+    .min(1, VALIDATION_ERROR_MESSAGES.REQUIRED_FIELDS)
+    .optional(),
+  hasInstallments: z.boolean(),
+  numberOfInstallments: z.number().optional(),
 });
 export const createExpenseSchema = baseExpenseSchema;
 type InferBaseExpenseFormSchema = z.infer<typeof baseExpenseSchema>;
