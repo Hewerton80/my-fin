@@ -18,6 +18,7 @@ const baseExpenseSchema = z.object({
     .optional(),
   description: z.string().optional(),
   amount: z.number().optional(),
+  isRepeat: z.boolean(),
   frequency: z.string().min(1, VALIDATION_ERROR_MESSAGES.REQUIRED_FIELDS),
 });
 export const createExpenseSchema = baseExpenseSchema;

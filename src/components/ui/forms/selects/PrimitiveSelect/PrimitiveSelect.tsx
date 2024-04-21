@@ -29,7 +29,7 @@ type MapedSelectProps = Pick<
   | "isSearchable"
   | "isLoading"
   | "placeholder"
-  // | "onChange"
+  | "onFocus"
 >;
 
 export interface PrimitiveSelectProps extends MapedSelectProps {
