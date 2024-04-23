@@ -8,7 +8,6 @@ import { parseJsonToSearchParams } from "@/shared/parseJsonToSearchParams";
 import { z } from "zod";
 import { SelectOption } from "@/components/ui/forms/selects";
 import { CONSTANTS } from "@/shared/constants";
-import { isNumber } from "@/shared/isType";
 
 const { VALIDATION_ERROR_MESSAGES } = CONSTANTS;
 

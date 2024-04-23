@@ -32,7 +32,7 @@ export function ExpenseForm({ id: expenseId }: ExpenseFormProps) {
       amount: undefined,
       isRepeat: false,
       frequency: "",
-      hasInstallments: true,
+      hasInstallments: false,
       numberOfInstallments: undefined,
     },
     mode: "onTouched",

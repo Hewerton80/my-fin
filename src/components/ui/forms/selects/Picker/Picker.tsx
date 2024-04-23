@@ -2,10 +2,7 @@
 import { Button } from "@/components/ui/buttons/Button";
 import { FaChevronDown } from "react-icons/fa";
 import * as Popover from "@radix-ui/react-popover";
-import {
-  Select,
-  SelectOption,
-} from "@/components/ui/forms/selects/PrimitiveSelect";
+import { Select, SelectOption } from "@/components/ui/forms/selects";
 import { Input } from "@/components/ui/forms/inputs/Input";
 import { twMerge } from "tailwind-merge";
 import slideAndFade from "@/components/sharedStyles/slideAndFade.module.css";
@@ -108,10 +105,7 @@ export function Picker({
               <Select
                 selectClassName={styled.root}
                 options={filteredOptions}
-                onChangeSingleOption={(option) =>
-                  onSelectOption(option?.value || "")
-                }
-                isAutocomplite
+                onChange={(option) => onSelectOption(option?.value || "")}
                 menuIsOpen
                 controlShouldRenderValue={false}
                 hideSelectedOptions={false}

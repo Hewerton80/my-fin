@@ -12,7 +12,7 @@ import {
 import { Prisma } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 const { USER_HAS_NO_PERMISSION, INTERNAL_SERVER_ERROR, VALIDATION_ERROR } =
-  CONSTANTS.API_RESPONSE_MENSSAGES;
+  CONSTANTS.API_RESPONSE_MESSAGES;
 
 export async function GET(request: NextRequest) {
   //   if (!(await verifyIfUserIsTeacher(request))) {

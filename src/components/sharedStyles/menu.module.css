@@ -1,12 +1,13 @@
 .root {
-  @apply flex flex-col py-3 z-50 bg-card dark:bg-dark-card
-  outline-none shadow-lg rounded;
+  @apply flex flex-col p-2 z-50 bg-card
+  outline-none shadow-lg rounded border 
+  border-border;
 }
 :global(.dark) .root {
-  @apply bg-dark-card;
+  @apply bg-dark-card border-dark-border;
 }
 .item {
-  @apply flex items-center w-full gap-4 relative h-9 px-3
+  @apply flex items-center w-full gap-4 relative px-2 py-1.5
   whitespace-nowrap font-medium text-sm text-text-acent
    duration-100 ease-linear rounded-md hover:bg-acent;
 }
@@ -20,7 +21,7 @@
   @apply text-light bg-muted hover:bg-muted/70;
 }
 .separator {
-  @apply h-[1px] bg-primary  my-1 mx-4;
+  @apply h-[1px] bg-primary my-1 mx-4;
 }
 :global(.dark) .separator {
   @apply bg-light;
