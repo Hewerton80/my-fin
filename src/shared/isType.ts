@@ -9,3 +9,7 @@ export const isUndefined = (value: any) => {
 export const isNumber = (value: any) => {
   return typeof value === "number";
 };
+
+export const isBoolean = (value: any) => {
+  return typeof value === "boolean";
+};

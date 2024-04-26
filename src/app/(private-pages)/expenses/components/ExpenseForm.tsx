@@ -15,6 +15,9 @@ import { useGetCategories } from "@/hooks/api/useCategory";
 import { Switch } from "@/components/ui/forms/Switch";
 import { Select } from "@/components/ui/forms/selects/Select";
 import { getRange } from "@/shared/getRange";
+import { stringToBoolean } from "@/shared/stringToBoolean";
+import { isBoolean } from "@/shared/isType";
+import { useGetCreditCards } from "@/hooks/api/useCreditCard";
 interface ExpenseFormProps {
   id?: string;
 }
@@ -22,6 +25,8 @@ interface ExpenseFormProps {
 export function ExpenseForm({ id: expenseId }: ExpenseFormProps) {
   const { categories, isLoadingCategories, refetchCategories } =
     useGetCategories();
+  const { creditCards, isLoadingCreditCards, refetchCreditCards } =
+    useGetCreditCards();
   const isEditExpense = useMemo(() => Boolean(expenseId), [expenseId]);
 
   const { control, watch, setValue } = useForm<ExpenseFormValues>({
@@ -31,19 +36,33 @@ export function ExpenseForm({ id: expenseId }: ExpenseFormProps) {
       description: "",
       amount: undefined,
       isRepeat: false,
-      frequency: "",
+      isPaid: null,
+      frequency: null,
       hasInstallments: false,
       numberOfInstallments: undefined,
+      creditCardId: "",
     },
     mode: "onTouched",
     resolver: zodResolver(createExpenseSchema),
   });
-  const { isRepeat, frequency, hasInstallments } = useWatch({ control });
+  const { isRepeat, frequency, hasInstallments, isPaid } = useWatch({
+    control,
+  });
 
   useEffect(() => {
     const subscription = watch((value, { name }) => {
       if (name === "isRepeat") {
-        setValue("frequency", "", {
+        setValue("frequency", null, {
+          shouldDirty: true,
+          shouldValidate: true,
+          shouldTouch: true,
+        });
+        setValue("isPaid", null, {
+          shouldDirty: true,
+          shouldValidate: true,
+          shouldTouch: true,
+        });
+        setValue("creditCardId", "", {
           shouldDirty: true,
           shouldValidate: true,
           shouldTouch: true,
@@ -63,6 +82,13 @@ export function ExpenseForm({ id: expenseId }: ExpenseFormProps) {
           shouldTouch: true,
         });
       }
+      if (name === "isPaid") {
+        setValue("creditCardId", "", {
+          shouldDirty: true,
+          shouldValidate: true,
+          shouldTouch: true,
+        });
+      }
     });
     return () => subscription.unsubscribe();
   }, [useWatch]);
@@ -73,7 +99,6 @@ export function ExpenseForm({ id: expenseId }: ExpenseFormProps) {
     }
     return categories.map((category) => ({
       label: category.name,
-      // value: category.id,
       options: category.subCategories.map((subCategory) => ({
         label: subCategory.name,
         value: subCategory.id,
@@ -81,11 +106,27 @@ export function ExpenseForm({ id: expenseId }: ExpenseFormProps) {
     })) as SelectOption[];
   }, [categories]);
 
-  const handleFocusCategoriesAutoComplite = useCallback(() => {
-    if (!Array.isArray(categories) || !isLoadingCategories) {
+  const creditCardsOptions = useMemo<SelectOption[]>(() => {
+    if (!Array.isArray(creditCards)) {
+      return [];
+    }
+    return creditCards.map((creditCard) => ({
+      label: creditCard?.name,
+      value: creditCard?.id,
+    })) as SelectOption[];
+  }, [creditCards]);
+
+  const handleFocusCategoriesSelect = useCallback(() => {
+    if (!Array.isArray(categories) && !isLoadingCategories) {
       refetchCategories();
     }
-  }, []);
+  }, [categories]);
+
+  const handleFocusCreditCardsSelect = useCallback(() => {
+    if (!Array.isArray(creditCards) && !isLoadingCreditCards) {
+      refetchCreditCards();
+    }
+  }, [creditCards]);
 
   return (
     <Card.Root>
@@ -114,7 +155,7 @@ export function ExpenseForm({ id: expenseId }: ExpenseFormProps) {
             render={({ field, fieldState }) => (
               <MultSelect
                 {...field}
-                onFocus={handleFocusCategoriesAutoComplite}
+                onFocus={handleFocusCategoriesSelect}
                 isLoading={isLoadingCategories}
                 formControlClassName="col-span-6"
                 label="Categories"
@@ -158,18 +199,47 @@ export function ExpenseForm({ id: expenseId }: ExpenseFormProps) {
                 checked={value}
                 onCheckedChange={onChange}
                 formControlClassName="col-span-12"
-                label="Repeat?"
+                label="Repeat"
                 required
               />
             )}
           />
+          {!isRepeat && (
+            <Controller
+              control={control}
+              name="isPaid"
+              render={({
+                field: { onChange, value, ...restField },
+                fieldState,
+              }) => (
+                <Radio.Root
+                  {...restField}
+                  value={isBoolean(value) ? String(value) : undefined}
+                  formControlClassName="col-span-12"
+                  label="Paid"
+                  onValueChange={(newValue) =>
+                    onChange(stringToBoolean(newValue))
+                  }
+                  error={fieldState?.error?.message}
+                  required
+                >
+                  <Radio.Item value="true" label="Yes" />
+                  <Radio.Item value="false" label="No" />
+                </Radio.Root>
+              )}
+            />
+          )}
           {isRepeat && (
             <Controller
               control={control}
               name="frequency"
-              render={({ field: { onChange, ...restField }, fieldState }) => (
+              render={({
+                field: { onChange, value, ...restField },
+                fieldState,
+              }) => (
                 <Radio.Root
                   {...restField}
+                  value={value || undefined}
                   formControlClassName="col-span-12"
                   label="Frequency"
                   onValueChange={onChange}
@@ -222,6 +292,29 @@ export function ExpenseForm({ id: expenseId }: ExpenseFormProps) {
                     label: `${i + 1}x`,
                     value: String(i + 1),
                   }))}
+                  error={fieldState.error?.message}
+                  required
+                />
+              )}
+            />
+          )}
+          {(isRepeat || isPaid === false) && (
+            <Controller
+              control={control}
+              name="creditCardId"
+              render={({
+                field: { value, onChange, ...restField },
+                fieldState,
+              }) => (
+                <Select
+                  {...restField}
+                  isClearable
+                  value={String(value || "")}
+                  formControlClassName="col-span-6"
+                  label="Credit Card"
+                  onChange={(option) => onChange(String(option?.value))}
+                  onFocus={handleFocusCreditCardsSelect}
+                  options={creditCardsOptions}
                   error={fieldState.error?.message}
                   required
                 />

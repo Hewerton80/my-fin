@@ -19,12 +19,16 @@ const baseExpenseSchema = z.object({
   description: z.string().optional(),
   amount: z.number().optional(),
   isRepeat: z.boolean(),
+  isPaid: z.boolean().nullable().optional(),
   frequency: z
     .string()
-    .min(1, VALIDATION_ERROR_MESSAGES.REQUIRED_FIELDS)
+    // .min(1, VALIDATION_ERROR_MESSAGES.REQUIRED_FIELDS)
+    .nullable()
     .optional(),
+
   hasInstallments: z.boolean(),
   numberOfInstallments: z.number().optional(),
+  creditCardId: z.string().optional(),
 });
 export const createExpenseSchema = baseExpenseSchema;
 type InferBaseExpenseFormSchema = z.infer<typeof baseExpenseSchema>;
