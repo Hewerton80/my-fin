@@ -8,6 +8,8 @@ import { parseJsonToSearchParams } from "@/shared/parseJsonToSearchParams";
 import { z } from "zod";
 import { SelectOption } from "@/components/ui/forms/selects";
 import { CONSTANTS } from "@/shared/constants";
+import { REGEX } from "@/shared/regex";
+import { isValid as isValidDate } from "date-fns";
 
 const { VALIDATION_ERROR_MESSAGES } = CONSTANTS;
 
@@ -20,6 +22,7 @@ const baseExpenseSchema = z.object({
   amount: z.number().optional(),
   isRepeat: z.boolean(),
   isPaid: z.boolean().nullable().optional(),
+  paymentType: z.string().nullable().optional(),
   frequency: z
     .string()
     // .min(1, VALIDATION_ERROR_MESSAGES.REQUIRED_FIELDS)
@@ -29,6 +32,27 @@ const baseExpenseSchema = z.object({
   hasInstallments: z.boolean(),
   numberOfInstallments: z.number().optional(),
   creditCardId: z.string().optional(),
+  dueDate: z
+    .string()
+    .refine(
+      (dueDate) =>
+        dueDate
+          ? dueDate.match(REGEX.isoDate) && isValidDate(new Date(dueDate))
+          : true,
+      VALIDATION_ERROR_MESSAGES.INVALID_DATE
+    )
+    .optional(),
+  registrationDate: z
+    .string()
+    .refine(
+      (registrationDate) =>
+        registrationDate
+          ? registrationDate.match(REGEX.isoDate) &&
+            isValidDate(new Date(registrationDate))
+          : true,
+      VALIDATION_ERROR_MESSAGES.INVALID_DATE
+    )
+    .optional(),
 });
 export const createExpenseSchema = baseExpenseSchema;
 type InferBaseExpenseFormSchema = z.infer<typeof baseExpenseSchema>;

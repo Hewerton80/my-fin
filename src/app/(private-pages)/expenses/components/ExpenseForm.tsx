@@ -9,7 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ExpenseFormValues, createExpenseSchema } from "@/hooks/api/useExpense";
 import { CurrencyInput } from "@/components/ui/forms/inputs/CurrencyInput";
 import { Radio } from "@/components/ui/forms/Radio";
-import { Frequency } from "@prisma/client";
+import { Frequency, PaymantType } from "@prisma/client";
 import { capitalizeFisrtLetter } from "@/shared/string";
 import { useGetCategories } from "@/hooks/api/useCategory";
 import { Switch } from "@/components/ui/forms/Switch";
@@ -37,17 +37,34 @@ export function ExpenseForm({ id: expenseId }: ExpenseFormProps) {
       amount: undefined,
       isRepeat: false,
       isPaid: null,
+      paymentType: null,
       frequency: null,
       hasInstallments: false,
       numberOfInstallments: undefined,
       creditCardId: "",
+      dueDate: "",
+      registrationDate: "",
     },
     mode: "onTouched",
     resolver: zodResolver(createExpenseSchema),
   });
-  const { isRepeat, frequency, hasInstallments, isPaid } = useWatch({
-    control,
-  });
+  const { isRepeat, frequency, hasInstallments, isPaid, creditCardId } =
+    useWatch({
+      control,
+    });
+
+  const clearDatesFields = useCallback(() => {
+    setValue("registrationDate", "", {
+      shouldDirty: true,
+      shouldValidate: true,
+      shouldTouch: true,
+    });
+    setValue("dueDate", "", {
+      shouldDirty: true,
+      shouldValidate: true,
+      shouldTouch: true,
+    });
+  }, [setValue]);
 
   useEffect(() => {
     const subscription = watch((value, { name }) => {
@@ -83,15 +100,24 @@ export function ExpenseForm({ id: expenseId }: ExpenseFormProps) {
         });
       }
       if (name === "isPaid") {
+        clearDatesFields();
         setValue("creditCardId", "", {
           shouldDirty: true,
           shouldValidate: true,
           shouldTouch: true,
         });
+        setValue("paymentType", null, {
+          shouldDirty: true,
+          shouldValidate: true,
+          shouldTouch: true,
+        });
+      }
+      if (name === "creditCardId") {
+        clearDatesFields();
       }
     });
     return () => subscription.unsubscribe();
-  }, [useWatch]);
+  }, [useWatch, clearDatesFields, setValue]);
 
   const categoriesOptions = useMemo<SelectOption[]>(() => {
     if (!Array.isArray(categories)) {
@@ -229,6 +255,34 @@ export function ExpenseForm({ id: expenseId }: ExpenseFormProps) {
               )}
             />
           )}
+          {isPaid && (
+            <Controller
+              control={control}
+              name="paymentType"
+              render={({
+                field: { onChange, value, ...restField },
+                fieldState,
+              }) => (
+                <Radio.Root
+                  {...restField}
+                  value={value || undefined}
+                  formControlClassName="col-span-12"
+                  label="Payment type"
+                  onValueChange={onChange}
+                  error={fieldState?.error?.message}
+                  required
+                >
+                  {Object.keys(PaymantType).map((key) => (
+                    <Radio.Item
+                      key={key}
+                      value={key}
+                      label={capitalizeFisrtLetter(key.replace("_", " "))}
+                    />
+                  ))}
+                </Radio.Root>
+              )}
+            />
+          )}
           {isRepeat && (
             <Controller
               control={control}
@@ -312,6 +366,7 @@ export function ExpenseForm({ id: expenseId }: ExpenseFormProps) {
                   value={String(value || "")}
                   formControlClassName="col-span-6"
                   label="Credit Card"
+                  isLoading={isLoadingCreditCards}
                   onChange={(option) => onChange(String(option?.value))}
                   onFocus={handleFocusCreditCardsSelect}
                   options={creditCardsOptions}
@@ -320,6 +375,36 @@ export function ExpenseForm({ id: expenseId }: ExpenseFormProps) {
                 />
               )}
             />
+          )}
+          {!creditCardId && !isPaid && (
+            <>
+              <Controller
+                control={control}
+                name="registrationDate"
+                render={({ field, fieldState }) => (
+                  <Input
+                    {...field}
+                    formControlClassName="col-span-6"
+                    label="Registration date"
+                    type="date"
+                    error={fieldState.error?.message}
+                  />
+                )}
+              />
+              <Controller
+                control={control}
+                name="dueDate"
+                render={({ field, fieldState }) => (
+                  <Input
+                    {...field}
+                    formControlClassName="col-span-6"
+                    label="Due date"
+                    type="date"
+                    error={fieldState.error?.message}
+                  />
+                )}
+              />
+            </>
           )}
         </div>
       </Card.Body>
