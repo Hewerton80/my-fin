@@ -1,6 +1,6 @@
 export const CONSTANTS = {
   VALIDATION_ERROR_MESSAGES: {
-    REQUIRED_FIELDS: "Required fields",
+    REQUIRED_FIELD: "Required field",
     INVALID_FILE: "Must be a valid file",
     INVALID_DATE: "Invalid date",
     INVALID_TIME: "Invalid time",

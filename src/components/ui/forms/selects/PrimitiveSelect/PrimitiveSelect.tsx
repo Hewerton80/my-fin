@@ -104,6 +104,7 @@ export const PrimitiveSelect = forwardRef(
           </FormLabel>
         )}
         <ReactSelect
+          ref={ref}
           menuIsOpen={_menuIsOpen}
           onMenuOpen={() => _setMenuIsOpen(true)}
           onMenuClose={() => _setMenuIsOpen(false)}

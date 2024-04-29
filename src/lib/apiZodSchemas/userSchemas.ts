@@ -5,7 +5,7 @@ import { isValid as isValidDate } from "date-fns";
 import { hashSync } from "bcrypt";
 
 const {
-  REQUIRED_FIELDS,
+  REQUIRED_FIELD,
   INVALID_EMAIL,
   INVALID_DATE,
   PASSWORD_MIN_LENGTH,
@@ -16,30 +16,30 @@ const {
 
 export const createUserSchema = z.object({
   name: z
-    .string({ required_error: REQUIRED_FIELDS })
-    .min(1, REQUIRED_FIELDS)
+    .string({ required_error: REQUIRED_FIELD })
+    .min(1, REQUIRED_FIELD)
     .trim(),
   email: z
-    .string({ required_error: REQUIRED_FIELDS })
-    .min(1, REQUIRED_FIELDS)
+    .string({ required_error: REQUIRED_FIELD })
+    .min(1, REQUIRED_FIELD)
     .email({ message: INVALID_EMAIL })
     .trim(),
   password: z
-    .string({ required_error: REQUIRED_FIELDS })
+    .string({ required_error: REQUIRED_FIELD })
     .min(6, PASSWORD_MIN_LENGTH)
     .transform((password) => hashSync(String(password).trim(), 10)),
   gender: z
-    .string({ required_error: REQUIRED_FIELDS })
+    .string({ required_error: REQUIRED_FIELD })
     .refine(
       (gender) => Gender?.[gender as Gender],
       `${MUST_BE_VALID}: ${Object.keys(Gender).join(" | ")}`
     ),
   dateOfBirth: z
-    .string({ required_error: REQUIRED_FIELDS })
+    .string({ required_error: REQUIRED_FIELD })
     .refine((dateOfBirth) => isValidDate(new Date(dateOfBirth)), INVALID_DATE)
     .transform((dateOfBirth) => new Date(dateOfBirth)),
-  isAdmin: z.boolean({ required_error: REQUIRED_FIELDS }),
-  isTeacher: z.boolean({ required_error: REQUIRED_FIELDS }),
+  isAdmin: z.boolean({ required_error: REQUIRED_FIELD }),
+  isTeacher: z.boolean({ required_error: REQUIRED_FIELD }),
 });
 
 export const updateUserSchema = createUserSchema
@@ -54,14 +54,14 @@ export const updateMeSchema = createUserSchema
       currentPassword: z.string().optional(),
       heightInMt: z
         .number({
-          required_error: REQUIRED_FIELDS,
+          required_error: REQUIRED_FIELD,
           invalid_type_error: MUST_BE_NUMBER,
         })
         .min(0.1, MUST_BE_GREATER_THAN_ZERO)
         .optional(),
       weightInKg: z
         .number({
-          required_error: REQUIRED_FIELDS,
+          required_error: REQUIRED_FIELD,
           invalid_type_error: MUST_BE_NUMBER,
         })
         .min(0.1, MUST_BE_GREATER_THAN_ZERO)
@@ -73,7 +73,7 @@ export const updateMeSchema = createUserSchema
       password && !currentPassword ? false : true,
     {
       path: ["currentPassword"],
-      message: REQUIRED_FIELDS,
+      message: REQUIRED_FIELD,
     }
   )
   .refine(
@@ -81,6 +81,6 @@ export const updateMeSchema = createUserSchema
       !password && currentPassword ? false : true,
     {
       path: ["password"],
-      message: REQUIRED_FIELDS,
+      message: REQUIRED_FIELD,
     }
   );

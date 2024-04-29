@@ -23,11 +23,11 @@ export const INITIAL_GET_USERS_QUERY_PARAMS: IGetStudentsQueryParams = {
 };
 
 const baseUserFormSchema = z.object({
-  name: z.string().min(1, VALIDATION_ERROR_MESSAGES.REQUIRED_FIELDS),
-  email: z.string().min(1, VALIDATION_ERROR_MESSAGES.REQUIRED_FIELDS),
+  name: z.string().min(1, VALIDATION_ERROR_MESSAGES.REQUIRED_FIELD),
+  email: z.string().min(1, VALIDATION_ERROR_MESSAGES.REQUIRED_FIELD),
   dateOfBirth: z
     .string()
-    .min(1, VALIDATION_ERROR_MESSAGES.REQUIRED_FIELDS)
+    .min(1, VALIDATION_ERROR_MESSAGES.REQUIRED_FIELD)
     .refine(
       (dateOfBirth) =>
         dateOfBirth.match(REGEX.isoDate) && isValidDate(new Date(dateOfBirth)),
@@ -74,11 +74,11 @@ const baseUserFormSchema = z.object({
 
 export const createFormSchema = baseUserFormSchema
   .refine(({ password }) => Boolean(String(password)?.trim()), {
-    message: VALIDATION_ERROR_MESSAGES.REQUIRED_FIELDS,
+    message: VALIDATION_ERROR_MESSAGES.REQUIRED_FIELD,
     path: ["password"],
   })
   .refine(({ confirmPassword }) => Boolean(String(confirmPassword)?.trim()), {
-    message: VALIDATION_ERROR_MESSAGES.REQUIRED_FIELDS,
+    message: VALIDATION_ERROR_MESSAGES.REQUIRED_FIELD,
     path: ["confirmPassword"],
   })
   .refine(({ password, confirmPassword }) => password === confirmPassword, {
@@ -104,7 +104,7 @@ export const updateMeFormSchema = baseUserFormSchema
     ({ currentPassword, showEditPassord }) =>
       showEditPassord ? Boolean(String(currentPassword)?.trim()) : true,
     {
-      message: VALIDATION_ERROR_MESSAGES.REQUIRED_FIELDS,
+      message: VALIDATION_ERROR_MESSAGES.REQUIRED_FIELD,
       path: ["currentPassword"],
     }
   )
@@ -112,7 +112,7 @@ export const updateMeFormSchema = baseUserFormSchema
     ({ password, showEditPassord }) =>
       showEditPassord ? Boolean(String(password)?.trim()) : true,
     {
-      message: VALIDATION_ERROR_MESSAGES.REQUIRED_FIELDS,
+      message: VALIDATION_ERROR_MESSAGES.REQUIRED_FIELD,
       path: ["password"],
     }
   )
@@ -120,7 +120,7 @@ export const updateMeFormSchema = baseUserFormSchema
     ({ confirmPassword, showEditPassord }) =>
       showEditPassord ? Boolean(String(confirmPassword)?.trim()) : true,
     {
-      message: VALIDATION_ERROR_MESSAGES.REQUIRED_FIELDS,
+      message: VALIDATION_ERROR_MESSAGES.REQUIRED_FIELD,
       path: ["confirmPassword"],
     }
   )

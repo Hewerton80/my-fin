@@ -26,7 +26,7 @@ export default function RootLayout({
 }) {
   return (
     <ThemeTamplate>
-      <html lang="pt-bt">
+      <html lang="pt-bt" suppressHydrationWarning={true}>
         <body className={poppins.className}>
           <Providers>
             {children}

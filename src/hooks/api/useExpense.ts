@@ -14,7 +14,7 @@ import { isValid as isValidDate } from "date-fns";
 const { VALIDATION_ERROR_MESSAGES } = CONSTANTS;
 
 const baseExpenseSchema = z.object({
-  name: z.string().min(1, VALIDATION_ERROR_MESSAGES.REQUIRED_FIELDS),
+  name: z.string().min(1, VALIDATION_ERROR_MESSAGES.REQUIRED_FIELD),
   categoriesOptions: z
     .array(z.object({ label: z.string(), value: z.string() }))
     .optional(),
@@ -25,7 +25,7 @@ const baseExpenseSchema = z.object({
   paymentType: z.string().nullable().optional(),
   frequency: z
     .string()
-    // .min(1, VALIDATION_ERROR_MESSAGES.REQUIRED_FIELDS)
+    // .min(1, VALIDATION_ERROR_MESSAGES.REQUIRED_FIELD)
     .nullable()
     .optional(),
 

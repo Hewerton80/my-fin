@@ -1,30 +1,30 @@
 import { z } from "zod";
 import { CONSTANTS } from "@/shared/constants";
 
-const { REQUIRED_FIELDS, MUST_BE_NUMBER, MUST_BE_POSITIVE, MUST_BE_ARRAY } =
+const { REQUIRED_FIELD, MUST_BE_NUMBER, MUST_BE_POSITIVE, MUST_BE_ARRAY } =
   CONSTANTS.VALIDATION_ERROR_MESSAGES;
 
 export const trainingSchema = z.object({
   exercises: z
     .array(
       z.object({
-        exerciseId: z.string().min(1, REQUIRED_FIELDS).trim(),
+        exerciseId: z.string().min(1, REQUIRED_FIELD).trim(),
         order: z
           .number({
-            required_error: REQUIRED_FIELDS,
+            required_error: REQUIRED_FIELD,
             invalid_type_error: MUST_BE_NUMBER,
           })
           .min(1, MUST_BE_POSITIVE),
         intervalInSeconds: z
           .number({
-            required_error: REQUIRED_FIELDS,
+            required_error: REQUIRED_FIELD,
             invalid_type_error: MUST_BE_NUMBER,
           })
           .min(1, MUST_BE_POSITIVE),
       }),
-      { required_error: REQUIRED_FIELDS, invalid_type_error: MUST_BE_ARRAY }
+      { required_error: REQUIRED_FIELD, invalid_type_error: MUST_BE_ARRAY }
     )
-    .min(1, REQUIRED_FIELDS)
+    .min(1, REQUIRED_FIELD)
     .refine(
       (exercises: any[]) => {
         const exercisesIds = exercises.map((exercise) => exercise.exerciseId);
