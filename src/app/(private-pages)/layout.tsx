@@ -1,7 +1,7 @@
 "use client";
 import { PrivatePagesTamplate } from "@/components/templates/PrivatePagesTamplate";
 import { ReactNode, useEffect } from "react";
-import { useAuth } from "@/hooks/api/useAuth";
+import { useAuth } from "@/hooks/auth/useAuth";
 import { SplashScreen } from "@/components/ui/feedback/SplashScreen";
 import { useGetMe } from "@/hooks/api/useUser";
 import { useAlertModal } from "@/hooks/utils/useAlertModal";

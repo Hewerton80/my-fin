@@ -5,62 +5,6 @@ import { useQuery } from "@tanstack/react-query";
 import { ExpernseWithComputedFields } from "@/types/Expense";
 import { IPaginatedDocs } from "@/lib/prismaHelpers";
 import { parseJsonToSearchParams } from "@/shared/parseJsonToSearchParams";
-import { z } from "zod";
-import { SelectOption } from "@/components/ui/forms/selects";
-import { CONSTANTS } from "@/shared/constants";
-import { REGEX } from "@/shared/regex";
-import { isValid as isValidDate } from "date-fns";
-
-const { VALIDATION_ERROR_MESSAGES } = CONSTANTS;
-
-const baseExpenseSchema = z.object({
-  name: z.string().min(1, VALIDATION_ERROR_MESSAGES.REQUIRED_FIELD),
-  categoriesOptions: z
-    .array(z.object({ label: z.string(), value: z.string() }))
-    .optional(),
-  description: z.string().optional(),
-  amount: z.number().optional(),
-  isRepeat: z.boolean(),
-  isPaid: z.boolean().nullable().optional(),
-  paymentType: z.string().nullable().optional(),
-  frequency: z
-    .string()
-    // .min(1, VALIDATION_ERROR_MESSAGES.REQUIRED_FIELD)
-    .nullable()
-    .optional(),
-
-  hasInstallments: z.boolean(),
-  numberOfInstallments: z.number().optional(),
-  creditCardId: z.string().optional(),
-  dueDate: z
-    .string()
-    .refine(
-      (dueDate) =>
-        dueDate
-          ? dueDate.match(REGEX.isoDate) && isValidDate(new Date(dueDate))
-          : true,
-      VALIDATION_ERROR_MESSAGES.INVALID_DATE
-    )
-    .optional(),
-  registrationDate: z
-    .string()
-    .refine(
-      (registrationDate) =>
-        registrationDate
-          ? registrationDate.match(REGEX.isoDate) &&
-            isValidDate(new Date(registrationDate))
-          : true,
-      VALIDATION_ERROR_MESSAGES.INVALID_DATE
-    )
-    .optional(),
-});
-export const createExpenseSchema = baseExpenseSchema;
-type InferBaseExpenseFormSchema = z.infer<typeof baseExpenseSchema>;
-type InferCreateExpenseFormSchema = z.infer<typeof createExpenseSchema>;
-export type ExpenseFormValues = InferBaseExpenseFormSchema &
-  InferCreateExpenseFormSchema & {
-    categoriesOptions: SelectOption[];
-  };
 
 export function useGetExpenses() {
   const { apiBase } = useAxios();
@@ -110,6 +54,28 @@ export function useGetExpenses() {
     enabled: false,
     retry: 1,
   });
+
+  const parsedExpenses = useMemo<
+    IPaginatedDocs<ExpernseWithComputedFields> | undefined
+  >(() => {
+    if (!expenses) return undefined;
+    const parsedExpenses: IPaginatedDocs<ExpernseWithComputedFields> = {
+      ...expenses,
+    };
+    parsedExpenses.docs = [...parsedExpenses.docs].map((expense) => {
+      const subCategoriesIcons = expense?.subCategories
+        ?.map((subCategory) => subCategory.iconName)
+        ?.join("");
+      const handledNane = subCategoriesIcons
+        ? `${subCategoriesIcons} ${expense.name}`
+        : expense.name;
+      return {
+        ...expense,
+        name: handledNane,
+      };
+    });
+    return parsedExpenses;
+  }, [expenses]);
 
   const isLoadingExpenses = useMemo(
     () => isFetching || isSearching,
@@ -162,7 +128,7 @@ export function useGetExpenses() {
   );
 
   return {
-    expenses,
+    expenses: parsedExpenses,
     isLoadingExpenses,
     expensesError,
     // expensesQueryParams,

@@ -2,6 +2,7 @@ import { ReactNode, ComponentPropsWithRef, forwardRef } from "react";
 import * as RadioGroup from "@radix-ui/react-radio-group";
 import { twMerge } from "tailwind-merge";
 import { FormLabel } from "../FormLabel";
+import { FormHelperText } from "../FormHelperText";
 
 interface RadioRootProps extends ComponentPropsWithRef<typeof RadioGroup.Root> {
   children: ReactNode;
@@ -31,24 +32,20 @@ const Root = forwardRef(
     ref?: any
   ) => {
     return (
-      <div
-        className={twMerge(
-          "flex flex-col w-full",
-
-          formControlClassName
-        )}
-      >
+      <div className={twMerge("flex flex-col w-full", formControlClassName)}>
         {label && <FormLabel required={required}>{label}</FormLabel>}
         <RadioGroup.Root
           ref={ref}
           className={twMerge(
             "flex gap-2",
-            orientation === "vertical" && "flex-col"
+            orientation === "vertical" && "flex-col",
+            error && "[&_button]:border-danger"
           )}
           {...restProps}
         >
           {children}
         </RadioGroup.Root>
+        {error && <FormHelperText>{error}</FormHelperText>}
       </div>
     );
   }

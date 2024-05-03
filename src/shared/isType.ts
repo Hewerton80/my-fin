@@ -13,3 +13,7 @@ export const isNumber = (value: any) => {
 export const isBoolean = (value: any) => {
   return typeof value === "boolean";
 };
+
+export const isNull = (value: any) => {
+  return value === null;
+};

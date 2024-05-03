@@ -1,5 +1,5 @@
 "use client";
-import { useAuth } from "@/hooks/api/useAuth";
+import { useAuth } from "@/hooks/auth/useAuth";
 import { navItems } from "@/shared/navItems";
 import Image from "next/image";
 import Link from "next/link";

@@ -1,34 +1,18 @@
 "use client";
 import { Button } from "@/components/ui/buttons/Button";
-import { IconButton } from "@/components/ui/buttons/IconButton";
 import { Card } from "@/components/ui/cards/Card";
 import {
   DataTable,
   IColmunDataTable,
-  IRowDataTable,
 } from "@/components/ui/dataDisplay/DataTable";
-import { useGetUsers } from "@/hooks/api/useUser";
-import {
-  UserRole,
-  UserRolesNamesType,
-  UserWithComputedFields,
-} from "@/types/User";
 import { isNumber, isUndefined } from "@/shared/isType";
 import Link from "next/link";
 import { useMemo } from "react";
-import { MdEdit } from "react-icons/md";
-import { orderByUserOptions, usersRolesOptions } from "@/shared/pickerOptions";
-import { Picker } from "@/components/ui/forms/selects/Picker";
-import { Input } from "@/components/ui/forms/inputs/Input";
-import { HorizontalScrollView } from "@/components/ui/navigation/HorizontalScrollView";
 import { ExpernseWithComputedFields } from "@/types/Expense";
-import { useGetExpenses } from "@/hooks/api/useExpense";
+import { useGetExpenses } from "@/hooks/expense/useGetExpenses";
 import { getCurrencyFormat } from "@/shared/getCurrencyFormat";
 import { format } from "date-fns/format";
 import { getExpenseBadge } from "@/shared/statusExpenseBadge";
-import { Badge } from "@/components/ui/dataDisplay/Badge";
-
-type UsersPageProps = keyof UserWithComputedFields;
 
 export default function UsersPage() {
   // const {
@@ -53,12 +37,7 @@ export default function UsersPage() {
       {
         label: "Nome",
         field: "name",
-        onParse: (expernse) => (
-          <>
-            {expernse?.iconName ? `${expernse?.iconName} ` : ""}
-            {expernse?.name}
-          </>
-        ),
+        onParse: (expernse) => <>{expernse?.name}</>,
       },
       {
         label: "Amount",
@@ -168,12 +147,6 @@ export default function UsersPage() {
             onChangePage: goToPage,
           }}
         />
-        <Badge variant="primary">Teste</Badge>
-        <Badge variant="info">Teste</Badge>
-        <Badge variant="danger">Teste</Badge>
-        <Badge variant="success">Teste</Badge>
-        <Badge variant="warning">Teste</Badge>
-        <Badge variant="dark">Teste</Badge>
       </Card.Body>
     </Card.Root>
   );

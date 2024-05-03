@@ -23,14 +23,6 @@ export async function GET(request: NextRequest) {
   //   }
   const { searchParams } = new URL(request.url);
   const { currentPage, perPage } = parseExpenseSearchParams(searchParams);
-  const expenses = await prisma.expense.findMany({
-    include: {
-      subCategories: { select: { id: true, name: true } },
-      creditCard: { select: { id: true, name: true } },
-    },
-
-    // include: {  },
-  });
   const paginedExpenses = await prismaPagination<
     ExpernseWithComputedFields,
     Prisma.ExpenseWhereInput,
@@ -40,7 +32,7 @@ export async function GET(request: NextRequest) {
     model: prisma.expense,
     paginationArgs: { currentPage, perPage },
     include: {
-      subCategories: { select: { id: true, name: true } },
+      subCategories: { select: { id: true, name: true, iconName: true } },
       creditCard: { select: { id: true, name: true } },
     },
     // orderBy,

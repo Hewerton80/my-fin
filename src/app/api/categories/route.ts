@@ -11,7 +11,9 @@ export async function GET(request: NextRequest) {
   //     );
   //   }
   const categories = await prisma.category.findMany({
-    include: { subCategories: { select: { id: true, name: true } } },
+    include: {
+      subCategories: { select: { id: true, name: true, iconName: true } },
+    },
   });
   return NextResponse.json(categories, { status: 200 });
 }

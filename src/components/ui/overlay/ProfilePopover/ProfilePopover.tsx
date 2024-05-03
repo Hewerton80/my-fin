@@ -3,7 +3,7 @@ import * as Menubar from "@radix-ui/react-menubar";
 import { Avatar } from "@/components/ui/dataDisplay/Avatar";
 import { twMerge } from "tailwind-merge";
 import Link from "next/link";
-import { useAuth } from "@/hooks/api/useAuth";
+import { useAuth } from "@/hooks/auth/useAuth";
 import { FiLogOut, FiUser } from "react-icons/fi";
 import assets from "../../../../../assets.json";
 import slideAndFadeANimation from "@/components/sharedStyles/slideAndFade.module.css";

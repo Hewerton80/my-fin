@@ -4,7 +4,7 @@ import { twMerge } from "tailwind-merge";
 import styled from "./side.module.css";
 import { Input } from "@/components/ui/forms/inputs/Input";
 import { Button } from "@/components/ui/buttons/Button";
-import { useAuth, loginFormSchema } from "@/hooks/api/useAuth";
+import { useAuth, loginFormSchema } from "@/hooks/auth/useAuth";
 import { useCallback, useEffect } from "react";
 
 import { useForm, Controller } from "react-hook-form";
