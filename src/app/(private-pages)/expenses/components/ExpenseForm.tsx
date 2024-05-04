@@ -41,17 +41,6 @@ export function ExpenseForm({ id: expenseId }: ExpenseFormProps) {
 
   const isEditExpense = useMemo(() => Boolean(expenseId), [expenseId]);
 
-  const { isRepeat, isPaid, creditCardId, paymentType } = useWatch({
-    control: expenseFormControl,
-    exact: true,
-  });
-
-  const showCreditCardField = useMemo(() => {
-    return (
-      isRepeat || isPaid === false || paymentType === PaymantType.CREDIT_CARD
-    );
-  }, [isRepeat, isPaid, paymentType]);
-
   const categoriesOptions = useMemo<SelectOption[]>(() => {
     if (!Array.isArray(categories)) {
       return [];
@@ -152,46 +141,29 @@ export function ExpenseForm({ id: expenseId }: ExpenseFormProps) {
                 />
               )}
             />
-
             <Controller
               control={expenseFormControl}
-              name="isRepeat"
-              render={({ field: { value, onChange, ...restFields } }) => (
-                <Switch
-                  {...restFields}
-                  checked={value}
-                  onCheckedChange={onChange}
+              name="isPaid"
+              render={({
+                field: { onChange, value, ...restField },
+                fieldState,
+              }) => (
+                <Radio.Root
+                  {...restField}
+                  value={isBoolean(value) ? String(value) : undefined}
                   formControlClassName="col-span-12"
-                  label="Repeat"
+                  label="Paid"
+                  onValueChange={(newValue) =>
+                    onChange(stringToBoolean(newValue))
+                  }
+                  error={fieldState?.error?.message}
                   required
-                />
+                >
+                  <Radio.Item value="true" label="Yes" />
+                  <Radio.Item value="false" label="No" />
+                </Radio.Root>
               )}
             />
-            {!isRepeat && (
-              <Controller
-                control={expenseFormControl}
-                name="isPaid"
-                render={({
-                  field: { onChange, value, ...restField },
-                  fieldState,
-                }) => (
-                  <Radio.Root
-                    {...restField}
-                    value={isBoolean(value) ? String(value) : undefined}
-                    formControlClassName="col-span-12"
-                    label="Paid"
-                    onValueChange={(newValue) =>
-                      onChange(stringToBoolean(newValue))
-                    }
-                    error={fieldState?.error?.message}
-                    required
-                  >
-                    <Radio.Item value="true" label="Yes" />
-                    <Radio.Item value="false" label="No" />
-                  </Radio.Root>
-                )}
-              />
-            )}
             {watchExpense("isPaid") && (
               <Controller
                 control={expenseFormControl}
@@ -213,34 +185,6 @@ export function ExpenseForm({ id: expenseId }: ExpenseFormProps) {
                       <Radio.Item
                         key={key}
                         value={key}
-                        label={capitalizeFisrtLetter(key.replace("_", " "))}
-                      />
-                    ))}
-                  </Radio.Root>
-                )}
-              />
-            )}
-            {isRepeat && (
-              <Controller
-                control={expenseFormControl}
-                name="frequency"
-                render={({
-                  field: { onChange, value, ...restField },
-                  fieldState,
-                }) => (
-                  <Radio.Root
-                    {...restField}
-                    value={value || undefined}
-                    formControlClassName="col-span-12"
-                    label="Frequency"
-                    onValueChange={onChange}
-                    error={fieldState?.error?.message}
-                    required
-                  >
-                    {Object.keys(Frequency).map((key) => (
-                      <Radio.Item
-                        key={key}
-                        value={key}
                         label={capitalizeFisrtLetter(key)}
                       />
                     ))}
@@ -248,52 +192,66 @@ export function ExpenseForm({ id: expenseId }: ExpenseFormProps) {
                 )}
               />
             )}
-            {watchExpense("frequency") && (
-              <Controller
-                control={expenseFormControl}
-                name="hasInstallments"
-                render={({ field: { value, onChange, ...restFields } }) => {
-                  console.log("hasInstallments value", value);
-                  return (
-                    <Switch
-                      {...restFields}
-                      checked={value}
-                      onCheckedChange={onChange}
+            {watchExpense("isPaid") === false && (
+              <>
+                <Controller
+                  control={expenseFormControl}
+                  name="frequency"
+                  render={({
+                    field: { onChange, value, ...restField },
+                    fieldState,
+                  }) => (
+                    <Radio.Root
+                      {...restField}
+                      value={value || undefined}
                       formControlClassName="col-span-12"
-                      label="Are there installments?"
+                      label="Frequency"
+                      onValueChange={onChange}
+                      error={fieldState?.error?.message}
                       required
+                    >
+                      {Object.keys(Frequency).map((key) => (
+                        <Radio.Item
+                          key={key}
+                          value={key}
+                          label={capitalizeFisrtLetter(key)}
+                        />
+                      ))}
+                    </Radio.Root>
+                  )}
+                />
+              </>
+            )}
+            {[Frequency.DAILY, Frequency.MONTHLY, Frequency.YEARLY].includes(
+              watchExpense("frequency") as any
+            ) && (
+              <>
+                <Controller
+                  control={expenseFormControl}
+                  name="numberOfInstallments"
+                  render={({
+                    field: { value, onChange, ...restField },
+                    fieldState,
+                  }) => (
+                    <Select
+                      {...restField}
+                      isClearable
+                      value={String(value || "")}
+                      formControlClassName="col-span-12 sm:col-span-6"
+                      label="Number of installments"
+                      onChange={(option) => onChange(Number(option?.value))}
+                      options={getRange(12).map((i) => ({
+                        label: `${i + 1}x`,
+                        value: String(i + 1),
+                      }))}
+                      error={fieldState.error?.message}
                     />
-                  );
-                }}
-              />
+                  )}
+                />
+              </>
             )}
-            {/* {console.log("hasInstallments", watchExpense('hasInstallments')} */}
-            {watchExpense("hasInstallments") && (
-              <Controller
-                control={expenseFormControl}
-                name="numberOfInstallments"
-                render={({
-                  field: { value, onChange, ...restField },
-                  fieldState,
-                }) => (
-                  <Select
-                    {...restField}
-                    isClearable
-                    value={String(value || "")}
-                    formControlClassName="col-span-12 sm:col-span-6"
-                    label="Number of installments"
-                    onChange={(option) => onChange(Number(option?.value))}
-                    options={getRange(12).map((i) => ({
-                      label: `${i + 1}x`,
-                      value: String(i + 1),
-                    }))}
-                    error={fieldState.error?.message}
-                    required
-                  />
-                )}
-              />
-            )}
-            {showCreditCardField && (
+            {(watchExpense("isPaid") === false ||
+              watchExpense("paymentType") === PaymantType.CREDIT_CARD) && (
               <Controller
                 control={expenseFormControl}
                 name="creditCardId"
@@ -319,40 +277,41 @@ export function ExpenseForm({ id: expenseId }: ExpenseFormProps) {
                 )}
               />
             )}
-            {!creditCardId && !isPaid && (
-              <>
-                <Controller
-                  control={expenseFormControl}
-                  name="registrationDate"
-                  render={({ field, fieldState }) => {
-                    return (
+            {!watchExpense("creditCardId") &&
+              watchExpense("isPaid") === false && (
+                <>
+                  <Controller
+                    control={expenseFormControl}
+                    name="registrationDate"
+                    render={({ field, fieldState }) => {
+                      return (
+                        <Input
+                          {...field}
+                          formControlClassName="col-span-12 sm:col-span-6"
+                          label="Registration date"
+                          required
+                          type="date"
+                          error={fieldState.error?.message}
+                        />
+                      );
+                    }}
+                  />
+                  <Controller
+                    control={expenseFormControl}
+                    name="dueDate"
+                    render={({ field, fieldState }) => (
                       <Input
                         {...field}
                         formControlClassName="col-span-12 sm:col-span-6"
-                        label="Registration date"
+                        label="Due date"
                         required
                         type="date"
                         error={fieldState.error?.message}
                       />
-                    );
-                  }}
-                />
-                <Controller
-                  control={expenseFormControl}
-                  name="dueDate"
-                  render={({ field, fieldState }) => (
-                    <Input
-                      {...field}
-                      formControlClassName="col-span-12 sm:col-span-6"
-                      label="Due date"
-                      required
-                      type="date"
-                      error={fieldState.error?.message}
-                    />
-                  )}
-                />
-              </>
-            )}
+                    )}
+                  />
+                </>
+              )}
           </div>
           <div className="flex mt-auto w-full">
             <Button

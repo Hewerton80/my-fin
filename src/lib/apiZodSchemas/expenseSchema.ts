@@ -1,0 +1,77 @@
+import { CONSTANTS } from "@/shared/constants";
+import { z } from "zod";
+import { isValid as isValidDate } from "date-fns";
+import { REGEX } from "@/shared/regex";
+import { PaymantType } from "@prisma/client";
+
+const {
+  REQUIRED_FIELD,
+  INVALID_DATE,
+  MUST_BE_VALID,
+  MUST_BE_NUMBER,
+  MUST_BE_GREATER_THAN_ZERO,
+} = CONSTANTS.VALIDATION_ERROR_MESSAGES;
+
+export const createExpenseSchema = z
+  .object({
+    name: z
+      .string({ required_error: REQUIRED_FIELD })
+      .min(1, REQUIRED_FIELD)
+      .trim(),
+    subCategories: z
+      .array(z.string({ required_error: REQUIRED_FIELD }))
+      .optional(),
+    description: z.string({ required_error: REQUIRED_FIELD }).trim().optional(),
+    amount: z
+      .number({
+        required_error: REQUIRED_FIELD,
+        invalid_type_error: MUST_BE_NUMBER,
+      })
+      .optional(),
+    isPaid: z.boolean().nullable().optional(),
+    paymentType: z.string({ required_error: REQUIRED_FIELD }).optional(),
+    frequency: z.string({ required_error: REQUIRED_FIELD }).optional(),
+    numberOfInstallments: z
+      .number({
+        invalid_type_error: MUST_BE_NUMBER,
+      })
+      .optional(),
+    creditCardId: z.string({ required_error: REQUIRED_FIELD }).optional(),
+    dueDate: z
+      .string()
+      .refine(
+        (dueDate) => (dueDate ? isValidDate(new Date(dueDate)) : true),
+        INVALID_DATE
+      )
+      .transform((dueDate) => new Date(dueDate))
+      .optional(),
+    registrationDate: z
+      .string()
+      .refine(
+        (registrationDate) =>
+          registrationDate ? isValidDate(new Date(registrationDate)) : true,
+        INVALID_DATE
+      )
+      .transform((registrationDate) => new Date(registrationDate))
+      .optional(),
+  })
+  .refine(
+    ({ paymentType, isPaid }) =>
+      isPaid ? PaymantType?.[paymentType as keyof typeof PaymantType] : true,
+    { message: "Invalid payment type", path: ["paymentType"] }
+  )
+  .refine(
+    ({ paymentType, creditCardId }) =>
+      paymentType === PaymantType.CREDIT_CARD ? creditCardId : true,
+    { message: REQUIRED_FIELD, path: ["creditCardId"] }
+  )
+  .refine(
+    ({ creditCardId, isPaid, registrationDate }) =>
+      creditCardId || isPaid ? true : registrationDate,
+    { message: REQUIRED_FIELD, path: ["registrationDate"] }
+  )
+  .refine(
+    ({ creditCardId, isPaid, dueDate }) =>
+      creditCardId || isPaid ? true : dueDate,
+    { message: REQUIRED_FIELD, path: ["dueDate"] }
+  );

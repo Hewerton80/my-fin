@@ -1,3 +1,6 @@
 export const capitalizeFisrtLetter = (str: string) => {
-  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+  // remove all underscores and replace with space
+  return (
+    str.charAt(0).toUpperCase() + str.slice(1).toLowerCase().replace(/_/g, " ")
+  );
 };

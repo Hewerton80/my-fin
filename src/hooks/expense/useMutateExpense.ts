@@ -22,16 +22,19 @@ const baseExpenseSchema = z
       .optional(),
     description: z.string().optional(),
     amount: z.number().optional().nullable(),
-    isRepeat: z.boolean(),
-    isPaid: z.boolean().nullable().optional(),
+    isPaid: z
+      .boolean()
+      .nullable()
+      .refine(
+        (isPaid) => isBoolean(isPaid),
+        VALIDATION_ERROR_MESSAGES.REQUIRED_FIELD
+      ),
     paymentType: z.string().nullable().optional(),
     frequency: z
       .string()
       // .min(1, VALIDATION_ERROR_MESSAGES.REQUIRED_FIELD)
       .nullable()
       .optional(),
-
-    hasInstallments: z.boolean(),
     numberOfInstallments: z.number().optional().nullable(),
     creditCardId: z.string().optional(),
     dueDate: z
@@ -56,11 +59,7 @@ const baseExpenseSchema = z
       )
       .optional(),
   })
-  .refine(({ isRepeat, isPaid }) => (isRepeat ? true : isBoolean(isPaid)), {
-    message: VALIDATION_ERROR_MESSAGES.REQUIRED_FIELD,
-    path: ["isPaid"],
-  })
-  .refine(({ isRepeat, frequency }) => (isRepeat ? frequency : true), {
+  .refine(({ isPaid, frequency }) => (isPaid ? true : frequency), {
     message: VALIDATION_ERROR_MESSAGES.REQUIRED_FIELD,
     path: ["frequency"],
   })
@@ -69,11 +68,11 @@ const baseExpenseSchema = z
     path: ["paymentType"],
   })
   .refine(
-    ({ hasInstallments, numberOfInstallments }) =>
-      hasInstallments ? numberOfInstallments : true,
+    ({ paymentType, creditCardId }) =>
+      paymentType === PaymantType.CREDIT_CARD ? creditCardId : true,
     {
       message: VALIDATION_ERROR_MESSAGES.REQUIRED_FIELD,
-      path: ["numberOfInstallments"],
+      path: ["creditCardId"],
     }
   )
   .refine(
@@ -90,14 +89,6 @@ const baseExpenseSchema = z
     {
       message: VALIDATION_ERROR_MESSAGES.REQUIRED_FIELD,
       path: ["dueDate"],
-    }
-  )
-  .refine(
-    ({ paymentType, creditCardId }) =>
-      paymentType === PaymantType.CREDIT_CARD ? creditCardId : true,
-    {
-      message: VALIDATION_ERROR_MESSAGES.REQUIRED_FIELD,
-      path: ["creditCardId"],
     }
   );
 export const createExpenseSchema = baseExpenseSchema;
@@ -126,11 +117,9 @@ export function useMutateExpense(expenseId?: string) {
       categoriesOptions: [],
       description: "",
       amount: null,
-      isRepeat: false,
       isPaid: null,
       paymentType: null,
       frequency: null,
-      hasInstallments: false,
       numberOfInstallments: null,
       creditCardId: "",
       dueDate: "",
@@ -174,35 +163,22 @@ export function useMutateExpense(expenseId?: string) {
 
   useEffect(() => {
     const subscription = watchExpense((value, { name }) => {
-      if (name === "isRepeat") {
+      if (name === "isPaid") {
+        setExpenseValue("paymentType", null, setValueOptions);
         setExpenseValue("frequency", null, setValueOptions);
-        setExpenseValue("isPaid", null, setValueOptions);
-        clearExpenseErrors(["frequency", "isPaid"]);
+        clearDatesFields();
         clearCreditCardField();
-      }
-      if (name === "frequency") {
-        setExpenseValue(
-          "hasInstallments",
-          value.frequency ? true : false,
-          setValueOptions
-        );
-        clearExpenseErrors(["hasInstallments"]);
+        clearExpenseErrors(["frequency", "paymentType"]);
       }
       if (name === "paymentType") {
         clearCreditCardField();
       }
-      if (name === "hasInstallments") {
-        setExpenseValue("numberOfInstallments", null, setValueOptions);
-        clearExpenseErrors(["numberOfInstallments"]);
-      }
-      if (name === "isPaid") {
-        clearDatesFields();
-        clearCreditCardField();
-        setExpenseValue("paymentType", null, setValueOptions);
-        clearExpenseErrors(["paymentType"]);
-      }
       if (name === "creditCardId") {
         clearDatesFields();
+      }
+      if (name === "frequency") {
+        setExpenseValue("numberOfInstallments", null, setValueOptions);
+        clearExpenseErrors(["numberOfInstallments"]);
       }
     });
     return () => subscription.unsubscribe();

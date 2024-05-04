@@ -18,6 +18,7 @@ enum PaymantType {
 }
 
 enum Frequency {
+    DO_NOT_REPEAT
     DAILY
     MONTHLY
     YEARLY
