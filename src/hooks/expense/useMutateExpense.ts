@@ -35,7 +35,7 @@ const baseExpenseSchema = z
       // .min(1, VALIDATION_ERROR_MESSAGES.REQUIRED_FIELD)
       .nullable()
       .optional(),
-    numberOfInstallments: z.number().optional().nullable(),
+    totalInstallments: z.number().optional().nullable(),
     creditCardId: z.string().optional(),
     dueDate: z
       .string()
@@ -120,7 +120,7 @@ export function useMutateExpense(expenseId?: string) {
       isPaid: null,
       paymentType: null,
       frequency: null,
-      numberOfInstallments: null,
+      totalInstallments: null,
       creditCardId: "",
       dueDate: "",
       registrationDate: "",
@@ -177,8 +177,8 @@ export function useMutateExpense(expenseId?: string) {
         clearDatesFields();
       }
       if (name === "frequency") {
-        setExpenseValue("numberOfInstallments", null, setValueOptions);
-        clearExpenseErrors(["numberOfInstallments"]);
+        setExpenseValue("totalInstallments", null, setValueOptions);
+        clearExpenseErrors(["totalInstallments"]);
       }
     });
     return () => subscription.unsubscribe();

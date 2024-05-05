@@ -4,19 +4,18 @@ import { Input } from "@/components/ui/forms/inputs/Input";
 import { MultSelect, SelectOption } from "@/components/ui/forms/selects";
 import { Textarea } from "@/components/ui/forms/Textarea/Textarea";
 import { useCallback, useMemo } from "react";
-import { Controller, useWatch } from "react-hook-form";
+import { Controller } from "react-hook-form";
 import { useMutateExpense } from "@/hooks/expense/useMutateExpense";
 import { CurrencyInput } from "@/components/ui/forms/inputs/CurrencyInput";
 import { Radio } from "@/components/ui/forms/Radio";
 import { Frequency, PaymantType } from "@prisma/client";
 import { capitalizeFisrtLetter } from "@/shared/string";
 import { useGetCategories } from "@/hooks/category/useCategory";
-import { Switch } from "@/components/ui/forms/Switch";
 import { Select } from "@/components/ui/forms/selects/Select";
 import { getRange } from "@/shared/getRange";
 import { stringToBoolean } from "@/shared/stringToBoolean";
 import { isBoolean, isNull } from "@/shared/isType";
-import { useGetCreditCards } from "@/hooks/api/useCreditCard";
+import { useGetCreditCards } from "@/hooks/creditCard/useGetCreditCards";
 import { Button } from "@/components/ui/buttons/Button";
 interface ExpenseFormProps {
   id?: string;
@@ -228,7 +227,7 @@ export function ExpenseForm({ id: expenseId }: ExpenseFormProps) {
               <>
                 <Controller
                   control={expenseFormControl}
-                  name="numberOfInstallments"
+                  name="totalInstallments"
                   render={({
                     field: { value, onChange, ...restField },
                     fieldState,
