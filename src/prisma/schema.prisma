@@ -59,15 +59,15 @@ model Expense {
 }
 
 model CreditCard {
-    id              String    @id @default(cuid())
-    iconName        String?
-    name            String
-    dueDay          Int
-    registrationDay Int
-    createdAt       DateTime  @default(now())
-    userId          String
-    user            User      @relation(fields: [userId], references: [id])
-    expenses        Expense[]
+    id                String    @id @default(cuid())
+    iconName          String?
+    name              String
+    dueDay            Int
+    invoiceClosingDay Int
+    createdAt         DateTime  @default(now())
+    userId            String
+    user              User      @relation(fields: [userId], references: [id])
+    expenses          Expense[]
 }
 
 model Category {

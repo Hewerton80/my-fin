@@ -33,7 +33,12 @@ const baseExpenseSchema = z.object({
   totalInstallments: z
     .number({ invalid_type_error: MUST_BE_NUMBER })
     .optional(),
-  creditCardId: z.string({ required_error: REQUIRED_FIELD }).optional(),
+  creditCard: z
+    .object(
+      { id: z.string(), dueDay: z.number(), invoiceClosingDay: z.number() },
+      { required_error: REQUIRED_FIELD }
+    )
+    .optional(),
   dueDate: z
     .string()
     .refine(
@@ -43,7 +48,8 @@ const baseExpenseSchema = z.object({
     .transform((dueDate) => new Date(dueDate))
     .optional(),
   registrationDate: z
-    .string()
+    .string({ required_error: REQUIRED_FIELD })
+    .min(1, REQUIRED_FIELD)
     .refine(
       (registrationDate) =>
         registrationDate ? isValidDate(new Date(registrationDate)) : true,
@@ -68,17 +74,21 @@ export const createExpenseSchema = baseExpenseSchema
     path: ["frequency"],
   })
   .refine(
-    ({ paymentType, creditCardId }) =>
-      paymentType === PaymantType.CREDIT_CARD ? creditCardId : true,
-    { message: REQUIRED_FIELD, path: ["creditCardId"] }
+    ({ paymentType, creditCard, isPaid }) =>
+      isPaid && paymentType === PaymantType.CREDIT_CARD
+        ? creditCard?.id && creditCard?.dueDay && creditCard?.invoiceClosingDay
+        : true,
+    { message: REQUIRED_FIELD, path: ["creditCard"] }
   )
   .refine(
-    ({ creditCardId, isPaid, registrationDate }) =>
-      creditCardId || isPaid ? true : registrationDate,
-    { message: REQUIRED_FIELD, path: ["registrationDate"] }
+    ({ paymentType, creditCard, isPaid }) =>
+      isPaid && paymentType !== PaymantType.CREDIT_CARD && creditCard?.id
+        ? false
+        : true,
+    { message: "Do not required", path: ["creditCard"] }
   )
   .refine(
-    ({ creditCardId, isPaid, dueDate }) =>
-      creditCardId || isPaid ? true : dueDate,
+    ({ creditCard, isPaid, dueDate }) =>
+      creditCard?.id || isPaid ? true : dueDate,
     { message: REQUIRED_FIELD, path: ["dueDate"] }
   );

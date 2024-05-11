@@ -11,9 +11,11 @@ import {
   ExpernseWithComputedFields,
   getExpensesWitchComputedFields,
 } from "@/types/Expense";
+import { endOfDay } from "date-fns/endOfDay";
 import { Frequency, PaymantType, Prisma } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
+
 const { USER_HAS_NO_PERMISSION, INTERNAL_SERVER_ERROR, VALIDATION_ERROR } =
   CONSTANTS.API_RESPONSE_MESSAGES;
 
@@ -76,17 +78,17 @@ export async function POST(request: NextRequest) {
       paymentType,
       frequency,
       totalInstallments,
-      creditCardId,
+      creditCard,
       dueDate,
       registrationDate,
     } = expense;
     const createExpenseData: any = {
-      userId: "clvqt0co5001z11vxc52s97la",
+      userId: "clw29jrns001z8rpl4940ce1e",
       name,
       description,
       amount,
       isPaid,
-      creditCardId,
+      registrationDate: new Date(registrationDate!),
     };
     if (subCategories) {
       createExpenseData.subCategories = {
@@ -97,13 +99,41 @@ export async function POST(request: NextRequest) {
     }
     if (isPaid) {
       createExpenseData.paymentType = paymentType as PaymantType;
+      if (paymentType === PaymantType.CREDIT_CARD) {
+        createExpenseData.creditCardId = creditCard?.id;
+      }
     } else {
       createExpenseData.frequency = frequency as Frequency;
-      createExpenseData.totalInstallments = totalInstallments;
-      if (!creditCardId) {
-        createExpenseData.registrationDate = registrationDate;
-        createExpenseData.dueDate = dueDate;
+      createExpenseData.creditCardId = creditCard?.id;
+      if (frequency !== Frequency.DO_NOT_REPEAT) {
+        createExpenseData.totalInstallments = totalInstallments;
       }
+    }
+    if (createExpenseData?.creditCardId) {
+      createExpenseData.paymentType = PaymantType.CREDIT_CARD;
+      const now = new Date(registrationDate!);
+      const currentDayOfMonth = now.getDate();
+      const creditCardDueDay = creditCard?.dueDay!;
+      const creditCardInvoiceClosingDay = creditCard?.invoiceClosingDay!;
+      const handledDueDate = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        creditCardDueDay
+      );
+      if (creditCardInvoiceClosingDay <= creditCardDueDay) {
+        if (currentDayOfMonth > creditCardInvoiceClosingDay) {
+          handledDueDate.setMonth(handledDueDate.getMonth() + 1);
+        }
+      } else {
+        if (currentDayOfMonth > creditCardInvoiceClosingDay) {
+          handledDueDate.setMonth(handledDueDate.getMonth() + 2);
+        } else {
+          handledDueDate.setMonth(handledDueDate.getMonth() + 1);
+        }
+      }
+      createExpenseData.dueDate = endOfDay(handledDueDate);
+    } else if (dueDate) {
+      createExpenseData.dueDate = endOfDay(new Date(dueDate));
     }
     await prisma.expense.create({
       data: createExpenseData,
@@ -130,7 +160,7 @@ export async function POST(request: NextRequest) {
     });
     return NextResponse.json(expense, { status: 201 });
   } catch (error: any) {
-    console.log(error?.meta?.field_name);
+    console.log(error);
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
       if (error?.code === "P2018") {
         return NextResponse.json(

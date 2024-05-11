@@ -83,14 +83,13 @@ export function ExpenseForm({ id: expenseId }: ExpenseFormProps) {
       </Card.Header>
       <Card.Body asChild>
         <form onSubmit={(e) => e.preventDefault()}>
-          <div className="grid grid-cols-12 gap-6 pb-56">
+          <div className="grid grid-cols-1 gap-6">
             <Controller
               control={expenseFormControl}
               name="name"
               render={({ field, fieldState }) => (
                 <Input
                   {...field}
-                  formControlClassName="col-span-12 sm:col-span-6"
                   label="Name"
                   placeholder="pizza"
                   required
@@ -106,7 +105,6 @@ export function ExpenseForm({ id: expenseId }: ExpenseFormProps) {
                   {...field}
                   onFocus={handleFocusCategoriesSelect}
                   isLoading={isLoadingCategories}
-                  formControlClassName="col-span-12 sm:col-span-6"
                   label="Categories"
                   options={categoriesOptions}
                   error={fieldState.error?.message}
@@ -120,7 +118,6 @@ export function ExpenseForm({ id: expenseId }: ExpenseFormProps) {
                 <Textarea
                   {...field}
                   id={field.name}
-                  formControlClassName="col-span-12"
                   label="Description"
                   placeholder="..."
                   error={fieldState.error?.message}
@@ -134,7 +131,6 @@ export function ExpenseForm({ id: expenseId }: ExpenseFormProps) {
                 <CurrencyInput
                   {...restField}
                   value={isNull(value) ? undefined : Number(value)}
-                  formControlClassName="col-span-12"
                   label="Amount"
                   error={fieldState.error?.message}
                 />
@@ -150,7 +146,6 @@ export function ExpenseForm({ id: expenseId }: ExpenseFormProps) {
                 <Radio.Root
                   {...restField}
                   value={isBoolean(value) ? String(value) : undefined}
-                  formControlClassName="col-span-12"
                   label="Paid"
                   onValueChange={(newValue) =>
                     onChange(stringToBoolean(newValue))
@@ -174,7 +169,6 @@ export function ExpenseForm({ id: expenseId }: ExpenseFormProps) {
                   <Radio.Root
                     {...restField}
                     value={value || undefined}
-                    formControlClassName="col-span-12"
                     label="Payment type"
                     onValueChange={onChange}
                     error={fieldState?.error?.message}
@@ -203,7 +197,6 @@ export function ExpenseForm({ id: expenseId }: ExpenseFormProps) {
                     <Radio.Root
                       {...restField}
                       value={value || undefined}
-                      formControlClassName="col-span-12"
                       label="Frequency"
                       onValueChange={onChange}
                       error={fieldState?.error?.message}
@@ -236,7 +229,6 @@ export function ExpenseForm({ id: expenseId }: ExpenseFormProps) {
                       {...restField}
                       isClearable
                       value={String(value || "")}
-                      formControlClassName="col-span-12 sm:col-span-6"
                       label="Number of installments"
                       onChange={(option) => onChange(Number(option?.value))}
                       options={getRange(12).map((i) => ({
@@ -249,6 +241,21 @@ export function ExpenseForm({ id: expenseId }: ExpenseFormProps) {
                 />
               </>
             )}
+            <Controller
+              control={expenseFormControl}
+              name="registrationDate"
+              render={({ field, fieldState }) => {
+                return (
+                  <Input
+                    {...field}
+                    label="Purchase registration date"
+                    required
+                    type="date"
+                    error={fieldState.error?.message}
+                  />
+                );
+              }}
+            />
             {(watchExpense("isPaid") === false ||
               watchExpense("paymentType") === PaymantType.CREDIT_CARD) && (
               <Controller
@@ -265,7 +272,6 @@ export function ExpenseForm({ id: expenseId }: ExpenseFormProps) {
                     }
                     isClearable
                     value={String(value || "")}
-                    formControlClassName="col-span-12 sm:col-span-6"
                     label="Credit Card"
                     isLoading={isLoadingCreditCards}
                     onChange={(option) => onChange(String(option?.value))}
@@ -276,40 +282,22 @@ export function ExpenseForm({ id: expenseId }: ExpenseFormProps) {
                 )}
               />
             )}
-            {!watchExpense("creditCardId") &&
-              watchExpense("isPaid") === false && (
-                <>
-                  <Controller
-                    control={expenseFormControl}
-                    name="registrationDate"
-                    render={({ field, fieldState }) => {
-                      return (
-                        <Input
-                          {...field}
-                          formControlClassName="col-span-12 sm:col-span-6"
-                          label="Registration date"
-                          required
-                          type="date"
-                          error={fieldState.error?.message}
-                        />
-                      );
-                    }}
-                  />
-                  <Controller
-                    control={expenseFormControl}
-                    name="dueDate"
-                    render={({ field, fieldState }) => (
-                      <Input
-                        {...field}
-                        formControlClassName="col-span-12 sm:col-span-6"
-                        label="Due date"
-                        required
-                        type="date"
-                        error={fieldState.error?.message}
-                      />
-                    )}
-                  />
-                </>
+
+            {watchExpense("isPaid") === false &&
+              !watchExpense("creditCardId") && (
+                <Controller
+                  control={expenseFormControl}
+                  name="dueDate"
+                  render={({ field, fieldState }) => (
+                    <Input
+                      {...field}
+                      label="Due date"
+                      required
+                      type="date"
+                      error={fieldState.error?.message}
+                    />
+                  )}
+                />
               )}
           </div>
           <div className="flex mt-auto w-full">

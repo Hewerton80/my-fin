@@ -1,6 +1,7 @@
 import { CreditCard, Expense, SubCategory } from "@prisma/client";
 import { isAfter } from "date-fns/isAfter";
 import { isBefore } from "date-fns/isBefore";
+import { subDays } from "date-fns/subDays";
 
 export enum ExpenseStatus {
   PENDING = "PENDING",
@@ -15,24 +16,31 @@ export interface ExpernseWithComputedFields extends Expense {
   creditCard?: CreditCard;
 }
 
-export const getExpenseWitchComputedFields = ({
-  ...expense
-}: Expense): ExpernseWithComputedFields => {
+const getExpenseStatusByDueDate = (dueDate: Date) => {
+  let status;
+  const now = new Date();
+  if (dueDate && isAfter(now, dueDate)) {
+    status = ExpenseStatus.OVERDUE;
+  } else if (dueDate && isAfter(now, subDays(dueDate, 7))) {
+    status = ExpenseStatus.PENDING;
+  } else {
+    status = ExpenseStatus["ON DAY"];
+  }
+};
+
+export const getExpenseWitchComputedFields = (
+  expense: ExpernseWithComputedFields
+): ExpernseWithComputedFields => {
   const now = new Date();
   let status;
+  console.log(expense);
   if (expense?.isPaid) {
     status = ExpenseStatus.PAID;
   } else if (expense?.dueDate && isAfter(now, expense?.dueDate)) {
     status = ExpenseStatus.OVERDUE;
-  } else if (
-    expense?.registrationDate &&
-    isAfter(now, expense?.registrationDate)
-  ) {
+  } else if (expense?.dueDate && isAfter(now, subDays(expense?.dueDate, 7))) {
     status = ExpenseStatus.PENDING;
-  } else if (
-    expense?.registrationDate &&
-    isBefore(now, expense?.registrationDate)
-  ) {
+  } else {
     status = ExpenseStatus["ON DAY"];
   }
 

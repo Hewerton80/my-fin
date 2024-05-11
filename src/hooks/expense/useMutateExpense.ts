@@ -49,6 +49,7 @@ const baseExpenseSchema = z
       .optional(),
     registrationDate: z
       .string()
+      .min(1, VALIDATION_ERROR_MESSAGES.REQUIRED_FIELD)
       .refine(
         (registrationDate) =>
           registrationDate
@@ -73,14 +74,6 @@ const baseExpenseSchema = z
     {
       message: VALIDATION_ERROR_MESSAGES.REQUIRED_FIELD,
       path: ["creditCardId"],
-    }
-  )
-  .refine(
-    ({ creditCardId, isPaid, registrationDate }) =>
-      creditCardId || isPaid ? true : registrationDate,
-    {
-      message: VALIDATION_ERROR_MESSAGES.REQUIRED_FIELD,
-      path: ["registrationDate"],
     }
   )
   .refine(
@@ -150,10 +143,9 @@ export function useMutateExpense(expenseId?: string) {
   //   console.log("isSubmitting", isSubmitting);
   // }, [isSubmitting]);
 
-  const clearDatesFields = useCallback(() => {
-    setExpenseValue("registrationDate", "", setValueOptions);
+  const clearDueDateField = useCallback(() => {
     setExpenseValue("dueDate", "", setValueOptions);
-    clearExpenseErrors(["registrationDate", "dueDate"]);
+    clearExpenseErrors(["dueDate"]);
   }, [setExpenseValue, , clearExpenseErrors, setValueOptions]);
 
   const clearCreditCardField = useCallback(() => {
@@ -166,7 +158,7 @@ export function useMutateExpense(expenseId?: string) {
       if (name === "isPaid") {
         setExpenseValue("paymentType", null, setValueOptions);
         setExpenseValue("frequency", null, setValueOptions);
-        clearDatesFields();
+        clearDueDateField();
         clearCreditCardField();
         clearExpenseErrors(["frequency", "paymentType"]);
       }
@@ -174,7 +166,7 @@ export function useMutateExpense(expenseId?: string) {
         clearCreditCardField();
       }
       if (name === "creditCardId") {
-        clearDatesFields();
+        clearDueDateField();
       }
       if (name === "frequency") {
         setExpenseValue("totalInstallments", null, setValueOptions);
@@ -187,7 +179,7 @@ export function useMutateExpense(expenseId?: string) {
     clearExpenseErrors,
     watchExpense,
     clearCreditCardField,
-    clearDatesFields,
+    clearDueDateField,
     setExpenseValue,
   ]);
 
