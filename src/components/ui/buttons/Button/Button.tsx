@@ -198,8 +198,8 @@ export const Button = forwardRef(
         ref={ref}
         className={twMerge(
           "inline-flex items-center justify-center relative whitespace-nowrap",
-          "h-fit w-fit px-3 py-2 sm:px-4 sm:py-2",
-          "cursor-pointer ease-linear duration-200 border-2 rounded-lg outline-none",
+          "h-fit w-fit px-2.5 py-1.5 sm:px-2.5 sm:py-1.5",
+          "cursor-pointer ease-linear duration-200 border rounded-lg outline-none",
           "text-xs sm:text-sm font-medium leading-none",
           "disabled:pointer-events-none disabled:opacity-50",
           "focus:ring-4 active:ring-4",

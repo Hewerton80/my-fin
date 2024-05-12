@@ -56,6 +56,7 @@ export interface PrimitiveSelectProps extends MapedSelectProps {
   // onChange: (newValue: MultiValue<SelectOption>, actionMeta: any) => void;
   disabled?: boolean;
   inputValue?: string;
+  subtitle?: string;
   onChangeSingleOption?: OnchangeSigleValue;
   onChangeMultValue?: OnchangeMultValue;
   onInputChange?: (newValue: string) => void;
@@ -75,6 +76,7 @@ export const PrimitiveSelect = forwardRef(
       placeholder = "Search...",
       isMulti,
       isSearchable = false,
+      subtitle,
       onChangeSingleOption,
       onChangeMultValue,
       ...restProps
@@ -226,6 +228,9 @@ export const PrimitiveSelect = forwardRef(
           {...restProps}
         />
         {error && <FormHelperText>{error}</FormHelperText>}
+        {subtitle && (
+          <p className="mt-2 text-xs text-muted-foreground">{subtitle}</p>
+        )}
       </div>
     );
   }

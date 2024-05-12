@@ -9,7 +9,7 @@ import { REGEX } from "@/shared/regex";
 import { isValid as isValidDate } from "date-fns";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { isBoolean } from "@/shared/isType";
+import { isBoolean, isNumber } from "@/shared/isType";
 import { PaymantType } from "@prisma/client";
 
 const { VALIDATION_ERROR_MESSAGES } = CONSTANTS;
@@ -21,7 +21,13 @@ const baseExpenseSchema = z
       .array(z.object({ label: z.string(), value: z.string() }))
       .optional(),
     description: z.string().optional(),
-    amount: z.number().optional().nullable(),
+    amount: z
+      .number()
+      .refine((amount) => (isNumber(amount) ? amount > 0 : true), {
+        message: VALIDATION_ERROR_MESSAGES.MUST_BE_GREATER_THAN_ZERO,
+      })
+      .optional()
+      .nullable(),
     isPaid: z
       .boolean()
       .nullable()
@@ -154,7 +160,7 @@ export function useMutateExpense(expenseId?: string) {
   }, [setExpenseValue, clearExpenseErrors, setValueOptions]);
 
   useEffect(() => {
-    const subscription = watchExpense((value, { name }) => {
+    const subscription = watchExpense(({ name }) => {
       if (name === "isPaid") {
         setExpenseValue("paymentType", null, setValueOptions);
         setExpenseValue("frequency", null, setValueOptions);

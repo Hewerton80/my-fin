@@ -34,7 +34,7 @@ const Root = ({
     <Dialog.Root open={show}>
       <Dialog.Portal>
         <Dialog.Overlay
-          className="z-[10000] fixed inset-0 bg-black/30"
+          className="z-[10000] fixed inset-0 bg-black/70"
           onClick={() => !disableBackdropClick && onClose?.()}
         />
         <Card.Root

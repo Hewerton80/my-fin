@@ -25,7 +25,7 @@ CREATE TABLE `Expense` (
     `userId` VARCHAR(191) NOT NULL,
     `frequency` ENUM('DAILY', 'MONTHLY', 'YEARLY') NULL,
     `totalInstallments` INTEGER NULL,
-    `paidInstallments` INTEGER NULL,
+    `currentInstallment` INTEGER NULL,
     `paymentType` ENUM('CREDIT_CARD', 'DEBIT_CARD', 'CASH', 'PIX') NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 

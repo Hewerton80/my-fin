@@ -13,6 +13,7 @@ import { useGetExpenses } from "@/hooks/expense/useGetExpenses";
 import { getCurrencyFormat } from "@/shared/getCurrencyFormat";
 import { format } from "date-fns/format";
 import { getExpenseBadge } from "@/shared/statusExpenseBadge";
+import { ModalTriggerExpenseForm } from "./components/ModalTriggerExpenseForm";
 
 export default function UsersPage() {
   // const {
@@ -45,6 +46,14 @@ export default function UsersPage() {
         onParse: (expernse) =>
           isNumber(expernse?.amount)
             ? getCurrencyFormat(expernse?.amount!)
+            : "-",
+      },
+      {
+        label: "Installments",
+        field: "totalInstallments",
+        onParse: ({ currentInstallment, totalInstallments }) =>
+          isNumber(currentInstallment) && isNumber(totalInstallments)
+            ? `${currentInstallment}/${totalInstallments}`
             : "-",
       },
       {
@@ -91,9 +100,9 @@ export default function UsersPage() {
       <Card.Header>
         <Card.Title>Expenses</Card.Title>
         <Card.Actions>
-          <Button asChild>
-            <Link href="/expenses/create">Add Expense </Link>
-          </Button>
+          <ModalTriggerExpenseForm>
+            <Button>Add Expense</Button>
+          </ModalTriggerExpenseForm>
         </Card.Actions>
       </Card.Header>
       <Card.Body>

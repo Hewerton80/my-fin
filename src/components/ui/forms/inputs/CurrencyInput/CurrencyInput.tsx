@@ -25,12 +25,15 @@ export const CurrencyInput = forwardRef(
       return getCurrencyFormat(Number(value));
     }, [value]);
 
-    const handleChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-      const value = e.target.value;
-      onChange?.(
-        value === "R$ 0,0" ? undefined : Number(onlyNumbersMask(value)) / 100
-      );
-    }, []);
+    const handleChange = useCallback(
+      (e: ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        onChange?.(
+          value === "R$ 0,0" ? undefined : Number(onlyNumbersMask(value)) / 100
+        );
+      },
+      [onChange]
+    );
 
     return (
       <Input

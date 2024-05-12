@@ -48,7 +48,7 @@ model Expense {
     userId               String
     frequency            Frequency?
     totalInstallments    Int?
-    paidInstallments     Int?
+    currentInstallment   Int?
     user                 User                 @relation(fields: [userId], references: [id])
     paymentType          PaymantType
     creditCard           CreditCard?          @relation(fields: [creditCardId], references: [id])

@@ -1,5 +1,4 @@
 "use client";
-import { Card } from "@/components/ui/cards/Card";
 import { Input } from "@/components/ui/forms/inputs/Input";
 import { MultSelect, SelectOption } from "@/components/ui/forms/selects";
 import { Textarea } from "@/components/ui/forms/Textarea/Textarea";
@@ -14,9 +13,10 @@ import { useGetCategories } from "@/hooks/category/useCategory";
 import { Select } from "@/components/ui/forms/selects/Select";
 import { getRange } from "@/shared/getRange";
 import { stringToBoolean } from "@/shared/stringToBoolean";
-import { isBoolean, isNull } from "@/shared/isType";
+import { isBoolean, isNull, isNumber } from "@/shared/isType";
 import { useGetCreditCards } from "@/hooks/creditCard/useGetCreditCards";
 import { Button } from "@/components/ui/buttons/Button";
+import { getCurrencyFormat } from "@/shared/getCurrencyFormat";
 interface ExpenseFormProps {
   id?: string;
 }
@@ -77,242 +77,241 @@ export function ExpenseForm({ id: expenseId }: ExpenseFormProps) {
   }, [creditCards, isLoadingCreditCards, refetchCreditCards]);
 
   return (
-    <Card.Root>
-      <Card.Header>
-        <Card.Title>{isEditExpense ? "Edit" : "Create"} Expense</Card.Title>
-      </Card.Header>
-      <Card.Body asChild>
-        <form onSubmit={(e) => e.preventDefault()}>
-          <div className="grid grid-cols-1 gap-6">
-            <Controller
-              control={expenseFormControl}
-              name="name"
-              render={({ field, fieldState }) => (
-                <Input
-                  {...field}
-                  label="Name"
-                  placeholder="pizza"
-                  required
-                  error={fieldState.error?.message}
-                />
-              )}
+    <form onSubmit={(e) => e.preventDefault()}>
+      <div className="grid grid-cols-1 gap-4">
+        <Controller
+          control={expenseFormControl}
+          name="name"
+          render={({ field, fieldState }) => (
+            <Input
+              {...field}
+              label="Name"
+              placeholder="pizza"
+              required
+              error={fieldState.error?.message}
             />
-            <Controller
-              control={expenseFormControl}
-              name="categoriesOptions"
-              render={({ field, fieldState }) => (
-                <MultSelect
-                  {...field}
-                  onFocus={handleFocusCategoriesSelect}
-                  isLoading={isLoadingCategories}
-                  label="Categories"
-                  options={categoriesOptions}
-                  error={fieldState.error?.message}
-                />
-              )}
+          )}
+        />
+        <Controller
+          control={expenseFormControl}
+          name="categoriesOptions"
+          render={({ field, fieldState }) => (
+            <MultSelect
+              {...field}
+              onFocus={handleFocusCategoriesSelect}
+              isLoading={isLoadingCategories}
+              label="Categories"
+              options={categoriesOptions}
+              error={fieldState.error?.message}
             />
-            <Controller
-              control={expenseFormControl}
-              name="description"
-              render={({ field, fieldState }) => (
-                <Textarea
-                  {...field}
-                  id={field.name}
-                  label="Description"
-                  placeholder="..."
-                  error={fieldState.error?.message}
-                />
-              )}
+          )}
+        />
+        <Controller
+          control={expenseFormControl}
+          name="description"
+          render={({ field, fieldState }) => (
+            <Textarea
+              {...field}
+              id={field.name}
+              label="Description"
+              placeholder="..."
+              error={fieldState.error?.message}
             />
-            <Controller
-              control={expenseFormControl}
-              name="amount"
-              render={({ field: { value, ...restField }, fieldState }) => (
-                <CurrencyInput
-                  {...restField}
-                  value={isNull(value) ? undefined : Number(value)}
-                  label="Amount"
-                  error={fieldState.error?.message}
-                />
-              )}
+          )}
+        />
+        <Controller
+          control={expenseFormControl}
+          name="amount"
+          render={({ field: { value, ...restField }, fieldState }) => (
+            <CurrencyInput
+              {...restField}
+              value={isNull(value) ? undefined : Number(value)}
+              label="Amount"
+              error={fieldState.error?.message}
             />
+          )}
+        />
+        <Controller
+          control={expenseFormControl}
+          name="isPaid"
+          render={({
+            field: { onChange, value, ...restField },
+            fieldState,
+          }) => (
+            <Radio.Root
+              {...restField}
+              value={isBoolean(value) ? String(value) : undefined}
+              label="Paid"
+              onValueChange={(newValue) => onChange(stringToBoolean(newValue))}
+              error={fieldState?.error?.message}
+              required
+            >
+              <Radio.Item value="true" label="Yes" />
+              <Radio.Item value="false" label="No" />
+            </Radio.Root>
+          )}
+        />
+        {watchExpense("isPaid") && (
+          <Controller
+            control={expenseFormControl}
+            name="paymentType"
+            render={({
+              field: { onChange, value, ...restField },
+              fieldState,
+            }) => (
+              <Radio.Root
+                {...restField}
+                value={value || undefined}
+                label="Payment type"
+                onValueChange={onChange}
+                error={fieldState?.error?.message}
+                required
+              >
+                {Object.keys(PaymantType).map((key) => (
+                  <Radio.Item
+                    key={key}
+                    value={key}
+                    label={capitalizeFisrtLetter(key)}
+                  />
+                ))}
+              </Radio.Root>
+            )}
+          />
+        )}
+        {watchExpense("isPaid") === false && (
+          <>
             <Controller
               control={expenseFormControl}
-              name="isPaid"
+              name="frequency"
               render={({
                 field: { onChange, value, ...restField },
                 fieldState,
               }) => (
                 <Radio.Root
                   {...restField}
-                  value={isBoolean(value) ? String(value) : undefined}
-                  label="Paid"
-                  onValueChange={(newValue) =>
-                    onChange(stringToBoolean(newValue))
-                  }
+                  value={value || undefined}
+                  label="Frequency"
+                  onValueChange={onChange}
                   error={fieldState?.error?.message}
                   required
                 >
-                  <Radio.Item value="true" label="Yes" />
-                  <Radio.Item value="false" label="No" />
+                  {Object.keys(Frequency).map((key) => (
+                    <Radio.Item
+                      key={key}
+                      value={key}
+                      label={capitalizeFisrtLetter(key)}
+                    />
+                  ))}
                 </Radio.Root>
               )}
             />
-            {watchExpense("isPaid") && (
-              <Controller
-                control={expenseFormControl}
-                name="paymentType"
-                render={({
-                  field: { onChange, value, ...restField },
-                  fieldState,
-                }) => (
-                  <Radio.Root
-                    {...restField}
-                    value={value || undefined}
-                    label="Payment type"
-                    onValueChange={onChange}
-                    error={fieldState?.error?.message}
-                    required
-                  >
-                    {Object.keys(PaymantType).map((key) => (
-                      <Radio.Item
-                        key={key}
-                        value={key}
-                        label={capitalizeFisrtLetter(key)}
-                      />
-                    ))}
-                  </Radio.Root>
-                )}
-              />
-            )}
-            {watchExpense("isPaid") === false && (
-              <>
-                <Controller
-                  control={expenseFormControl}
-                  name="frequency"
-                  render={({
-                    field: { onChange, value, ...restField },
-                    fieldState,
-                  }) => (
-                    <Radio.Root
-                      {...restField}
-                      value={value || undefined}
-                      label="Frequency"
-                      onValueChange={onChange}
-                      error={fieldState?.error?.message}
-                      required
-                    >
-                      {Object.keys(Frequency).map((key) => (
-                        <Radio.Item
-                          key={key}
-                          value={key}
-                          label={capitalizeFisrtLetter(key)}
-                        />
-                      ))}
-                    </Radio.Root>
-                  )}
-                />
-              </>
-            )}
-            {[Frequency.DAILY, Frequency.MONTHLY, Frequency.YEARLY].includes(
-              watchExpense("frequency") as any
-            ) && (
-              <>
-                <Controller
-                  control={expenseFormControl}
-                  name="totalInstallments"
-                  render={({
-                    field: { value, onChange, ...restField },
-                    fieldState,
-                  }) => (
-                    <Select
-                      {...restField}
-                      isClearable
-                      value={String(value || "")}
-                      label="Number of installments"
-                      onChange={(option) => onChange(Number(option?.value))}
-                      options={getRange(12).map((i) => ({
-                        label: `${i + 1}x`,
-                        value: String(i + 1),
-                      }))}
-                      error={fieldState.error?.message}
-                    />
-                  )}
-                />
-              </>
-            )}
+          </>
+        )}
+        {[Frequency.DAILY, Frequency.MONTHLY, Frequency.YEARLY].includes(
+          watchExpense("frequency") as any
+        ) && (
+          <>
             <Controller
               control={expenseFormControl}
-              name="registrationDate"
-              render={({ field, fieldState }) => {
-                return (
-                  <Input
-                    {...field}
-                    label="Purchase registration date"
-                    required
-                    type="date"
-                    error={fieldState.error?.message}
-                  />
-                );
-              }}
-            />
-            {(watchExpense("isPaid") === false ||
-              watchExpense("paymentType") === PaymantType.CREDIT_CARD) && (
-              <Controller
-                control={expenseFormControl}
-                name="creditCardId"
-                render={({
-                  field: { value, onChange, ...restField },
-                  fieldState,
-                }) => (
-                  <Select
-                    {...restField}
-                    required={
-                      watchExpense("paymentType") === PaymantType.CREDIT_CARD
-                    }
-                    isClearable
-                    value={String(value || "")}
-                    label="Credit Card"
-                    isLoading={isLoadingCreditCards}
-                    onChange={(option) => onChange(String(option?.value))}
-                    onFocus={handleFocusCreditCardsSelect}
-                    options={creditCardsOptions}
-                    error={fieldState.error?.message}
-                  />
-                )}
-              />
-            )}
-
-            {watchExpense("isPaid") === false &&
-              !watchExpense("creditCardId") && (
-                <Controller
-                  control={expenseFormControl}
-                  name="dueDate"
-                  render={({ field, fieldState }) => (
-                    <Input
-                      {...field}
-                      label="Due date"
-                      required
-                      type="date"
-                      error={fieldState.error?.message}
-                    />
-                  )}
+              name="totalInstallments"
+              render={({
+                field: { value, onChange, ...restField },
+                fieldState,
+              }) => (
+                <Select
+                  {...restField}
+                  isClearable
+                  value={String(value || "")}
+                  label="Number of installments"
+                  onChange={(option) => onChange(Number(option?.value))}
+                  options={getRange(12).map((i) => ({
+                    label: `${i + 1}x`,
+                    value: String(i + 1),
+                  }))}
+                  error={fieldState.error?.message}
+                  subtitle={
+                    watchExpense("amount") && isNumber(value)
+                      ? `${value}x de ${getCurrencyFormat(
+                          Number(watchExpense("amount"))
+                        )}  |  total: ${getCurrencyFormat(
+                          Number(value) * Number(watchExpense("amount"))
+                        )}`
+                      : undefined
+                  }
                 />
               )}
-          </div>
-          <div className="flex mt-auto w-full">
-            <Button
-              onClick={handleSubmitExpense}
-              fullWidth
-              type="button"
-              variantStyle="primary"
-              isLoading={isSubmitting}
-            >
-              Criar
-            </Button>
-          </div>
-        </form>
-      </Card.Body>
-    </Card.Root>
+            />
+          </>
+        )}
+        <Controller
+          control={expenseFormControl}
+          name="registrationDate"
+          render={({ field, fieldState }) => {
+            return (
+              <Input
+                {...field}
+                label="Purchase registration date"
+                required
+                type="date"
+                error={fieldState.error?.message}
+              />
+            );
+          }}
+        />
+        {(watchExpense("isPaid") === false ||
+          watchExpense("paymentType") === PaymantType.CREDIT_CARD) && (
+          <Controller
+            control={expenseFormControl}
+            name="creditCardId"
+            render={({
+              field: { value, onChange, ...restField },
+              fieldState,
+            }) => (
+              <Select
+                {...restField}
+                required={
+                  watchExpense("paymentType") === PaymantType.CREDIT_CARD
+                }
+                isClearable
+                value={String(value || "")}
+                label="Credit Card"
+                isLoading={isLoadingCreditCards}
+                onChange={(option) => onChange(String(option?.value))}
+                onFocus={handleFocusCreditCardsSelect}
+                options={creditCardsOptions}
+                error={fieldState.error?.message}
+              />
+            )}
+          />
+        )}
+
+        {watchExpense("isPaid") === false && !watchExpense("creditCardId") && (
+          <Controller
+            control={expenseFormControl}
+            name="dueDate"
+            render={({ field, fieldState }) => (
+              <Input
+                {...field}
+                label="Due date"
+                required
+                type="date"
+                error={fieldState.error?.message}
+              />
+            )}
+          />
+        )}
+        <div className="flex w-full">
+          <Button
+            onClick={handleSubmitExpense}
+            fullWidth
+            type="button"
+            variantStyle="primary"
+            isLoading={isSubmitting}
+          >
+            Criar
+          </Button>
+        </div>
+      </div>
+    </form>
   );
 }

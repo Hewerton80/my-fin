@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Poppins } from "next/font/google";
+import { Inter } from "next/font/google";
 import { Providers } from "@/providers";
 import { AlertModal } from "@/components/ui/overlay/AlertModal";
 import { Toast } from "@/components/ui/feedback/Toast";
@@ -10,7 +10,7 @@ import "./globals.css";
 
 setDefaultOptions({ locale: ptBR });
 
-const poppins = Poppins({
+const inter = Inter({
   subsets: ["latin"],
   weight: ["100", "300", "400", "500", "700", "900"],
 });
@@ -27,7 +27,7 @@ export default function RootLayout({
   return (
     <ThemeTamplate>
       <html lang="pt-bt" suppressHydrationWarning={true}>
-        <body className={poppins.className}>
+        <body className={inter.className}>
           <Providers>
             {children}
             <AlertModal />

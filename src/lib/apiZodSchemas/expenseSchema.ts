@@ -3,6 +3,7 @@ import { z } from "zod";
 import { isValid as isValidDate } from "date-fns";
 import { REGEX } from "@/shared/regex";
 import { PaymantType } from "@prisma/client";
+import { isNumber } from "@/shared/isType";
 
 const {
   REQUIRED_FIELD,
@@ -26,6 +27,9 @@ const baseExpenseSchema = z.object({
       required_error: REQUIRED_FIELD,
       invalid_type_error: MUST_BE_NUMBER,
     })
+    .refine((amount) => (isNumber(amount) ? amount > 0 : true), {
+      message: MUST_BE_GREATER_THAN_ZERO,
+    })
     .optional(),
   isPaid: z.boolean({ required_error: REQUIRED_FIELD }),
   paymentType: z.string({ required_error: REQUIRED_FIELD }).optional(),
@@ -33,12 +37,7 @@ const baseExpenseSchema = z.object({
   totalInstallments: z
     .number({ invalid_type_error: MUST_BE_NUMBER })
     .optional(),
-  creditCard: z
-    .object(
-      { id: z.string(), dueDay: z.number(), invoiceClosingDay: z.number() },
-      { required_error: REQUIRED_FIELD }
-    )
-    .optional(),
+  creditCardId: z.string({ required_error: REQUIRED_FIELD }).trim().optional(),
   dueDate: z
     .string()
     .refine(
@@ -74,21 +73,19 @@ export const createExpenseSchema = baseExpenseSchema
     path: ["frequency"],
   })
   .refine(
-    ({ paymentType, creditCard, isPaid }) =>
-      isPaid && paymentType === PaymantType.CREDIT_CARD
-        ? creditCard?.id && creditCard?.dueDay && creditCard?.invoiceClosingDay
-        : true,
+    ({ paymentType, creditCardId, isPaid }) =>
+      isPaid && paymentType === PaymantType.CREDIT_CARD ? creditCardId : true,
     { message: REQUIRED_FIELD, path: ["creditCard"] }
   )
   .refine(
-    ({ paymentType, creditCard, isPaid }) =>
-      isPaid && paymentType !== PaymantType.CREDIT_CARD && creditCard?.id
+    ({ paymentType, creditCardId, isPaid }) =>
+      isPaid && paymentType !== PaymantType.CREDIT_CARD && creditCardId
         ? false
         : true,
     { message: "Do not required", path: ["creditCard"] }
   )
   .refine(
-    ({ creditCard, isPaid, dueDate }) =>
-      creditCard?.id || isPaid ? true : dueDate,
+    ({ creditCardId, isPaid, dueDate }) =>
+      creditCardId || isPaid ? true : dueDate,
     { message: REQUIRED_FIELD, path: ["dueDate"] }
   );

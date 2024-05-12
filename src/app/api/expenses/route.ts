@@ -1,5 +1,4 @@
 import { createExpenseSchema } from "@/lib/apiZodSchemas/expenseSchema";
-import { verifyIfUserIsTeacher } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import {
   parseExpenseSearchParams,
@@ -15,6 +14,7 @@ import { endOfDay } from "date-fns/endOfDay";
 import { Frequency, PaymantType, Prisma } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
+import { isNumber } from "@/shared/isType";
 
 const { USER_HAS_NO_PERMISSION, INTERNAL_SERVER_ERROR, VALIDATION_ERROR } =
   CONSTANTS.API_RESPONSE_MESSAGES;
@@ -78,12 +78,12 @@ export async function POST(request: NextRequest) {
       paymentType,
       frequency,
       totalInstallments,
-      creditCard,
+      creditCardId,
       dueDate,
       registrationDate,
     } = expense;
     const createExpenseData: any = {
-      userId: "clw29jrns001z8rpl4940ce1e",
+      userId: "clw3lfm92001z20gvmiux3f4h",
       name,
       description,
       amount,
@@ -97,19 +97,35 @@ export async function POST(request: NextRequest) {
         })),
       };
     }
+
     if (isPaid) {
       createExpenseData.paymentType = paymentType as PaymantType;
       if (paymentType === PaymantType.CREDIT_CARD) {
-        createExpenseData.creditCardId = creditCard?.id;
+        createExpenseData.creditCardId = creditCardId;
       }
     } else {
       createExpenseData.frequency = frequency as Frequency;
-      createExpenseData.creditCardId = creditCard?.id;
-      if (frequency !== Frequency.DO_NOT_REPEAT) {
+      createExpenseData.creditCardId = creditCardId;
+      if (
+        frequency !== Frequency.DO_NOT_REPEAT &&
+        isNumber(totalInstallments)
+      ) {
         createExpenseData.totalInstallments = totalInstallments;
+        createExpenseData.currentInstallment = 1;
       }
     }
     if (createExpenseData?.creditCardId) {
+      const creditCard = await prisma.creditCard.findUnique({
+        where: { id: creditCardId },
+      });
+
+      if (!creditCard) {
+        return NextResponse.json(
+          { message: "Credit card not found" },
+          { status: 404 }
+        );
+      }
+
       createExpenseData.paymentType = PaymantType.CREDIT_CARD;
       const now = new Date(registrationDate!);
       const currentDayOfMonth = now.getDate();
