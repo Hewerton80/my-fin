@@ -3,7 +3,7 @@ import { ProfilePopover } from "@/components/ui/overlay/ProfilePopover";
 import { useMemo, useState } from "react";
 import { FaBarsStaggered } from "react-icons/fa6";
 import { Slot } from "@radix-ui/react-slot";
-import { useSideBar } from "@/hooks/utils/useSideBar";
+import { useSideBar } from "@/hooks/useSideBar";
 import * as Popover from "@radix-ui/react-popover";
 import { SideBarItems } from "../Sidebar";
 import { twMerge } from "tailwind-merge";

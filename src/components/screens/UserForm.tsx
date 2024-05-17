@@ -12,7 +12,7 @@ import {
 import { Controller } from "react-hook-form";
 import { useCallback, useEffect, useMemo } from "react";
 import { toast } from "react-toastify";
-import { useAlertModal } from "@/hooks/utils/useAlertModal";
+import { useAlertModal } from "@/hooks/useAlertModal";
 import { useRouter } from "next/navigation";
 import { FeedBackLoading } from "@/components/ui/feedback/FeedBackLoading";
 import { isUndefined } from "@/shared/isType";

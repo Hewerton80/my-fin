@@ -4,7 +4,7 @@ import { z } from "zod";
 import { ToZodObjectSchema } from "@/lib/zodHelpers";
 import { LoginCredentials } from "@/dtos/loginCredentials";
 import { useRouter } from "next/navigation";
-import { useAxios } from "@/hooks/utils/useAxios";
+import { useAxios } from "@/hooks/useAxios";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { UserWithComputedFields } from "@/types/User";
 import { useMutation } from "@tanstack/react-query";

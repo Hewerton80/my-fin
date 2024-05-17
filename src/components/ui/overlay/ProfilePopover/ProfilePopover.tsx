@@ -10,7 +10,7 @@ import slideAndFadeANimation from "@/components/sharedStyles/slideAndFade.module
 import { getContrastColor } from "@/shared/colors";
 import colors from "tailwindcss/colors";
 import { UserRole } from "@/types/User";
-import { useTheme } from "@/hooks/utils/useTheme";
+import { useTheme } from "@/hooks/useTheme";
 import { FaMoon, FaSun, FaChevronRight } from "react-icons/fa";
 import menuStyle from "@/components/sharedStyles/menu.module.css";
 import { LuPaintbrush2 } from "react-icons/lu";

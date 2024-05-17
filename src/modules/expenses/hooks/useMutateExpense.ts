@@ -1,5 +1,5 @@
 import { useRouter } from "next/navigation";
-import { useAxios } from "../utils/useAxios";
+import { useAxios } from "../../../hooks/useAxios";
 import { useCallback, useEffect, useMemo } from "react";
 
 import { z } from "zod";
@@ -11,6 +11,9 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { isBoolean, isNumber } from "@/shared/isType";
 import { PaymantType } from "@prisma/client";
+import { ExpernseWithComputedFields } from "@/types/Expense";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "react-toastify";
 
 const { VALIDATION_ERROR_MESSAGES } = CONSTANTS;
 
@@ -98,7 +101,7 @@ export type ExpenseFormValues = InferBaseExpenseFormSchema &
     categoriesOptions: SelectOption[];
   };
 
-export function useMutateExpense(expenseId?: string) {
+export function useMutateExpense() {
   const { apiBase } = useAxios();
   const router = useRouter();
 
@@ -110,6 +113,7 @@ export function useMutateExpense(expenseId?: string) {
     trigger: triggerExpenseErrors,
     formState: expenseFormState,
     clearErrors: clearExpenseErrors,
+    reset: resetExpenseForm,
   } = useForm<ExpenseFormValues>({
     defaultValues: {
       name: "",
@@ -128,6 +132,12 @@ export function useMutateExpense(expenseId?: string) {
     resolver: zodResolver(createExpenseSchema),
   });
 
+  const { mutate: createQrCode, isPending: isCreatingExpense } = useMutation({
+    mutationFn: (
+      expenseData: Partial<ExpenseFormValues & ExpernseWithComputedFields>
+    ) => apiBase.post("/expenses", expenseData),
+  });
+
   useEffect(() => {
     console.log("expenseFormState.errors", expenseFormState?.errors);
   }, [expenseFormState.errors]);
@@ -138,8 +148,8 @@ export function useMutateExpense(expenseId?: string) {
   );
 
   const isSubmitting = useMemo(() => {
-    return expenseFormState.isValidating;
-  }, [expenseFormState.isValidating]);
+    return expenseFormState.isValidating || isCreatingExpense;
+  }, [expenseFormState.isValidating, isCreatingExpense]);
 
   //   useEffect(() => {
   //     console.log("expenseFormState", expenseFormState);
@@ -191,30 +201,47 @@ export function useMutateExpense(expenseId?: string) {
 
   const getHandledExpenseFormValues = useCallback(() => {
     const expenseFormValues = { ...getExpenseValues() };
-    let handledExpenseFormValues: any = {};
+    let handledExpenseFormValues: Partial<
+      ExpenseFormValues & ExpernseWithComputedFields
+    > = {};
     Object.keys(expenseFormState.dirtyFields).forEach((field) => {
       const expenseFormValue =
         expenseFormValues[field as keyof ExpenseFormValues];
 
-      handledExpenseFormValues[field] =
-        expenseFormValue === "" ? null : expenseFormValue;
+      handledExpenseFormValues[field as keyof ExpenseFormValues] = (
+        expenseFormValue === "" ? null : expenseFormValue
+      ) as any;
     });
-    return handledExpenseFormValues as ExpenseFormValues;
+    if (handledExpenseFormValues?.categoriesOptions) {
+      handledExpenseFormValues.subCategories =
+        handledExpenseFormValues?.categoriesOptions.map(
+          (category) => category.value
+        );
+    }
+    delete handledExpenseFormValues?.categoriesOptions;
+    return handledExpenseFormValues;
   }, [getExpenseValues, expenseFormState.dirtyFields]);
 
-  const handleSubmitExpense = useCallback(async () => {
-    // setIsTriggingErrors(true);
-    const isValid = await triggerExpenseErrors();
-    // setIsTriggingErrors(false);
-    const expenseFormValues = getExpenseValues();
-    console.log("expenseFormValues", expenseFormValues);
-    console.log("isValid", isValid);
-    if (!isValid) {
-      return;
-    }
-    const handledExpenseFormValues = getHandledExpenseFormValues();
-    console.log("handledExpenseFormValues", handledExpenseFormValues);
-  }, [getExpenseValues, triggerExpenseErrors, getHandledExpenseFormValues]);
+  const handleSubmitExpense = useCallback(
+    async (callbacks?: { onSuccess?: () => void; onError?: () => void }) => {
+      // setIsTriggingErrors(true);
+      const isValid = await triggerExpenseErrors();
+      // setIsTriggingErrors(false);
+      if (!isValid) {
+        return;
+      }
+      const handledExpenseFormValues = getHandledExpenseFormValues();
+      const onSuccess = () => {
+        callbacks?.onSuccess?.();
+        toast.success("Expense created successfully!");
+      };
+      const onError = (error: any) => {
+        console.error("error", error);
+      };
+      createQrCode(handledExpenseFormValues, { onSuccess, onError });
+    },
+    [triggerExpenseErrors, getHandledExpenseFormValues, createQrCode]
+  );
 
   return {
     expenseFormControl,
@@ -225,5 +252,6 @@ export function useMutateExpense(expenseId?: string) {
     setExpenseValue,
     getExpenseValues,
     triggerExpenseErrors,
+    resetExpenseForm,
   };
 }

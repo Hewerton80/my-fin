@@ -12,7 +12,7 @@ export enum ExpenseStatus {
 
 export interface ExpernseWithComputedFields extends Expense {
   status?: ExpenseStatus;
-  subCategories?: SubCategory[];
+  subCategories?: SubCategory[] | string[];
   creditCard?: CreditCard;
 }
 

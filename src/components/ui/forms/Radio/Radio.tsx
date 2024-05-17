@@ -37,7 +37,7 @@ const Root = forwardRef(
         <RadioGroup.Root
           ref={ref}
           className={twMerge(
-            "flex gap-2",
+            "flex flex-wrap gap-2",
             orientation === "vertical" && "flex-col",
             error && "[&_button]:border-danger"
           )}

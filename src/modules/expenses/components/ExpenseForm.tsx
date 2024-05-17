@@ -4,19 +4,19 @@ import { MultSelect, SelectOption } from "@/components/ui/forms/selects";
 import { Textarea } from "@/components/ui/forms/Textarea/Textarea";
 import { useCallback, useMemo } from "react";
 import { Controller } from "react-hook-form";
-import { useMutateExpense } from "@/hooks/expense/useMutateExpense";
+import { useMutateExpense } from "@/modules/expenses/hooks/useMutateExpense";
 import { CurrencyInput } from "@/components/ui/forms/inputs/CurrencyInput";
 import { Radio } from "@/components/ui/forms/Radio";
 import { Frequency, PaymantType } from "@prisma/client";
 import { capitalizeFisrtLetter } from "@/shared/string";
-import { useGetCategories } from "@/hooks/category/useCategory";
 import { Select } from "@/components/ui/forms/selects/Select";
 import { getRange } from "@/shared/getRange";
 import { stringToBoolean } from "@/shared/stringToBoolean";
 import { isBoolean, isNull, isNumber } from "@/shared/isType";
-import { useGetCreditCards } from "@/hooks/creditCard/useGetCreditCards";
 import { Button } from "@/components/ui/buttons/Button";
 import { getCurrencyFormat } from "@/shared/getCurrencyFormat";
+import { useGetCategories } from "@/modules/category/hooks/useGetCategories";
+import { useGetCreditCards } from "@/modules/creditCard/hooks/useGetCreditCards";
 interface ExpenseFormProps {
   id?: string;
 }

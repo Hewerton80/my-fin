@@ -9,11 +9,11 @@ import { isNumber, isUndefined } from "@/shared/isType";
 import Link from "next/link";
 import { useMemo } from "react";
 import { ExpernseWithComputedFields } from "@/types/Expense";
-import { useGetExpenses } from "@/hooks/expense/useGetExpenses";
+import { useGetExpenses } from "@/modules/expenses/hooks/useGetExpenses";
 import { getCurrencyFormat } from "@/shared/getCurrencyFormat";
 import { format } from "date-fns/format";
 import { getExpenseBadge } from "@/shared/statusExpenseBadge";
-import { ModalTriggerExpenseForm } from "./components/ModalTriggerExpenseForm";
+import { ModalTriggerExpenseForm } from "../../../modules/expenses/components/ModalTriggerExpenseForm";
 
 export default function UsersPage() {
   // const {
@@ -100,7 +100,7 @@ export default function UsersPage() {
       <Card.Header>
         <Card.Title>Expenses</Card.Title>
         <Card.Actions>
-          <ModalTriggerExpenseForm>
+          <ModalTriggerExpenseForm onSuccess={() => refetchExpenses()}>
             <Button>Add Expense</Button>
           </ModalTriggerExpenseForm>
         </Card.Actions>

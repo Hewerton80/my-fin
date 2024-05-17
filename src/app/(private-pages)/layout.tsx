@@ -4,7 +4,7 @@ import { ReactNode, useEffect } from "react";
 import { useAuth } from "@/hooks/auth/useAuth";
 import { SplashScreen } from "@/components/ui/feedback/SplashScreen";
 import { useGetMe } from "@/hooks/api/useUser";
-import { useAlertModal } from "@/hooks/utils/useAlertModal";
+import { useAlertModal } from "@/hooks/useAlertModal";
 import { handleErrorMessage } from "@/shared/handleErrorMessage";
 
 export default function AppLayout({ children }: { children: ReactNode }) {

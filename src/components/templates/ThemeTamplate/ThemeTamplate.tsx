@@ -1,5 +1,5 @@
 "use client";
-import { useTheme } from "@/hooks/utils/useTheme";
+import { useTheme } from "@/hooks/useTheme";
 import { CONSTANTS } from "@/shared/constants";
 import { ReactNode, useEffect } from "react";
 

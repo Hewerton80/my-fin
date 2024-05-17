@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { useAxios } from "../utils/useAxios";
+import { useAxios } from "../../../hooks/useAxios";
 import { CategoryWitchComputedFields } from "@/types/Category";
 import { useMemo } from "react";
 

@@ -11,6 +11,7 @@ import {
   getExpensesWitchComputedFields,
 } from "@/types/Expense";
 import { endOfDay } from "date-fns/endOfDay";
+import { startOfDay } from "date-fns/startOfDay";
 import { Frequency, PaymantType, Prisma } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
@@ -88,7 +89,7 @@ export async function POST(request: NextRequest) {
       description,
       amount,
       isPaid,
-      registrationDate: new Date(registrationDate!),
+      registrationDate: startOfDay(new Date(registrationDate!)),
     };
     if (subCategories) {
       createExpenseData.subCategories = {

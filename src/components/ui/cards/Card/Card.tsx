@@ -109,6 +109,7 @@ const Footer = forwardRef(
   ) => {
     return (
       <div
+        ref={ref}
         className={twMerge(
           "flex items-center mt-auto px-4 sm:px-[1.875rem] pb-5",
           orientation === "start" && "justify-start",

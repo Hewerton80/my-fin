@@ -5,7 +5,7 @@ import { twMerge } from "tailwind-merge";
 import { Button, ButtonVariantStyle } from "@/components/ui/buttons/Button";
 import { isString } from "@/shared/isType";
 import { Spinner } from "../../feedback/Spinner";
-import { useAlertModal } from "@/hooks/utils/useAlertModal";
+import { useAlertModal } from "@/hooks/useAlertModal";
 
 // type VariantsMap = {
 //   [Property in Variant]: { icon: JSX.Element };

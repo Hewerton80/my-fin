@@ -3,7 +3,7 @@ import { TrainingWithComputedFields } from "@/types/Expense";
 import { Button } from "../../buttons/Button";
 import { Badge } from "../../dataDisplay/Badge";
 import { twMerge } from "tailwind-merge";
-import { useAlertModal } from "@/hooks/utils/useAlertModal";
+import { useAlertModal } from "@/hooks/useAlertModal";
 import { useCallback, useMemo, forwardRef } from "react";
 import { useMutateTraning } from "@/hooks/api/useTraining";
 import { handleErrorMessage } from "@/shared/handleErrorMessage";

@@ -8,7 +8,7 @@ import { useMemo, forwardRef } from "react";
 import { twMerge } from "tailwind-merge";
 import { Slot } from "@radix-ui/react-slot";
 import { Resizable } from "re-resizable";
-import { useSideBar } from "@/hooks/utils/useSideBar";
+import { useSideBar } from "@/hooks/useSideBar";
 import style from "@/components/sharedStyles/menu.module.css";
 export const SideBarItems = forwardRef((_, ref?: any) => {
   const currentPath = usePathname();

@@ -8,6 +8,14 @@ import {
   CardFooterProps,
 } from "@/components/ui/cards/Card";
 
+const sizes = {
+  xs: "max-w-[444px]",
+  sm: "max-w-[600px]",
+  md: "max-w-[900px]",
+  lg: "max-w-[1200px]",
+  xl: "max-w-[1400px]",
+};
+
 export interface ModalProps {
   children: ReactNode;
   id?: string;
@@ -15,6 +23,7 @@ export interface ModalProps {
   show?: boolean;
   hideCloseIcon?: boolean;
   disableBackdropClick?: boolean;
+  size?: keyof typeof sizes;
   onClose?: () => void;
 }
 export interface ModalTitleProps extends ComponentPropsWithoutRef<"div"> {}
@@ -27,6 +36,7 @@ const Root = ({
   show,
   hideCloseIcon,
   disableBackdropClick,
+  size = "sm",
   onClose,
   ...restProps
 }: ModalProps) => {
@@ -41,8 +51,9 @@ const Root = ({
           asChild
           className={twMerge(
             "fixed z-[10001] top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]",
-            "w-[calc(100vw-2rem)] max-h-[calc(100vh-2rem)] max-w-xl overflow-visible",
+            "w-[calc(100vw-2rem)] max-h-[calc(100vh-2rem)] overflow-visible",
             "dark:bg-dark-card",
+            sizes[size],
             className
           )}
         >
@@ -82,8 +93,16 @@ const Body = ({ children, ...restProps }: ModalBodyProps) => {
   return <Card.Body {...restProps}>{children}</Card.Body>;
 };
 
-function Footer({ children, ...restProps }: ModalFooterProps) {
-  return <Card.Footer {...restProps}>{children}</Card.Footer>;
+function Footer({ children, className, ...restProps }: ModalFooterProps) {
+  return (
+    <Card.Footer
+      orientation="end"
+      className={twMerge("pt-5", className)}
+      {...restProps}
+    >
+      {children}
+    </Card.Footer>
+  );
 }
 const Modal = { Root, Title, Body, Footer };
 // Modal.Title = Title;
