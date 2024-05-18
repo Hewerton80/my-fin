@@ -8,7 +8,7 @@ import {
 import { isNumber, isUndefined } from "@/shared/isType";
 import Link from "next/link";
 import { useMemo } from "react";
-import { ExpernseWithComputedFields } from "@/types/Expense";
+import { ExpernseWithComputedFields } from "@/modules/expenses/types/Expense";
 import { useGetExpenses } from "@/modules/expenses/hooks/useGetExpenses";
 import { getCurrencyFormat } from "@/shared/getCurrencyFormat";
 import { format } from "date-fns/format";

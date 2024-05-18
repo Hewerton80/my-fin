@@ -143,6 +143,7 @@ export async function main() {
         { name: "Smartphone", iconName: "📱" },
         { name: "Computer", iconName: "💻" },
         { name: "Video game", iconName: "👾" },
+        { name: "peripherals", iconName: "🖱️" },
       ],
     },
     {

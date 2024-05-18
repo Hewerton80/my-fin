@@ -1,4 +1,3 @@
-import { createExpenseSchema } from "@/lib/apiZodSchemas/expenseSchema";
 import prisma from "@/lib/prisma";
 import {
   parseExpenseSearchParams,
@@ -9,17 +8,19 @@ import { CONSTANTS } from "@/shared/constants";
 import {
   ExpernseWithComputedFields,
   getExpensesWitchComputedFields,
-} from "@/types/Expense";
+} from "@/modules/expenses/types/Expense";
 import { endOfDay } from "date-fns/endOfDay";
 import { startOfDay } from "date-fns/startOfDay";
 import { Frequency, PaymantType, Prisma } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { isNumber } from "@/shared/isType";
+import { createApiExpenseSchema } from "@/modules/expenses/schemas/apiFormExpenseSchema";
 
 const { USER_HAS_NO_PERMISSION, INTERNAL_SERVER_ERROR, VALIDATION_ERROR } =
   CONSTANTS.API_RESPONSE_MESSAGES;
 
+const userId = "clw3lfm92001z20gvmiux3f4h";
 export async function GET(request: NextRequest) {
   //   if (!(await verifyIfUserIsTeacher(request))) {
   //     return NextResponse.json(
@@ -37,6 +38,7 @@ export async function GET(request: NextRequest) {
   >({
     model: prisma.expense,
     paginationArgs: { currentPage, perPage },
+    where: { userId },
     include: {
       subCategories: { select: { id: true, name: true, iconName: true } },
       creditCard: { select: { id: true, name: true } },
@@ -62,10 +64,12 @@ export async function POST(request: NextRequest) {
   //   );
   // }
 
-  const expense = (await request.json()) as z.infer<typeof createExpenseSchema>;
+  const expense = (await request.json()) as z.infer<
+    typeof createApiExpenseSchema
+  >;
 
   try {
-    createExpenseSchema.parse(expense);
+    createApiExpenseSchema.parse(expense);
   } catch (error: any) {
     return NextResponse.json(handleZodValidationError(error), { status: 400 });
   }
@@ -84,7 +88,7 @@ export async function POST(request: NextRequest) {
       registrationDate,
     } = expense;
     const createExpenseData: any = {
-      userId: "clw3lfm92001z20gvmiux3f4h",
+      userId,
       name,
       description,
       amount,
@@ -152,29 +156,7 @@ export async function POST(request: NextRequest) {
     } else if (dueDate) {
       createExpenseData.dueDate = endOfDay(new Date(dueDate));
     }
-    await prisma.expense.create({
-      data: createExpenseData,
-      // data: {
-      //   userId: "clvqt0co5001z11vxc52s97la",
-      //   name,
-      //   subCategories: subCategories
-      //     ? {
-      //         connect: subCategories?.map((subCategoryId) => ({
-      //           id: subCategoryId,
-      //         })),
-      //       }
-      //     : undefined,
-      //   description,
-      //   amount,
-      //   isPaid,
-      //   paymentType: paymentType as PaymantType,
-      //   frequency: frequency as Frequency,
-      //   totalInstallments,
-      //   creditCardId,
-      //   dueDate,
-      //   registrationDate,
-      // },
-    });
+    await prisma.expense.create({ data: createExpenseData });
     return NextResponse.json(expense, { status: 201 });
   } catch (error: any) {
     console.log(error);

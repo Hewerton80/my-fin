@@ -5,3 +5,17 @@
 body {
   @apply font-sans bg-white text-body-text dark:bg-dark-card dark:text-light;
 }
+
+@media (min-width: theme("screens.md")) {
+  /* scrollbar-width: none; */
+  ::-webkit-scrollbar {
+    height: 10px;
+    width: 6px;
+    background: theme("colors.gray.400");
+  }
+  ::-webkit-scrollbar-thumb {
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    background: theme("colors.gray.600");
+  }
+}

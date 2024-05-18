@@ -163,7 +163,7 @@ export function ModalTriggerExpenseForm({
                   <Radio.Root
                     {...restField}
                     value={isBoolean(value) ? String(value) : undefined}
-                    label="Paid"
+                    label="Paid off"
                     onValueChange={(newValue) =>
                       onChange(stringToBoolean(newValue))
                     }

@@ -2,7 +2,10 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useAxios } from "../../../hooks/useAxios";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { ExpernseWithComputedFields } from "@/types/Expense";
+import {
+  ExpenseQueryKeys,
+  ExpernseWithComputedFields,
+} from "@/modules/expenses/types/Expense";
 import { IPaginatedDocs } from "@/lib/prismaHelpers";
 import { parseJsonToSearchParams } from "@/shared/parseJsonToSearchParams";
 
@@ -50,9 +53,9 @@ export function useGetExpenses() {
         //   })
         .then((res) => res.data || { docs: [] })
         .finally(() => setIsSearching(false)),
-    queryKey: ["expenses"],
-    enabled: false,
+    queryKey: [ExpenseQueryKeys.LIST],
     retry: 1,
+    gcTime: 1000 * 10,
   });
 
   const parsedExpenses = useMemo<

@@ -13,7 +13,7 @@ const {
   MUST_BE_GREATER_THAN_ZERO,
 } = CONSTANTS.VALIDATION_ERROR_MESSAGES;
 
-const baseExpenseSchema = z.object({
+const apiFormExpenseSchema = z.object({
   name: z
     .string({ required_error: REQUIRED_FIELD })
     .min(1, REQUIRED_FIELD)
@@ -58,7 +58,7 @@ const baseExpenseSchema = z.object({
     .optional(),
 });
 
-export const createExpenseSchema = baseExpenseSchema
+export const createApiExpenseSchema = apiFormExpenseSchema
   .refine(({ paymentType, isPaid }) => (isPaid ? paymentType : true), {
     message: REQUIRED_FIELD,
     path: ["paymentType"],

@@ -1,5 +1,5 @@
 import { Badge } from "@/components/ui/dataDisplay/Badge";
-import { ExpenseStatus } from "@/types/Expense";
+import { ExpenseStatus } from "@/modules/expenses/types/Expense";
 
 type BadgeVariatnsType = {
   [key in keyof typeof ExpenseStatus]: JSX.Element;
