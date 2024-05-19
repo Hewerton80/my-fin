@@ -14,6 +14,8 @@ import { format } from "date-fns/format";
 import { getExpenseBadge } from "@/shared/statusExpenseBadge";
 import { ModalTriggerExpenseForm } from "../../../modules/expenses/components/ModalTriggerExpenseForm";
 import { ExpernseWithComputedFields } from "@/modules/expenses/types";
+import { TableExpenseActionsButtons } from "@/modules/expenses/components/TableExpenseActionsButtons";
+import { capitalizeFisrtLetter } from "@/shared/string";
 
 export default function UsersPage() {
   // const {
@@ -75,7 +77,9 @@ export default function UsersPage() {
         label: "Frequency",
         field: "frequency",
         onParse: (expernse) =>
-          expernse?.frequency ? expernse?.frequency?.toLocaleLowerCase() : "-",
+          expernse?.frequency
+            ? capitalizeFisrtLetter(expernse?.frequency)
+            : "-",
       },
       {
         label: "Due Date",
@@ -91,8 +95,18 @@ export default function UsersPage() {
         onParse: (expernse) =>
           expernse?.status ? getExpenseBadge(expernse?.status) : "-",
       },
+      {
+        label: "",
+        field: "actions",
+        onParse: (expernse) => (
+          <TableExpenseActionsButtons
+            expense={expernse}
+            onSuccess={refetchExpenses}
+          />
+        ),
+      },
     ],
-    []
+    [refetchExpenses]
   );
 
   return (

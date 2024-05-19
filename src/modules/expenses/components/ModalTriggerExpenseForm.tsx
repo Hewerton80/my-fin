@@ -1,6 +1,5 @@
 import { Modal } from "@/components/ui/overlay/Modal";
 import { useState } from "react";
-import { ExpenseForm } from "./ExpenseForm";
 import { Slot } from "@radix-ui/react-slot";
 import { Button } from "@/components/ui/buttons/Button";
 import { Input } from "@/components/ui/forms/inputs/Input";

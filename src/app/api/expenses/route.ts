@@ -37,7 +37,7 @@ export async function GET(request: NextRequest) {
   const paginedExpenses = await prismaPagination<
     ExpernseWithComputedFields,
     Prisma.ExpenseWhereInput,
-    Prisma.ExpenseOrderByWithRelationInput,
+    any,
     Prisma.ExpenseInclude
   >({
     model: prisma.expense,

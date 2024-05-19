@@ -19,20 +19,11 @@ interface ButtonStyle {
   activeRing?: string;
   hoverBg?: string;
   hoverText?: string;
-  darkStyles?: string[];
 }
 
 const generateButtonStyles = (baseStyles: ButtonStyle) => {
-  const {
-    bg,
-    border,
-    text,
-    focusRing,
-    activeRing,
-    hoverBg,
-    hoverText,
-    darkStyles,
-  } = baseStyles;
+  const { bg, border, text, focusRing, activeRing, hoverBg, hoverText } =
+    baseStyles;
   const commonClasses = [
     bg,
     border,
@@ -41,13 +32,7 @@ const generateButtonStyles = (baseStyles: ButtonStyle) => {
     focusRing,
     hoverBg,
     hoverText,
-    darkStyles,
   ];
-
-  if (darkStyles) {
-    commonClasses.push(...darkStyles);
-  }
-
   return twMerge(...commonClasses);
 };
 
@@ -128,14 +113,14 @@ const buttonVariants = {
     "light-ghost": generateButtonStyles({
       bg: "bg-transparent",
       border: "border-transparent",
-      text: "text-light",
-      hoverBg: "hover:bg-light/10",
+      text: "text-body-text dark:text-light ",
+      hoverBg: "hover:bg-dark-card/10 dark:hover:bg-light/10",
     }),
     "dark-ghost": generateButtonStyles({
       bg: "bg-transparent",
       border: "border-transparent",
-      text: "text-body-text dark:text-light",
-      hoverBg: "hover:bg-dark-card/10 dark:hover:bg-light/10",
+      text: "text-light dark:text-body-text",
+      hoverBg: "hover:bg-light/10 dark:hover:bg-dark-card/10",
     }),
   },
 };

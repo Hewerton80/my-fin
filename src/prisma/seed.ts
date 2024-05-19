@@ -233,6 +233,7 @@ export async function main() {
       data: {
         name: "ifood Ana Cleide Campos",
         amount: 16.99,
+        frequency: "DO_NOT_REPEAT",
         userId: createdUser.id,
         paymentType: "CREDIT_CARD",
         registrationDate: new Date("2024-04-29T00:00:01"),

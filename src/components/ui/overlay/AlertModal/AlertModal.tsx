@@ -12,7 +12,7 @@ import { useAlertModal } from "@/hooks/useAlertModal";
 // };
 
 const variants = {
-  default: { color: "text-black" },
+  default: { color: "text-black dark:text-light" },
   success: { color: "text-success" },
   info: { color: "text-info" },
   warning: { color: "text-warning" },
@@ -107,7 +107,7 @@ const AlertModal = forwardRef(() => {
         </div>
       </Modal.Body>
       {!isLoading && (
-        <Modal.Footer className="gap-4" orientation="center">
+        <Modal.Footer className="gap-4" orientation="end">
           {showCancelButton && (
             <Button
               variantStyle={cancelButtonVariantStyle}

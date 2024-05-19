@@ -3,10 +3,13 @@ import { isAfter } from "date-fns/isAfter";
 import { subDays } from "date-fns/subDays";
 import { ExpenseStatus, ExpernseWithComputedFields } from "./types";
 
-export const getExpenseStatusByDueDate = (dueDate?: Date | null) => {
-  if (!dueDate) {
-    return undefined;
-  }
+export const getExpenseStatusByDueDate = (
+  expense: ExpernseWithComputedFields
+) => {
+  if (expense?.isPaid) return ExpenseStatus.PAID;
+  const dueDate = expense?.dueDate;
+  if (!dueDate) return undefined;
+
   const now = new Date();
   if (dueDate && isAfter(now, dueDate)) {
     return ExpenseStatus.OVERDUE;
@@ -20,7 +23,7 @@ export const getExpenseStatusByDueDate = (dueDate?: Date | null) => {
 export const getExpenseWitchComputedFields = (
   expense: ExpernseWithComputedFields
 ): ExpernseWithComputedFields => {
-  const status = getExpenseStatusByDueDate(expense?.dueDate);
+  const status = getExpenseStatusByDueDate(expense);
   return { ...expense, status };
 };
 
