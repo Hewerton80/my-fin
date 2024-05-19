@@ -5,10 +5,6 @@ import {
 } from "@/lib/prismaHelpers";
 import { handleZodValidationError } from "@/lib/zodHelpers";
 import { CONSTANTS } from "@/shared/constants";
-import {
-  ExpernseWithComputedFields,
-  getExpensesWitchComputedFields,
-} from "@/modules/expenses/types/Expense";
 import { endOfDay } from "date-fns/endOfDay";
 import { startOfDay } from "date-fns/startOfDay";
 import { Frequency, PaymantType, Prisma } from "@prisma/client";
@@ -16,9 +12,17 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { isNumber } from "@/shared/isType";
 import { createApiExpenseSchema } from "@/modules/expenses/schemas/apiFormExpenseSchema";
+import { ExpernseWithComputedFields } from "@/modules/expenses/types";
+import { getExpensesWitchComputedFields } from "@/modules/expenses/utils";
 
-const { USER_HAS_NO_PERMISSION, INTERNAL_SERVER_ERROR, VALIDATION_ERROR } =
-  CONSTANTS.API_RESPONSE_MESSAGES;
+const {
+  USER_HAS_NO_PERMISSION,
+  CREDIT_CARD_NOT_FOUND,
+  USER_NOT_FOUND,
+  INTERNAL_SERVER_ERROR,
+  SUB_CATEGORY_NOT_FOUND,
+  VALIDATION_ERROR,
+} = CONSTANTS.API_RESPONSE_MESSAGES;
 
 const userId = "clw3lfm92001z20gvmiux3f4h";
 export async function GET(request: NextRequest) {
@@ -39,6 +43,7 @@ export async function GET(request: NextRequest) {
     model: prisma.expense,
     paginationArgs: { currentPage, perPage },
     where: { userId },
+    orderBy: [{ isPaid: "asc" }, { dueDate: "asc" }],
     include: {
       subCategories: { select: { id: true, name: true, iconName: true } },
       creditCard: { select: { id: true, name: true } },
@@ -126,19 +131,19 @@ export async function POST(request: NextRequest) {
 
       if (!creditCard) {
         return NextResponse.json(
-          { message: "Credit card not found" },
+          { message: CREDIT_CARD_NOT_FOUND },
           { status: 404 }
         );
       }
 
       createExpenseData.paymentType = PaymantType.CREDIT_CARD;
-      const now = new Date(registrationDate!);
-      const currentDayOfMonth = now.getDate();
+      const _registrationDate = new Date(registrationDate!);
+      const currentDayOfMonth = _registrationDate.getDate();
       const creditCardDueDay = creditCard?.dueDay!;
       const creditCardInvoiceClosingDay = creditCard?.invoiceClosingDay!;
       const handledDueDate = new Date(
-        now.getFullYear(),
-        now.getMonth(),
+        _registrationDate.getFullYear(),
+        _registrationDate.getMonth(),
         creditCardDueDay
       );
       if (creditCardInvoiceClosingDay <= creditCardDueDay) {
@@ -163,21 +168,18 @@ export async function POST(request: NextRequest) {
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
       if (error?.code === "P2018") {
         return NextResponse.json(
-          { message: "SubCategory not found" },
+          { message: SUB_CATEGORY_NOT_FOUND },
           { status: 404 }
         );
       }
       if (error?.meta?.field_name === "creditCardId") {
         return NextResponse.json(
-          { message: "Credit card not found" },
+          { message: CREDIT_CARD_NOT_FOUND },
           { status: 404 }
         );
       }
       if (error?.meta?.field_name === "userId") {
-        return NextResponse.json(
-          { message: "User not found" },
-          { status: 404 }
-        );
+        return NextResponse.json({ message: USER_NOT_FOUND }, { status: 404 });
       }
     }
     return NextResponse.json(error, { status: 500 });

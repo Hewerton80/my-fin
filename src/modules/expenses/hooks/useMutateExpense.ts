@@ -2,13 +2,13 @@ import { useAxios } from "../../../hooks/useAxios";
 import { useCallback, useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ExpernseWithComputedFields } from "@/modules/expenses/types/Expense";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import {
   ExpenseFormValues,
   createFrontendExpenseSchema,
 } from "../schemas/frontendFormExpenseSchema";
+import { ExpernseWithComputedFields } from "../types";
 
 export function useMutateExpense() {
   const { apiBase } = useAxios();

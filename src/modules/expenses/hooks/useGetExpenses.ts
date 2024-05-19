@@ -2,12 +2,9 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useAxios } from "../../../hooks/useAxios";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import {
-  ExpenseQueryKeys,
-  ExpernseWithComputedFields,
-} from "@/modules/expenses/types/Expense";
 import { IPaginatedDocs } from "@/lib/prismaHelpers";
 import { parseJsonToSearchParams } from "@/shared/parseJsonToSearchParams";
+import { ExpenseQueryKeys, ExpernseWithComputedFields } from "../types";
 
 export function useGetExpenses() {
   const { apiBase } = useAxios();

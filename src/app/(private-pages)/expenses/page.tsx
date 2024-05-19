@@ -8,12 +8,12 @@ import {
 import { isNumber, isUndefined } from "@/shared/isType";
 import Link from "next/link";
 import { useMemo } from "react";
-import { ExpernseWithComputedFields } from "@/modules/expenses/types/Expense";
 import { useGetExpenses } from "@/modules/expenses/hooks/useGetExpenses";
 import { getCurrencyFormat } from "@/shared/getCurrencyFormat";
 import { format } from "date-fns/format";
 import { getExpenseBadge } from "@/shared/statusExpenseBadge";
 import { ModalTriggerExpenseForm } from "../../../modules/expenses/components/ModalTriggerExpenseForm";
+import { ExpernseWithComputedFields } from "@/modules/expenses/types";
 
 export default function UsersPage() {
   // const {

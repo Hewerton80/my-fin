@@ -102,10 +102,12 @@ model ExpenseSubCategory {
 }
 
 model TransitionHistory {
-    id        String   @id @default(cuid())
-    name      String
-    amount    Float?
-    expenseId String
-    expense   Expense  @relation(fields: [expenseId], references: [id])
-    createdAt DateTime @default(now())
+    id                 String   @id @default(cuid())
+    name               String
+    amount             Float?
+    totalInstallments  Int?
+    currentInstallment Int?
+    expenseId          String
+    expense            Expense  @relation(fields: [expenseId], references: [id])
+    createdAt          DateTime @default(now())
 }

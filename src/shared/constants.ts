@@ -29,13 +29,10 @@ export const CONSTANTS = {
     TRAINING_PLAN_NOT_FOUND: "Training plan not found",
     TRAINING_ALREADY_PROGRESS: "Training is already in progress",
     ALREADY_HAS_TRAINING_IN_PROGRESS: "Already has a training in progress",
-    TRAINING_ALREADY_NOT_PROGRESS: "Training is already not in progress",
-    EXERCISE_ALREADY_PROGRESS: "Exercise is already in progress",
-    EXERCISE_ALREADY_FINISHED: "Exercise is already finished",
-    EXERCISE_WAS_NOT_STARTED: "Exercise was not started",
-    EXERCISE_NOT_FOUND: "Exercise not found",
-    THERE_IS_EXERCISES_NOT_FINISHED:
-      "There are exercises that are not finished",
+    EXPENSE_NOT_FOUND: "expense not found",
+    EXPENSE_ALREADY_PAID: "This expense has already been paid",
+    CREDIT_CARD_NOT_FOUND: "Credit card not found",
+    SUB_CATEGORY_NOT_FOUND: "Sub category not found",
     USER_ALREADY_EXISTS: "User with this email already exists",
     INTERNAL_SERVER_ERROR: "Internal server error",
     STUDENT_ALREADY_HAS_TRAINING_PLAN:
