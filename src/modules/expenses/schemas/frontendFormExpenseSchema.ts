@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { SelectOption } from "@/components/ui/forms/selects";
 import { CONSTANTS } from "@/shared/constants";
 import { REGEX } from "@/shared/regex";
 import { isValid as isValidDate } from "date-fns";
@@ -89,6 +88,4 @@ export const createFrontendExpenseSchema = frontendFormExpenseSchema;
 type InferBaseExpenseFormSchema = z.infer<typeof frontendFormExpenseSchema>;
 type InferCreateExpenseFormSchema = z.infer<typeof createFrontendExpenseSchema>;
 export type ExpenseFormValues = InferBaseExpenseFormSchema &
-  InferCreateExpenseFormSchema & {
-    categoriesOptions: SelectOption[];
-  };
+  InferCreateExpenseFormSchema;

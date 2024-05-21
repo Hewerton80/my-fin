@@ -107,8 +107,8 @@ export const PrimitiveSelect = forwardRef(
         )}
         <ReactSelect
           ref={ref}
-          menuIsOpen={_menuIsOpen}
           onMenuOpen={() => _setMenuIsOpen(true)}
+          menuIsOpen={_menuIsOpen}
           onMenuClose={() => _setMenuIsOpen(false)}
           required={required}
           placeholder={placeholder}
@@ -153,7 +153,7 @@ export const PrimitiveSelect = forwardRef(
                 )}
                 isFocused={isFocused}
                 isSelected={isSelected}
-                getStyles={() => ({ fontSize: 14, padding: "6px 8px" })}
+                getStyles={() => ({ fontSize: 14, padding: "6px 8px", gap: 0 })}
               >
                 {children}
               </components.Option>
@@ -167,14 +167,15 @@ export const PrimitiveSelect = forwardRef(
                 {children}
               </div>
             ),
-            MultiValueContainer: ({ children, innerProps }) => (
-              <Badge variant="primary" className="gap-1">
-                {children}
-              </Badge>
+            MultiValueContainer: ({ children }) => (
+              <Badge variant="primary">{children}</Badge>
             ),
             MultiValueLabel: ({ children }) => <Fragment>{children}</Fragment>,
             MultiValueRemove: ({ innerProps }) => (
-              <CloseButton {...innerProps} />
+              <CloseButton
+                {...innerProps}
+                className={twMerge("ml-1", innerProps?.className)}
+              />
             ),
             DropdownIndicator: () => (
               <span
@@ -216,7 +217,7 @@ export const PrimitiveSelect = forwardRef(
           options={isLoading ? [] : options}
           formatOptionLabel={(option) => (
             <>
-              {option?.icon && <span className="mr-2">{option?.icon}</span>}
+              {option?.icon && <span className="mr-1">{option?.icon}</span>}
               {option.label}
             </>
           )}

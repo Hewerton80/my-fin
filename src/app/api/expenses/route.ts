@@ -45,7 +45,7 @@ export async function GET(request: NextRequest) {
     where: { userId },
     orderBy: [{ isPaid: "asc" }, { dueDate: "asc" }],
     include: {
-      subCategories: { select: { id: true, name: true, iconName: true } },
+      // subCategories: { select: { id: true, name: true, iconName: true } },
       creditCard: { select: { id: true, name: true } },
     },
     // orderBy,
@@ -91,21 +91,31 @@ export async function POST(request: NextRequest) {
       creditCardId,
       dueDate,
       registrationDate,
+      iconsName,
     } = expense;
     const createExpenseData: any = {
       userId,
       name,
       description,
+      iconsName,
       amount,
       isPaid,
       registrationDate: startOfDay(new Date(registrationDate!)),
     };
     if (subCategories) {
-      createExpenseData.subCategories = {
-        connect: subCategories?.map((subCategoryId) => ({
-          id: subCategoryId,
-        })),
-      };
+      const subCategoriesIds = subCategories.map((subCategoryId) => ({
+        id: subCategoryId,
+      }));
+      const foundSubCategories = await prisma.subCategory.findMany({
+        where: { id: { in: subCategories } },
+      });
+      createExpenseData.iconsName = foundSubCategories
+        .map((subCategory) => subCategory.iconName)
+        ?.join(",");
+      createExpenseData.subCategoriesName = foundSubCategories
+        .map((subCategory) => subCategory.name)
+        ?.join(",");
+      createExpenseData.subCategories = { connect: subCategoriesIds };
     }
 
     if (isPaid) {

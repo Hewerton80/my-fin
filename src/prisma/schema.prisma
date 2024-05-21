@@ -39,8 +39,9 @@ model Expense {
     id                   String               @id @default(cuid())
     name                 String
     description          String?
-    iconName             String?
     amount               Float?
+    iconsName            String?
+    subCategoriesName    String?
     isPaid               Boolean              @default(false)
     dueDate              DateTime?
     registrationDate     DateTime?

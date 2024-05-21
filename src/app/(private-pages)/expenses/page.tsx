@@ -40,7 +40,14 @@ export default function UsersPage() {
       {
         label: "Nome",
         field: "name",
-        onParse: (expernse) => <>{expernse?.name}</>,
+        onParse: (expernse) => (
+          <>
+            {expernse?.iconsName
+              ? `${expernse?.iconsName?.replace(",", "")} `
+              : ""}
+            {expernse?.name}
+          </>
+        ),
       },
       {
         label: "Amount",
@@ -60,12 +67,10 @@ export default function UsersPage() {
       },
       {
         label: "Categories",
-        field: "subCategories",
+        field: "subCategoriesName",
         onParse: (expernse) =>
-          expernse?.subCategories?.length
-            ? expernse?.subCategories
-                ?.map((subCategory) => subCategory?.name)
-                ?.join(", ")
+          expernse?.subCategoriesName
+            ? expernse?.subCategoriesName?.replace(",", ", ")
             : "-",
       },
       {

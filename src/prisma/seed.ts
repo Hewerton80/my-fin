@@ -201,53 +201,53 @@ export async function main() {
       },
     ],
   });
-  const createExpenses: Prisma.ExpenseCreateArgs[] = [
-    {
-      data: {
-        name: "Aluguel",
-        iconName: "🏠",
-        amount: 450,
-        userId: createdUser.id,
-        paymentType: "PIX",
-        frequency: "MONTHLY",
-        registrationDate: new Date("2024-05-01T00:00:01"),
-        dueDate: new Date("2024-05-05T23:59:00"),
-        subCategories: {
-          connect: { id: subCategoryRentId },
-        },
-      },
-    },
-    {
-      data: {
-        name: "Gift Card PlayStation Store R$100",
-        amount: 100,
-        userId: createdUser.id,
-        paymentType: "PIX",
-        isPaid: true,
-        subCategories: {
-          connect: { id: subCategoryInfoProdictGitfitCardId },
-        },
-      },
-    },
-    {
-      data: {
-        name: "ifood Ana Cleide Campos",
-        amount: 16.99,
-        frequency: "DO_NOT_REPEAT",
-        userId: createdUser.id,
-        paymentType: "CREDIT_CARD",
-        registrationDate: new Date("2024-04-29T00:00:01"),
-        dueDate: new Date("2024-05-04T23:59:00"),
-        creditCardId: creditCardNubankId,
-        subCategories: {
-          connect: [{ id: subCategoryIfooId }, { id: subCategoryRestaurantId }],
-        },
-      },
-    },
-  ];
-  for (const expense of createExpenses) {
-    await prisma.expense.create(expense);
-  }
+  // const createExpenses: Prisma.ExpenseCreateArgs[] = [
+  //   {
+  //     data: {
+  //       name: "Aluguel",
+  //       iconName: "🏠",
+  //       amount: 450,
+  //       userId: createdUser.id,
+  //       paymentType: "PIX",
+  //       frequency: "MONTHLY",
+  //       registrationDate: new Date("2024-05-01T00:00:01"),
+  //       dueDate: new Date("2024-05-05T23:59:00"),
+  //       subCategories: {
+  //         connect: { id: subCategoryRentId },
+  //       },
+  //     },
+  //   },
+  //   {
+  //     data: {
+  //       name: "Gift Card PlayStation Store R$100",
+  //       amount: 100,
+  //       userId: createdUser.id,
+  //       paymentType: "PIX",
+  //       isPaid: true,
+  //       subCategories: {
+  //         connect: { id: subCategoryInfoProdictGitfitCardId },
+  //       },
+  //     },
+  //   },
+  //   {
+  //     data: {
+  //       name: "ifood Ana Cleide Campos",
+  //       amount: 16.99,
+  //       frequency: "DO_NOT_REPEAT",
+  //       userId: createdUser.id,
+  //       paymentType: "CREDIT_CARD",
+  //       registrationDate: new Date("2024-04-29T00:00:01"),
+  //       dueDate: new Date("2024-05-04T23:59:00"),
+  //       creditCardId: creditCardNubankId,
+  //       subCategories: {
+  //         connect: [{ id: subCategoryIfooId }, { id: subCategoryRestaurantId }],
+  //       },
+  //     },
+  //   },
+  // ];
+  // for (const expense of createExpenses) {
+  //   await prisma.expense.create(expense);
+  // }
 }
 
 main();

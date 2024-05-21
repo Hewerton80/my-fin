@@ -116,16 +116,19 @@ export function ModalTriggerExpenseForm({
               <Controller
                 control={expenseFormControl}
                 name="categoriesOptions"
-                render={({ field, fieldState }) => (
-                  <MultSelect
-                    {...field}
-                    onFocus={handleFocusCategoriesSelect}
-                    isLoading={isLoadingCategories}
-                    label="Categories"
-                    options={categoriesOptions}
-                    error={fieldState.error?.message}
-                  />
-                )}
+                render={({ field, fieldState }) => {
+                  console.log("value", field.value);
+                  return (
+                    <MultSelect
+                      {...field}
+                      onFocus={handleFocusCategoriesSelect}
+                      isLoading={isLoadingCategories}
+                      label="Categories"
+                      options={categoriesOptions}
+                      error={fieldState.error?.message}
+                    />
+                  );
+                }}
               />
               <Controller
                 control={expenseFormControl}

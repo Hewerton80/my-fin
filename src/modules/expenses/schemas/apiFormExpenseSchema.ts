@@ -21,6 +21,7 @@ const apiFormExpenseSchema = z.object({
   subCategories: z
     .array(z.string({ required_error: REQUIRED_FIELD }))
     .optional(),
+  iconsName: z.string({ required_error: REQUIRED_FIELD }).optional(),
   description: z.string({ required_error: REQUIRED_FIELD }).trim().optional(),
   amount: z
     .number({

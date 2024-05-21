@@ -55,28 +55,6 @@ export function useGetExpenses() {
     gcTime: 1000 * 10,
   });
 
-  const parsedExpenses = useMemo<
-    IPaginatedDocs<ExpernseWithComputedFields> | undefined
-  >(() => {
-    if (!expenses) return undefined;
-    const parsedExpenses: IPaginatedDocs<ExpernseWithComputedFields> = {
-      ...expenses,
-    };
-    parsedExpenses.docs = [...parsedExpenses.docs].map((expense) => {
-      const subCategoriesIcons = expense?.subCategories
-        ?.map((subCategory) => subCategory.iconName)
-        ?.join("");
-      const handledNane = subCategoriesIcons
-        ? `${subCategoriesIcons} ${expense.name}`
-        : expense.name;
-      return {
-        ...expense,
-        name: handledNane,
-      };
-    });
-    return parsedExpenses;
-  }, [expenses]);
-
   const isLoadingExpenses = useMemo(
     () => isFetching || isSearching,
     [isFetching, isSearching]
@@ -128,7 +106,7 @@ export function useGetExpenses() {
   );
 
   return {
-    expenses: parsedExpenses,
+    expenses,
     isLoadingExpenses,
     expensesError,
     // expensesQueryParams,
