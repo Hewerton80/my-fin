@@ -43,7 +43,8 @@ export default function UsersPage() {
         onParse: (expernse) => (
           <>
             {expernse?.iconsName
-              ? `${expernse?.iconsName?.replace(",", "")} `
+              ? // replace all ',' to ' '
+                `${expernse?.iconsName?.replaceAll(",", "")} `
               : ""}
             {expernse?.name}
           </>
@@ -70,7 +71,7 @@ export default function UsersPage() {
         field: "subCategoriesName",
         onParse: (expernse) =>
           expernse?.subCategoriesName
-            ? expernse?.subCategoriesName?.replace(",", ", ")
+            ? expernse?.subCategoriesName?.replaceAll(",", ", ")
             : "-",
       },
       {

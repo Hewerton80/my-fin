@@ -11,7 +11,7 @@ export function SplashScreen() {
       <div className="flex justify-center items-center flex-col h-fit m-auto gap-8">
         <Image
           src="/images/logo-1.png"
-          alt="logo"
+          alt="splash-screen"
           width={80}
           height={80}
           priority

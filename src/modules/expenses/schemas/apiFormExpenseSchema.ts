@@ -21,7 +21,6 @@ const apiFormExpenseSchema = z.object({
   subCategories: z
     .array(z.string({ required_error: REQUIRED_FIELD }))
     .optional(),
-  iconsName: z.string({ required_error: REQUIRED_FIELD }).optional(),
   description: z.string({ required_error: REQUIRED_FIELD }).trim().optional(),
   amount: z
     .number({
@@ -90,3 +89,10 @@ export const createApiExpenseSchema = apiFormExpenseSchema
       creditCardId || isPaid ? true : dueDate,
     { message: REQUIRED_FIELD, path: ["dueDate"] }
   );
+
+const updateApiExpenseSchema = apiFormExpenseSchema.partial().required();
+// .refine(
+//   ({ creditCardId, isPaid, dueDate }) =>
+//     creditCardId || isPaid ? true : dueDate,
+//   { message: REQUIRED_FIELD, path: ["dueDate"] }
+// );

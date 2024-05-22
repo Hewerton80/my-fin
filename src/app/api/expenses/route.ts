@@ -13,7 +13,10 @@ import { z } from "zod";
 import { isNumber } from "@/shared/isType";
 import { createApiExpenseSchema } from "@/modules/expenses/schemas/apiFormExpenseSchema";
 import { ExpernseWithComputedFields } from "@/modules/expenses/types";
-import { getExpensesWitchComputedFields } from "@/modules/expenses/utils";
+import {
+  getExpensesWitchComputedFields,
+  getParsedSubCategoriesByIds,
+} from "@/modules/expenses/services";
 
 const {
   USER_HAS_NO_PERMISSION,
@@ -91,31 +94,22 @@ export async function POST(request: NextRequest) {
       creditCardId,
       dueDate,
       registrationDate,
-      iconsName,
     } = expense;
-    const createExpenseData: any = {
+
+    let createExpenseData: any = {
       userId,
       name,
       description,
-      iconsName,
       amount,
       isPaid,
       registrationDate: startOfDay(new Date(registrationDate!)),
     };
-    if (subCategories) {
-      const subCategoriesIds = subCategories.map((subCategoryId) => ({
-        id: subCategoryId,
-      }));
-      const foundSubCategories = await prisma.subCategory.findMany({
-        where: { id: { in: subCategories } },
-      });
-      createExpenseData.iconsName = foundSubCategories
-        .map((subCategory) => subCategory.iconName)
-        ?.join(",");
-      createExpenseData.subCategoriesName = foundSubCategories
-        .map((subCategory) => subCategory.name)
-        ?.join(",");
-      createExpenseData.subCategories = { connect: subCategoriesIds };
+
+    if (Array.isArray(subCategories)) {
+      createExpenseData = {
+        ...createExpenseData,
+        ...(await getParsedSubCategoriesByIds(subCategories)),
+      };
     }
 
     if (isPaid) {
