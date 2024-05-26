@@ -12,7 +12,7 @@ export enum ExpenseStatus {
   "ON DAY" = "ON DAY",
 }
 
-export interface ExpernseWithComputedFields extends Expense {
+export interface ExpenseWithComputedFields extends Expense {
   status?: ExpenseStatus;
   subCategories?: SubCategory[];
   creditCard?: CreditCard;

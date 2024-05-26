@@ -1,4 +1,3 @@
-"use client";
 import { ComponentPropsWithRef } from "react";
 import { twMerge } from "tailwind-merge";
 
@@ -115,7 +114,7 @@ function Td({ children, className, ...restProps }: TdProps) {
 Table.Container = TableContainer;
 Table.Head = Thead;
 Table.HeadCell = Th;
-Table.Roll = Tr;
+Table.Row = Tr;
 Table.Body = Tbody;
 Table.Data = Td;
 

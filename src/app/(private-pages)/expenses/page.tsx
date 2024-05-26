@@ -6,16 +6,16 @@ import {
   IColmunDataTable,
 } from "@/components/ui/dataDisplay/DataTable";
 import { isNumber, isUndefined } from "@/shared/isType";
-import Link from "next/link";
-import { useMemo } from "react";
+import { Suspense, useMemo } from "react";
 import { useGetExpenses } from "@/modules/expenses/hooks/useGetExpenses";
 import { getCurrencyFormat } from "@/shared/getCurrencyFormat";
 import { format } from "date-fns/format";
 import { getExpenseBadge } from "@/shared/statusExpenseBadge";
 import { ModalTriggerExpenseForm } from "../../../modules/expenses/components/ModalTriggerExpenseForm";
-import { ExpernseWithComputedFields } from "@/modules/expenses/types";
+import { ExpenseWithComputedFields } from "@/modules/expenses/types";
 import { TableExpenseActionsButtons } from "@/modules/expenses/components/TableExpenseActionsButtons";
 import { capitalizeFisrtLetter } from "@/shared/string";
+import ExpensesTable from "@/modules/expenses/components/ExpensesTable";
 
 export default function UsersPage() {
   // const {
@@ -35,28 +35,26 @@ export default function UsersPage() {
     refetchExpenses,
   } = useGetExpenses();
 
-  const cols = useMemo<IColmunDataTable<ExpernseWithComputedFields>[]>(
+  const cols = useMemo<IColmunDataTable<ExpenseWithComputedFields>[]>(
     () => [
       {
         label: "Nome",
         field: "name",
-        onParse: (expernse) => (
+        onParse: (expense) => (
           <>
-            {expernse?.iconsName
+            {expense?.iconsName
               ? // replace all ',' to ' '
-                `${expernse?.iconsName?.replaceAll(",", "")} `
+                `${expense?.iconsName?.replaceAll(",", "")} `
               : ""}
-            {expernse?.name}
+            {expense?.name}
           </>
         ),
       },
       {
         label: "Amount",
         field: "amount",
-        onParse: (expernse) =>
-          isNumber(expernse?.amount)
-            ? getCurrencyFormat(expernse?.amount!)
-            : "-",
+        onParse: (expense) =>
+          isNumber(expense?.amount) ? getCurrencyFormat(expense?.amount!) : "-",
       },
       {
         label: "Installments",
@@ -69,44 +67,42 @@ export default function UsersPage() {
       {
         label: "Categories",
         field: "subCategoriesName",
-        onParse: (expernse) =>
-          expernse?.subCategoriesName
-            ? expernse?.subCategoriesName?.replaceAll(",", ", ")
+        onParse: (expense) =>
+          expense?.subCategoriesName
+            ? expense?.subCategoriesName?.replaceAll(",", ", ")
             : "-",
       },
       {
         label: "Credit Card",
         field: "creditCard",
-        onParse: (expernse) => expernse?.creditCard?.name || "-",
+        onParse: (expense) => expense?.creditCard?.name || "-",
       },
       {
         label: "Frequency",
         field: "frequency",
-        onParse: (expernse) =>
-          expernse?.frequency
-            ? capitalizeFisrtLetter(expernse?.frequency)
-            : "-",
+        onParse: (expense) =>
+          expense?.frequency ? capitalizeFisrtLetter(expense?.frequency) : "-",
       },
       {
         label: "Due Date",
         field: "dueDate",
-        onParse: (expernse) =>
-          expernse?.dueDate
-            ? format(new Date(expernse?.dueDate), "dd/MM/yyyy")
+        onParse: (expense) =>
+          expense?.dueDate
+            ? format(new Date(expense?.dueDate), "dd/MM/yyyy")
             : "-",
       },
       {
         label: "Status",
         field: "status",
-        onParse: (expernse) =>
-          expernse?.status ? getExpenseBadge(expernse?.status) : "-",
+        onParse: (expense) =>
+          expense?.status ? getExpenseBadge(expense?.status) : "-",
       },
       {
         label: "",
         field: "actions",
-        onParse: (expernse) => (
+        onParse: (expense) => (
           <TableExpenseActionsButtons
-            expense={expernse}
+            expense={expense}
             onSuccess={refetchExpenses}
           />
         ),
@@ -162,6 +158,12 @@ export default function UsersPage() {
             />
           </div>
         </div> */}
+        {/* <ErrorBoundary> */}
+        {/* <Suspense fallback={<div>Loading...</div>}>
+          <ExpensesTable
+          />
+        </Suspense> */}
+        {/* </ErrorBoundary> */}
         <DataTable
           columns={cols}
           data={expenses?.docs}

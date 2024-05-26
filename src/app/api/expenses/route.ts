@@ -12,11 +12,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { isNumber } from "@/shared/isType";
 import { createApiExpenseSchema } from "@/modules/expenses/schemas/apiFormExpenseSchema";
-import { ExpernseWithComputedFields } from "@/modules/expenses/types";
-import {
-  getExpensesWitchComputedFields,
-  getParsedSubCategoriesByIds,
-} from "@/modules/expenses/services";
+import { ExpenseWithComputedFields } from "@/modules/expenses/types";
+import { ExpenseUtils } from "@/modules/expenses/utils";
+import { ExpenseServices } from "@/modules/expenses/service";
+import { sleep } from "@/shared/sleep";
 
 const {
   USER_HAS_NO_PERMISSION,
@@ -38,7 +37,7 @@ export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const { currentPage, perPage } = parseExpenseSearchParams(searchParams);
   const paginedExpenses = await prismaPagination<
-    ExpernseWithComputedFields,
+    ExpenseWithComputedFields,
     Prisma.ExpenseWhereInput,
     any,
     Prisma.ExpenseInclude
@@ -48,19 +47,12 @@ export async function GET(request: NextRequest) {
     where: { userId },
     orderBy: [{ isPaid: "asc" }, { dueDate: "asc" }],
     include: {
-      // subCategories: { select: { id: true, name: true, iconName: true } },
       creditCard: { select: { id: true, name: true } },
     },
-    // orderBy,
-    // where: {
-    //   isTeacher: role === "TEACHER" || undefined,
-    //   isAdmin: role === "ADMIN" || undefined,
-    //   gender,
-    //   isActive,
-    //   OR: [{ name: { contains: keyword } }, { email: { contains: keyword } }],
-    // },
   });
-  paginedExpenses.docs = getExpensesWitchComputedFields(paginedExpenses.docs);
+  paginedExpenses.docs = ExpenseUtils.getListWitchComputedFields(
+    paginedExpenses.docs
+  );
   return NextResponse.json(paginedExpenses, { status: 200 });
 }
 
@@ -108,7 +100,7 @@ export async function POST(request: NextRequest) {
     if (Array.isArray(subCategories)) {
       createExpenseData = {
         ...createExpenseData,
-        ...(await getParsedSubCategoriesByIds(subCategories)),
+        ...(await ExpenseServices.getParsedSubCategoriesByIds(subCategories)),
       };
     }
 
@@ -168,7 +160,7 @@ export async function POST(request: NextRequest) {
     await prisma.expense.create({ data: createExpenseData });
     return NextResponse.json(expense, { status: 201 });
   } catch (error: any) {
-    console.log(error);
+    console.log({ apiError: error });
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
       if (error?.code === "P2018") {
         return NextResponse.json(

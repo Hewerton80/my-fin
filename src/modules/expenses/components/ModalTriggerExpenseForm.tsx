@@ -1,3 +1,4 @@
+"use client";
 import { Modal } from "@/components/ui/overlay/Modal";
 import { useState } from "react";
 import { Slot } from "@radix-ui/react-slot";

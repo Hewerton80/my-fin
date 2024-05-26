@@ -11,9 +11,9 @@ import { Frequency, PaymantType, Prisma } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { isNumber } from "@/shared/isType";
-import { createApiExpenseSchema } from "@/modules/expenses/schemas/apiFormExpenseSchema";
+import { updateApiExpenseSchema } from "@/modules/expenses/schemas/apiFormExpenseSchema";
 import { getLoggedUser } from "@/lib/auth";
-import { getParsedSubCategoriesByIds } from "@/modules/expenses/services";
+import { ExpenseServices } from "@/modules/expenses/service";
 
 const {
   USER_HAS_NO_PERMISSION,
@@ -38,35 +38,28 @@ export async function PATCH(
   // }
 
   const expense = (await request.json()) as z.infer<
-    typeof createApiExpenseSchema
+    typeof updateApiExpenseSchema
   >;
 
   try {
-    createApiExpenseSchema.parse(expense);
+    updateApiExpenseSchema.parse(expense);
   } catch (error: any) {
     return NextResponse.json(handleZodValidationError(error), { status: 400 });
   }
   try {
-    const {
-      name,
-      subCategories,
-      description,
-      amount,
-      isPaid,
-      registrationDate,
-    } = expense;
+    const { name, subCategories, description, amount } = expense;
 
     let createExpenseData: any = {
       userId,
       name,
       description,
-      registrationDate: startOfDay(new Date(registrationDate!)),
+      amount,
     };
 
     if (Array.isArray(subCategories)) {
       createExpenseData = {
         ...createExpenseData,
-        ...(await getParsedSubCategoriesByIds(subCategories)),
+        ...(await ExpenseServices.getParsedSubCategoriesByIds(subCategories)),
       };
     }
 
@@ -74,7 +67,10 @@ export async function PATCH(
       where: { id: params?.id },
       data: createExpenseData,
     });
-    return NextResponse.json(expense, { status: 201 });
+    const expenseWitchComputedFields = await ExpenseServices.getExpenseById(
+      params?.id
+    );
+    return NextResponse.json(expenseWitchComputedFields, { status: 201 });
   } catch (error: any) {
     console.log(error);
     if (error instanceof Prisma.PrismaClientKnownRequestError) {

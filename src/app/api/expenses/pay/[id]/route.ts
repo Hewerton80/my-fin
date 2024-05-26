@@ -12,6 +12,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { isNumber } from "@/shared/isType";
 import { createApiExpenseSchema } from "@/modules/expenses/schemas/apiFormExpenseSchema";
 import { getLoggedUser } from "@/lib/auth";
+import { ExpenseServices } from "@/modules/expenses/service";
+import { ExpenseUtils } from "@/modules/expenses/utils";
 
 const {
   USER_HAS_NO_PERMISSION,
@@ -55,7 +57,7 @@ export async function PATCH(
     isNumber(totalInstallments) && isNumber(currentInstallment);
   const nextInstallment = hasInstallments ? currentInstallment! + 1 : null;
   const isLastInstallment =
-    hasInstallments && nextInstallment === totalInstallments;
+    hasInstallments && currentInstallment === totalInstallments;
 
   const transitionHistory = {
     create: {
@@ -69,11 +71,16 @@ export async function PATCH(
   let expenseData: Prisma.ExpenseUpdateInput = { transitionHistory };
 
   if (isLastInstallment) {
-    expenseData = { ...expenseData, isPaid: true, dueDate: null };
+    expenseData = {
+      ...expenseData,
+      currentInstallment: nextInstallment,
+      isPaid: true,
+      dueDate: null,
+    };
   } else if (hasInstallments && !isLastInstallment) {
     expenseData = {
       ...expenseData,
-      currentInstallment: currentInstallment! + 1,
+      currentInstallment: nextInstallment,
     };
   }
 
@@ -95,11 +102,16 @@ export async function PATCH(
     expenseData = { ...expenseData, dueDate: newDueDate };
   }
   try {
-    await prisma.expense.update({
+    const updatedExpense = await prisma.expense.update({
       where: { id: params?.id },
       data: expenseData,
+      include: {
+        creditCard: { select: { id: true, name: true } },
+      },
     });
-    return NextResponse.json(expenseData, { status: 200 });
+    const expenseWitchComputedFields =
+      ExpenseUtils.getWitchComputedFields(updatedExpense);
+    return NextResponse.json(expenseWitchComputedFields, { status: 200 });
   } catch (error: any) {
     return NextResponse.json(error, { status: 500 });
   }

@@ -90,7 +90,7 @@ export const createApiExpenseSchema = apiFormExpenseSchema
     { message: REQUIRED_FIELD, path: ["dueDate"] }
   );
 
-const updateApiExpenseSchema = apiFormExpenseSchema.partial().required();
+export const updateApiExpenseSchema = apiFormExpenseSchema.partial();
 // .refine(
 //   ({ creditCardId, isPaid, dueDate }) =>
 //     creditCardId || isPaid ? true : dueDate,

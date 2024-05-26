@@ -1,14 +1,15 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAxios } from "../../../hooks/useAxios";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient, QueryCache } from "@tanstack/react-query";
 import { IPaginatedDocs } from "@/lib/prismaHelpers";
 import { parseJsonToSearchParams } from "@/shared/parseJsonToSearchParams";
-import { ExpenseQueryKeys, ExpernseWithComputedFields } from "../types";
+import { ExpenseQueryKeys, ExpenseWithComputedFields } from "../types";
 
 export function useGetExpenses() {
   const { apiBase } = useAxios();
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   const searchParams = useSearchParams();
 
@@ -44,15 +45,11 @@ export function useGetExpenses() {
   } = useQuery({
     queryFn: () =>
       apiBase
-        .get<IPaginatedDocs<ExpernseWithComputedFields>>("/expenses")
-        //   .get<IPaginatedDocs<ExpenseWithComputedFields>>("/expenses", {
-        //      params: removeEmptyKeys(expensesQueryParamsDebounced),
-        //   })
+        .get<IPaginatedDocs<ExpenseWithComputedFields>>("/expenses")
         .then((res) => res.data || { docs: [] })
         .finally(() => setIsSearching(false)),
     queryKey: [ExpenseQueryKeys.LIST],
     retry: 1,
-    gcTime: 1000 * 10,
   });
 
   const isLoadingExpenses = useMemo(

@@ -8,7 +8,7 @@ import {
   ExpenseFormValues,
   createFrontendExpenseSchema,
 } from "../schemas/frontendFormExpenseSchema";
-import { ExpernseWithComputedFields } from "../types";
+import { ExpenseWithComputedFields } from "../types";
 
 export function useMutateExpense() {
   const { apiBase } = useAxios();
@@ -41,7 +41,7 @@ export function useMutateExpense() {
 
   const { mutate: createQrCode, isPending: isCreatingExpense } = useMutation({
     mutationFn: (
-      expenseData: Partial<ExpenseFormValues & ExpernseWithComputedFields>
+      expenseData: Partial<ExpenseFormValues & ExpenseWithComputedFields>
     ) => apiBase.post("/expenses", expenseData),
   });
 
@@ -109,7 +109,7 @@ export function useMutateExpense() {
   const getHandledExpenseFormValues = useCallback(() => {
     const expenseFormValues = { ...getExpenseValues() };
     let handledExpenseFormValues: Partial<
-      ExpenseFormValues & ExpernseWithComputedFields
+      ExpenseFormValues & ExpenseWithComputedFields
     > = {};
     Object.keys(expenseFormState.dirtyFields).forEach((field) => {
       const expenseFormValue =

@@ -41,13 +41,13 @@ export function DataTable({
 }: DataTableProps) {
   const handledDesktopData = useMemo(() => {
     return data?.map((cellData, i) => (
-      <Table.Roll key={`row-${i}`}>
+      <Table.Row key={`row-${i}`}>
         {columns.map((column, j) => (
           <Table.Data key={`row-${i}-column-${j}`}>
             {column?.onParse?.(cellData) || cellData?.[column.field] || ""}
           </Table.Data>
         ))}
-      </Table.Roll>
+      </Table.Row>
     ));
   }, [data, columns]);
 
@@ -86,11 +86,11 @@ export function DataTable({
       <Table.Container className="hidden sm:flex flex-col" {...restProps}>
         <Table>
           <Table.Head>
-            <Table.Roll>
+            <Table.Row>
               {columns.map((col, i) => (
                 <Table.HeadCell key={`col-${i}`}>{col.label}</Table.HeadCell>
               ))}
-            </Table.Roll>
+            </Table.Row>
           </Table.Head>
           <Table.Body>{handledDesktopData}</Table.Body>
         </Table>

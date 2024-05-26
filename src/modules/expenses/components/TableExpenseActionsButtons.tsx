@@ -1,13 +1,15 @@
+"use client";
 import { IconButton } from "@/components/ui/buttons/IconButton";
 import { Dropdown } from "@/components/ui/overlay/Dropdown/Dropdown";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { MdPaid, MdHistory } from "react-icons/md";
-import { ExpernseWithComputedFields } from "../types";
+import { ExpenseWithComputedFields } from "../types";
 import { memo, useCallback } from "react";
 import { usePayExpense } from "../hooks/usePayExpense";
+import { ModalTriggerExpenseForm } from "./ModalTriggerExpenseForm";
 
 interface TableExpenseActionsButtonsProps {
-  expense?: ExpernseWithComputedFields;
+  expense?: ExpenseWithComputedFields;
   onSuccess?: () => void;
 }
 
@@ -45,6 +47,15 @@ export const TableExpenseActionsButtons = memo(
               <MdHistory />
               history
             </Dropdown.Item>
+            <ModalTriggerExpenseForm id={expense?.id} onSuccess={onSuccess}>
+              <Dropdown.Item
+                className="gap-2"
+                // onClick={() => handlePayExpense(expense)}
+              >
+                <MdHistory />
+                Editar
+              </Dropdown.Item>
+            </ModalTriggerExpenseForm>
             {/* <Dropdown.Item
                       className="gap-2"
                       onClick={() => setStateExerciseIndexToEdit(i)}
