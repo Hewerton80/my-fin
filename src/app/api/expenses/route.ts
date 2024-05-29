@@ -16,6 +16,9 @@ import { ExpenseWithComputedFields } from "@/modules/expenses/types";
 import { ExpenseUtils } from "@/modules/expenses/utils";
 import { ExpenseServices } from "@/modules/expenses/service";
 import { sleep } from "@/shared/sleep";
+import { getServerSession } from "next-auth";
+import { getSession } from "next-auth/react";
+import { NextAuthOptions } from "../auth/[...nextauth]/nextAuthOptions";
 
 const {
   USER_HAS_NO_PERMISSION,
@@ -26,14 +29,18 @@ const {
   VALIDATION_ERROR,
 } = CONSTANTS.API_RESPONSE_MESSAGES;
 
-const userId = "clw3lfm92001z20gvmiux3f4h";
 export async function GET(request: NextRequest) {
-  //   if (!(await verifyIfUserIsTeacher(request))) {
-  //     return NextResponse.json(
-  //       { message: USER_HAS_NO_PERMISSION },
-  //       { status: 401 }
-  //     );
-  //   }
+  const session = await getServerSession(NextAuthOptions);
+
+  console.log({ GETSessions: session });
+  if (!session) {
+    return NextResponse.json(
+      { message: USER_HAS_NO_PERMISSION },
+      { status: 401 }
+    );
+  }
+  const userId = session?.user?.id;
+
   const { searchParams } = new URL(request.url);
   const { currentPage, perPage } = parseExpenseSearchParams(searchParams);
   const paginedExpenses = await prismaPagination<
@@ -57,13 +64,15 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  // if (!(await verifyIfUserIsTeacher(request))) {
-  //   return NextResponse.json(
-  //     { message: USER_HAS_NO_PERMISSION },
-  //     { status: 401 }
-  //   );
-  // }
-
+  const session = await getServerSession(NextAuthOptions);
+  console.log({ POSTSessions: session });
+  if (!session) {
+    return NextResponse.json(
+      { message: USER_HAS_NO_PERMISSION },
+      { status: 401 }
+    );
+  }
+  const userId = session?.user?.id;
   const expense = (await request.json()) as z.infer<
     typeof createApiExpenseSchema
   >;

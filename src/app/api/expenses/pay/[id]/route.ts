@@ -1,41 +1,28 @@
 import prisma from "@/lib/prisma";
-import {
-  parseExpenseSearchParams,
-  prismaPagination,
-} from "@/lib/prismaHelpers";
-import { handleZodValidationError } from "@/lib/zodHelpers";
 import { CONSTANTS } from "@/shared/constants";
-import { endOfDay } from "date-fns/endOfDay";
-import { startOfDay } from "date-fns/startOfDay";
-import { Frequency, PaymantType, Prisma } from "@prisma/client";
-import { NextRequest, NextResponse } from "next/server";
+import { Frequency, Prisma } from "@prisma/client";
+
 import { isNumber } from "@/shared/isType";
-import { createApiExpenseSchema } from "@/modules/expenses/schemas/apiFormExpenseSchema";
-import { getLoggedUser } from "@/lib/auth";
-import { ExpenseServices } from "@/modules/expenses/service";
 import { ExpenseUtils } from "@/modules/expenses/utils";
+import { getServerSession } from "next-auth";
+import { NextResponse } from "next/server";
+import { NextAuthOptions } from "@/app/api/auth/[...nextauth]/nextAuthOptions";
 
-const {
-  USER_HAS_NO_PERMISSION,
-  EXPENSE_NOT_FOUND,
-  INTERNAL_SERVER_ERROR,
-  VALIDATION_ERROR,
-  EXPENSE_ALREADY_PAID,
-} = CONSTANTS.API_RESPONSE_MESSAGES;
-
-const userId = "clw3lfm92001z20gvmiux3f4h";
+const { USER_HAS_NO_PERMISSION, EXPENSE_NOT_FOUND, EXPENSE_ALREADY_PAID } =
+  CONSTANTS.API_RESPONSE_MESSAGES;
 
 export async function PATCH(
-  request: NextRequest,
+  _: unknown,
   { params }: { params: { id: string } }
 ) {
-  // if (!(await verifyIfUserIsTeacher(request))) {
-  //   return NextResponse.json(
-  //     { message: USER_HAS_NO_PERMISSION },
-  //     { status: 401 }
-  //   );
-  // }
-  //   const loggedUser = getLoggedUser(request);
+  const session = await getServerSession(NextAuthOptions);
+  if (!session) {
+    return NextResponse.json(
+      { message: USER_HAS_NO_PERMISSION },
+      { status: 401 }
+    );
+  }
+  const userId = session?.user?.id;
   const expense = await prisma.expense.findUnique({
     where: { id: params?.id, userId },
   });

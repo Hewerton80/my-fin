@@ -4,7 +4,7 @@ import { type NextRequest, NextResponse } from "next/server";
 import { compareSync } from "bcrypt";
 import { signJWT } from "@/lib/auth";
 import { CONSTANTS } from "@/shared/constants";
-import { getUserWithComputedFields } from "@/types/User";
+import { getUserWithComputedFields } from "@/modules/user/User";
 
 export async function POST(request: NextRequest) {
   const loginCredentials = (await request.json()) as LoginCredentials;

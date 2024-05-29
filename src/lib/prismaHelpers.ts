@@ -1,5 +1,5 @@
 import { stringToBoolean } from "@/shared/stringToBoolean";
-import { UserRolesNamesType } from "@/types/User";
+import { UserRolesNamesType } from "@/modules/user/User";
 
 export interface IPaginatedDocs<DocsType> {
   docs: DocsType[];

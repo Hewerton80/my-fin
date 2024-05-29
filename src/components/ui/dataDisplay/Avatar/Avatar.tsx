@@ -34,7 +34,7 @@ export function Avatar({
       return `${firstLetterSingleName}`;
     }
   }, [username]);
-
+  console.log({ username, nameInities });
   return (
     <RadixAvatar.Root
       className={twMerge(

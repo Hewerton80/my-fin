@@ -1,5 +1,5 @@
-import { GenderPtBr } from "@/types/User";
-import { UserRole, UserRolesNamesType } from "@/types/User";
+import { GenderPtBr } from "@/modules/user/User";
+import { UserRole, UserRolesNamesType } from "@/modules/user/User";
 
 export const genderOptions = Object.entries(GenderPtBr).map(([key, value]) => ({
   value: key,

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { verifyJWT } from "@/lib/auth";
-import { getUserWithComputedFields } from "@/types/User";
+import { getUserWithComputedFields } from "@/modules/user/User";
 import { CONSTANTS } from "@/shared/constants";
 import { updateMeSchema } from "@/lib/apiZodSchemas/userSchemas";
 import { Prisma } from "@prisma/client";

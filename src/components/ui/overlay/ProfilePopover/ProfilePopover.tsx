@@ -3,52 +3,39 @@ import * as Menubar from "@radix-ui/react-menubar";
 import { Avatar } from "@/components/ui/dataDisplay/Avatar";
 import { twMerge } from "tailwind-merge";
 import Link from "next/link";
-import { useAuth } from "@/hooks/auth/useAuth";
 import { FiLogOut, FiUser } from "react-icons/fi";
-import assets from "../../../../../assets.json";
 import slideAndFadeANimation from "@/components/sharedStyles/slideAndFade.module.css";
-import { getContrastColor } from "@/shared/colors";
 import colors from "tailwindcss/colors";
-import { UserRole } from "@/types/User";
 import { useTheme } from "@/hooks/useTheme";
 import { FaMoon, FaSun, FaChevronRight } from "react-icons/fa";
 import menuStyle from "@/components/sharedStyles/menu.module.css";
 import { LuPaintbrush2 } from "react-icons/lu";
+import { signOut, useSession } from "next-auth/react";
+import { getContrastColor } from "@/shared/colors";
 
 export function ProfilePopover() {
-  const { logout, loggedUser } = useAuth();
   const { theme, setTheme } = useTheme();
-
-  // if (!loggedUser) {
-  //   return <></>;
-  // }
+  const { data: session } = useSession();
 
   return (
     <Menubar.Root>
       <Menubar.Menu>
         <Menubar.Trigger asChild>
           <div className="flex gap-2 sm:gap-4 items-center cursor-pointer max-w-[220px]">
-            <Avatar
-              // username={loggedUser?.name}
-              // bgColor={loggedUser?.avatarBgColor}
-              username="Lá ele"
-              bgColor="#1976d2"
-              color={
-                // loggedUser?.avatarBgColor
-                //   ? getContrastColor(loggedUser?.avatarBgColor)
-                //   :
-                colors.black
-              }
-            />
-            <div className="flex flex-col">
-              <strong className="text-black dark:text-white text-sm sm:text-base line-clamp-1">
-                Lá ele
-                {/* {loggedUser?.name} */}
-              </strong>
-              {/* <p className="text-xs text-body-text dark:text-white line-clamp-1">
-                {loggedUser?.roles?.map((role) => UserRole[role]).join(", ")}
-              </p> */}
-            </div>
+            {session?.user && (
+              <>
+                <Avatar
+                  username={session?.user?.name}
+                  bgColor={session?.user?.avatarBgColor}
+                  color={getContrastColor(session?.user?.avatarBgColor!)}
+                />
+                <div className="flex flex-col">
+                  <strong className="text-black dark:text-white text-sm sm:text-base line-clamp-1">
+                    {session?.user?.name}
+                  </strong>
+                </div>
+              </>
+            )}
           </div>
         </Menubar.Trigger>
         <Menubar.Portal>
@@ -97,7 +84,10 @@ export function ProfilePopover() {
               </Menubar.Portal>
             </Menubar.Sub>
             <Menubar.Separator className={menuStyle.separator} />
-            <Menubar.Item className={menuStyle.item} onClick={logout}>
+            <Menubar.Item
+              className={menuStyle.item}
+              onClick={() => signOut({ callbackUrl: "/auth/login" })}
+            >
               <FiLogOut size={20} /> Sair
             </Menubar.Item>
           </Menubar.Content>

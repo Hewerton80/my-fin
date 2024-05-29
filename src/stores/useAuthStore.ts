@@ -1,4 +1,4 @@
-import { UserWithComputedFields } from "@/types/User";
+import { UserWithComputedFields } from "@/modules/user/User";
 import { create } from "zustand";
 
 interface State {

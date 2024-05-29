@@ -25,7 +25,7 @@ import {
 import { Gender } from "@prisma/client";
 import { genderOptions } from "@/shared/pickerOptions";
 import { format as formatDate } from "date-fns";
-import { GenderPtBr } from "@/types/User";
+import { GenderPtBr } from "@/modules/user/User";
 import { handleErrorMessage } from "@/shared/handleErrorMessage";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";

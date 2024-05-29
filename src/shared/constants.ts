@@ -23,7 +23,7 @@ export const CONSTANTS = {
       "User does not have permission to perform this action",
     INVALID_TOKEN: "Invalid token",
     TOKEN_NOT_PROVIDED: "Token not provided",
-    INVALID_CREDENTIALS: "Invalid username or password",
+    INVALID_CREDENTIALS: "Invalid email or password",
     USER_NOT_FOUND: "User not found",
     TRAINING_NOT_FOUND: "Training not found",
     TRAINING_PLAN_NOT_FOUND: "Training plan not found",
@@ -39,6 +39,7 @@ export const CONSTANTS = {
       "The student already has an active training plan",
     PLAN_NOT_FOUND: "Training plan not found",
     INVALID_PASSWORD: "Invalid password",
+    LOGIN_ERROR: "Error while trying to login",
   },
   COOKIES_KEYS: {
     TOKEN: "TOKEN",

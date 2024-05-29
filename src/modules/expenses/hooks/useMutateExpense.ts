@@ -9,9 +9,11 @@ import {
   createFrontendExpenseSchema,
 } from "../schemas/frontendFormExpenseSchema";
 import { ExpenseWithComputedFields } from "../types";
+import { useAlertModal } from "@/hooks/useAlertModal";
 
 export function useMutateExpense() {
   const { apiBase } = useAxios();
+  const { showAlert } = useAlertModal();
   const {
     control: expenseFormControl,
     watch: watchExpense,
@@ -138,16 +140,21 @@ export function useMutateExpense() {
         return;
       }
       const handledExpenseFormValues = getHandledExpenseFormValues();
+      const isEdit = handledExpenseFormValues?.id;
       const onSuccess = () => {
         callbacks?.onSuccess?.();
-        toast.success("Expense created successfully!");
+        toast.success(`Expense ${isEdit ? "edited" : "created"} successfully!`);
       };
       const onError = (error: any) => {
         console.error("error", error);
+        showAlert({
+          title: `Error to ${isEdit ? "edit" : "create"}`,
+          variant: "danger",
+        });
       };
       createQrCode(handledExpenseFormValues, { onSuccess, onError });
     },
-    [triggerExpenseErrors, getHandledExpenseFormValues, createQrCode]
+    [triggerExpenseErrors, showAlert, getHandledExpenseFormValues, createQrCode]
   );
 
   return {
