@@ -44,12 +44,8 @@ export function useMutateExpense() {
   const { mutate: createQrCode, isPending: isCreatingExpense } = useMutation({
     mutationFn: (
       expenseData: Partial<ExpenseFormValues & ExpenseWithComputedFields>
-    ) => apiBase.post("/expenses", expenseData),
+    ) => apiBase.post("/me/expenses", expenseData),
   });
-
-  useEffect(() => {
-    console.log("expenseFormState.errors", expenseFormState?.errors);
-  }, [expenseFormState.errors]);
 
   const setValueOptions = useMemo(
     () => ({ shouldDirty: true, shouldTouch: true }),
@@ -59,14 +55,6 @@ export function useMutateExpense() {
   const isSubmitting = useMemo(() => {
     return expenseFormState.isValidating || isCreatingExpense;
   }, [expenseFormState.isValidating, isCreatingExpense]);
-
-  //   useEffect(() => {
-  //     console.log("expenseFormState", expenseFormState);
-  //   }, [expenseFormState]);
-
-  // useEffect(() => {
-  //   console.log("isSubmitting", isSubmitting);
-  // }, [isSubmitting]);
 
   const clearDueDateField = useCallback(() => {
     setExpenseValue("dueDate", "", setValueOptions);
@@ -133,9 +121,7 @@ export function useMutateExpense() {
 
   const handleSubmitExpense = useCallback(
     async (callbacks?: { onSuccess?: () => void; onError?: () => void }) => {
-      // setIsTriggingErrors(true);
       const isValid = await triggerExpenseErrors();
-      // setIsTriggingErrors(false);
       if (!isValid) {
         return;
       }

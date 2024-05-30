@@ -13,7 +13,7 @@ export function usePayExpense() {
 
   const { mutate, isPending: isPaying } = useMutation({
     mutationFn: ({ id }: { id: string }) =>
-      apiBase.patch<ExpenseWithComputedFields>(`/expenses/pay/${id}`),
+      apiBase.patch<ExpenseWithComputedFields>(`/me/expenses/pay/${id}`),
   });
 
   const payExpense = useCallback(

@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
-import { verifyJWT } from "./lib/auth";
-import prisma from "./lib/prisma";
+// import type { NextRequest } from "next/server";
+// import prisma from "./lib/prisma";
 
 export const config = {
   // matcher: "/student/:path*",
@@ -17,7 +16,8 @@ export const config = {
   ],
 };
 
-export async function middleware(request: NextRequest) {
+export async function middleware() {
+  // request: NextRequest
   // const { pathname } = request.nextUrl;
   // console.log({ pathname });
 

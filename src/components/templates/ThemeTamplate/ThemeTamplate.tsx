@@ -10,10 +10,6 @@ interface ThemeTamplateProps {
 export function ThemeTamplate({ children }: ThemeTamplateProps) {
   const { theme, setTheme } = useTheme();
   useEffect(() => {
-    console.log({
-      localStorage: localStorage.getItem(CONSTANTS.COOKIES_KEYS.THEME),
-    });
-
     if (localStorage.getItem(CONSTANTS.COOKIES_KEYS.THEME) === "dark") {
       setTheme("dark");
     }
@@ -21,7 +17,6 @@ export function ThemeTamplate({ children }: ThemeTamplateProps) {
   }, [setTheme]);
 
   useEffect(() => {
-    console.log({ theme });
     if (theme === "dark") {
       document.documentElement.classList.add("dark");
       localStorage.setItem(CONSTANTS.COOKIES_KEYS.THEME, "dark");

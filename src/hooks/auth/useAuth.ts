@@ -1,4 +1,4 @@
-import { FormEvent, useCallback, useState } from "react";
+import { useCallback, useState } from "react";
 import { CONSTANTS } from "@/shared/constants";
 import { LoginCredentials } from "./types";
 import { signIn } from "next-auth/react";
@@ -13,9 +13,8 @@ export function useAuth() {
 
   const {
     control: loginFormControl,
-    getValues,
+    handleSubmit,
     setError,
-    clearErrors,
   } = useForm<LoginCredentials>({
     defaultValues: { email: "", password: "" },
     resolver: zodResolver(loginFormSchema),
@@ -23,11 +22,8 @@ export function useAuth() {
   });
 
   const login = useCallback(
-    async (e: FormEvent) => {
-      e.preventDefault();
-      const loginCredentials = getValues();
+    async (loginCredentials: LoginCredentials) => {
       setIsLogging(true);
-      clearErrors();
       try {
         const response = await signIn("credentials", {
           redirect: false,
@@ -49,8 +45,8 @@ export function useAuth() {
         setIsLogging(false);
       }
     },
-    [router, clearErrors, getValues, setError]
+    [router, setError]
   );
 
-  return { login, loginFormControl, isLogging };
+  return { login: handleSubmit(login), loginFormControl, isLogging };
 }

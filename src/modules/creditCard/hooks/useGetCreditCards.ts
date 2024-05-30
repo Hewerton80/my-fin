@@ -13,7 +13,7 @@ export function useGetCreditCards() {
     queryKey: ["creditCards"],
     queryFn: () =>
       apiBase
-        .get<CreditCardWitchComputedFields[]>("/credit-cards")
+        .get<CreditCardWitchComputedFields[]>("/me/credit-cards")
         .then((res) => res.data || { docs: [] }),
     enabled: false,
   });

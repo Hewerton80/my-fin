@@ -1,7 +1,5 @@
 "use client";
-import { useAuth } from "@/hooks/auth/useAuth";
 import { navItems } from "@/shared/navItems";
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useMemo, forwardRef } from "react";
@@ -10,15 +8,10 @@ import { Slot } from "@radix-ui/react-slot";
 import { Resizable } from "re-resizable";
 import { useSideBar } from "@/hooks/useSideBar";
 import style from "@/components/sharedStyles/menu.module.css";
+
 export const SideBarItems = forwardRef((_, ref?: any) => {
   const currentPath = usePathname();
-
-  const { loggedUser } = useAuth();
   const { showOnlyIcons } = useSideBar();
-
-  // const avaliableNavItems = useMemo<INavItem[]>(() => {
-  //   return getAvaliableNavItems(loggedUser);
-  // }, [loggedUser]);
 
   return (
     <ul ref={ref} className="flex flex-col w-full space-y-1 p-2">
@@ -71,7 +64,6 @@ export function Sidebar() {
           onResizeStart={() => setResizingSideBar(true)}
           onResizeStop={(e, direction, ref, d) => {
             setResizingSideBar(false);
-            console.log({ futureW: sideBarWidth + d.width });
             setSideBarWidth(sideBarWidth + d.width);
           }}
           handleWrapperClass={twMerge(

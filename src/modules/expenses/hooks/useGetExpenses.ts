@@ -45,7 +45,7 @@ export function useGetExpenses() {
   } = useQuery({
     queryFn: () =>
       apiBase
-        .get<IPaginatedDocs<ExpenseWithComputedFields>>("/expenses")
+        .get<IPaginatedDocs<ExpenseWithComputedFields>>("/me/expenses")
         .then((res) => res.data || { docs: [] })
         .finally(() => setIsSearching(false)),
     queryKey: [ExpenseQueryKeys.LIST],

@@ -1,6 +1,3 @@
-import { stringToBoolean } from "@/shared/stringToBoolean";
-import { UserRolesNamesType } from "@/modules/user/User";
-
 export interface IPaginatedDocs<DocsType> {
   docs: DocsType[];
   total: number;

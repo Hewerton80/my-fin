@@ -17,3 +17,5 @@ export interface ExpenseWithComputedFields extends Expense {
   subCategories?: SubCategory[];
   creditCard?: CreditCard;
 }
+
+export type BadgeVariatnsType = Record<keyof typeof ExpenseStatus, JSX.Element>;

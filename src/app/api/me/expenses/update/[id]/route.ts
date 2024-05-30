@@ -7,7 +7,7 @@ import { z } from "zod";
 import { updateApiExpenseSchema } from "@/modules/expenses/schemas/apiFormExpenseSchema";
 import { ExpenseServices } from "@/modules/expenses/service";
 import { getServerSession } from "next-auth";
-import { NextAuthOptions } from "@/app/api/auth/[...nextauth]/nextAuthOptions";
+import { NextAuthOptions } from "@/lib/nextAuthConfig";
 
 const { USER_HAS_NO_PERMISSION, USER_NOT_FOUND, SUB_CATEGORY_NOT_FOUND } =
   CONSTANTS.API_RESPONSE_MESSAGES;

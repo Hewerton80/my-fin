@@ -15,24 +15,18 @@ import { createApiExpenseSchema } from "@/modules/expenses/schemas/apiFormExpens
 import { ExpenseWithComputedFields } from "@/modules/expenses/types";
 import { ExpenseUtils } from "@/modules/expenses/utils";
 import { ExpenseServices } from "@/modules/expenses/service";
-import { sleep } from "@/shared/sleep";
 import { getServerSession } from "next-auth";
-import { getSession } from "next-auth/react";
-import { NextAuthOptions } from "../auth/[...nextauth]/nextAuthOptions";
+import { NextAuthOptions } from "@/lib/nextAuthConfig";
 
 const {
   USER_HAS_NO_PERMISSION,
   CREDIT_CARD_NOT_FOUND,
   USER_NOT_FOUND,
-  INTERNAL_SERVER_ERROR,
   SUB_CATEGORY_NOT_FOUND,
-  VALIDATION_ERROR,
 } = CONSTANTS.API_RESPONSE_MESSAGES;
 
 export async function GET(request: NextRequest) {
   const session = await getServerSession(NextAuthOptions);
-
-  console.log({ GETSessions: session });
   if (!session) {
     return NextResponse.json(
       { message: USER_HAS_NO_PERMISSION },
@@ -65,7 +59,6 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   const session = await getServerSession(NextAuthOptions);
-  console.log({ POSTSessions: session });
   if (!session) {
     return NextResponse.json(
       { message: USER_HAS_NO_PERMISSION },
@@ -118,6 +111,7 @@ export async function POST(request: NextRequest) {
       if (paymentType === PaymantType.CREDIT_CARD) {
         createExpenseData.creditCardId = creditCardId;
       }
+      createExpenseData.transitionHistory = { create: { name, amount } };
     } else {
       createExpenseData.frequency = frequency as Frequency;
       createExpenseData.creditCardId = creditCardId;
@@ -129,6 +123,7 @@ export async function POST(request: NextRequest) {
         createExpenseData.currentInstallment = 1;
       }
     }
+
     if (createExpenseData?.creditCardId) {
       const creditCard = await prisma.creditCard.findUnique({
         where: { id: creditCardId },

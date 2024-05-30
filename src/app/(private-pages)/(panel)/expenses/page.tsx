@@ -6,27 +6,17 @@ import {
   IColmunDataTable,
 } from "@/components/ui/dataDisplay/DataTable";
 import { isNumber, isUndefined } from "@/shared/isType";
-import { Suspense, useMemo } from "react";
+import { useMemo } from "react";
 import { useGetExpenses } from "@/modules/expenses/hooks/useGetExpenses";
 import { getCurrencyFormat } from "@/shared/getCurrencyFormat";
 import { format } from "date-fns/format";
-import { getExpenseBadge } from "@/shared/statusExpenseBadge";
-import { ModalTriggerExpenseForm } from "../../../modules/expenses/components/ModalTriggerExpenseForm";
+import { ModalTriggerExpenseForm } from "../../../../modules/expenses/components/ModalTriggerExpenseForm";
 import { ExpenseWithComputedFields } from "@/modules/expenses/types";
 import { TableExpenseActionsButtons } from "@/modules/expenses/components/TableExpenseActionsButtons";
 import { capitalizeFisrtLetter } from "@/shared/string";
-import ExpensesTable from "@/modules/expenses/components/ExpensesTable";
+import { ExpenseUtils } from "@/modules/expenses/utils";
 
-export default function UsersPage() {
-  // const {
-  //   users,
-  //   isLoadingUsers,
-  //   usersError,
-  //   usersQueryParams,
-  //   refetchUsers,
-  //   changeUserFilter,
-  //   goToPage,
-  // } = useGetUsers();
+export default function ExpensesPage() {
   const {
     expenses,
     isLoadingExpenses,
@@ -43,8 +33,7 @@ export default function UsersPage() {
         onParse: (expense) => (
           <>
             {expense?.iconsName
-              ? // replace all ',' to ' '
-                `${expense?.iconsName?.replaceAll(",", "")} `
+              ? `${expense?.iconsName?.replaceAll(",", "")} `
               : ""}
             {expense?.name}
           </>
@@ -95,7 +84,9 @@ export default function UsersPage() {
         label: "Status",
         field: "status",
         onParse: (expense) =>
-          expense?.status ? getExpenseBadge(expense?.status) : "-",
+          expense?.status
+            ? ExpenseUtils.getBadgeByStatus(expense?.status)
+            : "-",
       },
       {
         label: "",

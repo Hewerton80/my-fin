@@ -28,7 +28,7 @@ interface ModalTriggerExpenseFormProps {
 }
 
 export function ModalTriggerExpenseForm({
-  id: expenseId,
+  // id: expenseId,
   children,
   onSuccess,
 }: ModalTriggerExpenseFormProps) {
@@ -41,16 +41,11 @@ export function ModalTriggerExpenseForm({
   const {
     expenseFormControl,
     watchExpense,
-    expenseFormState,
     isSubmitting,
     handleSubmitExpense,
     resetExpenseForm,
-    // getExpenseValues,
-    // triggerExpenseErrors,
   } = useMutateExpense();
   const [isOpen, setOpen] = useState(false);
-
-  const isEditExpense = useMemo(() => Boolean(expenseId), [expenseId]);
 
   const categoriesOptions = useMemo<SelectOption[]>(() => {
     if (!Array.isArray(categories)) {
@@ -117,19 +112,16 @@ export function ModalTriggerExpenseForm({
               <Controller
                 control={expenseFormControl}
                 name="categoriesOptions"
-                render={({ field, fieldState }) => {
-                  console.log("value", field.value);
-                  return (
-                    <MultSelect
-                      {...field}
-                      onFocus={handleFocusCategoriesSelect}
-                      isLoading={isLoadingCategories}
-                      label="Categories"
-                      options={categoriesOptions}
-                      error={fieldState.error?.message}
-                    />
-                  );
-                }}
+                render={({ field, fieldState }) => (
+                  <MultSelect
+                    {...field}
+                    onFocus={handleFocusCategoriesSelect}
+                    isLoading={isLoadingCategories}
+                    label="Categories"
+                    options={categoriesOptions}
+                    error={fieldState.error?.message}
+                  />
+                )}
               />
               <Controller
                 control={expenseFormControl}

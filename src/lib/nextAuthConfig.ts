@@ -1,5 +1,5 @@
 import { compareSync } from "bcrypt";
-import NextAuth, { AuthOptions } from "next-auth";
+import { AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import prisma from "@/lib/prisma";
 import { CONSTANTS } from "@/shared/constants";
@@ -35,13 +35,11 @@ export const NextAuthOptions: AuthOptions = {
   },
   callbacks: {
     async jwt({ token }) {
-      // token.user = await UserService.getById(String(token.sub));
       return token;
     },
     async session({ session, token }) {
       session.user = await UserService.getById(String(token.sub));
       session.accessToken = token as any;
-      console.log({ session });
       return { ...session };
     },
   },

@@ -1,10 +1,5 @@
-import { Card } from "@/components/ui/cards/Card";
-import { FeedBackLoading } from "@/components/ui/feedback/FeedBackLoading";
+import { SplashScreen } from "@/components/ui/feedback/SplashScreen";
 
 export default function Loading() {
-  return (
-    <Card.Root>
-      <FeedBackLoading />
-    </Card.Root>
-  );
+  return <SplashScreen />;
 }

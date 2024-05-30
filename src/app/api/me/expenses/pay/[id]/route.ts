@@ -6,7 +6,7 @@ import { isNumber } from "@/shared/isType";
 import { ExpenseUtils } from "@/modules/expenses/utils";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
-import { NextAuthOptions } from "@/app/api/auth/[...nextauth]/nextAuthOptions";
+import { NextAuthOptions } from "@/lib/nextAuthConfig";
 
 const { USER_HAS_NO_PERMISSION, EXPENSE_NOT_FOUND, EXPENSE_ALREADY_PAID } =
   CONSTANTS.API_RESPONSE_MESSAGES;
@@ -58,12 +58,7 @@ export async function PATCH(
   let expenseData: Prisma.ExpenseUpdateInput = { transitionHistory };
 
   if (isLastInstallment) {
-    expenseData = {
-      ...expenseData,
-      currentInstallment: nextInstallment,
-      isPaid: true,
-      dueDate: null,
-    };
+    expenseData = { ...expenseData, isPaid: true };
   } else if (hasInstallments && !isLastInstallment) {
     expenseData = {
       ...expenseData,
@@ -72,8 +67,9 @@ export async function PATCH(
   }
 
   if (frequency === Frequency.DO_NOT_REPEAT) {
-    expenseData = { ...expenseData, isPaid: true, dueDate: null };
-  } else if (dueDate && frequency) {
+    expenseData = { ...expenseData, isPaid: true };
+  }
+  if (dueDate && frequency && !isLastInstallment) {
     const newDueDate = new Date(dueDate);
     switch (frequency) {
       case Frequency.DAILY:

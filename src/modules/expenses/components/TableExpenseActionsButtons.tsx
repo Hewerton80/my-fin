@@ -3,7 +3,7 @@ import { IconButton } from "@/components/ui/buttons/IconButton";
 import { Dropdown } from "@/components/ui/overlay/Dropdown/Dropdown";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { MdPaid, MdHistory } from "react-icons/md";
-import { ExpenseWithComputedFields } from "../types";
+import { ExpenseStatus, ExpenseWithComputedFields } from "../types";
 import { memo, useCallback } from "react";
 import { usePayExpense } from "../hooks/usePayExpense";
 import { ModalTriggerExpenseForm } from "./ModalTriggerExpenseForm";
@@ -34,12 +34,13 @@ export const TableExpenseActionsButtons = memo(
             />
           </Dropdown.Toogle>
           <Dropdown.Menu>
-            {!expense?.isPaid && (
-              <Dropdown.Item onClick={handlePayExpense} className="gap-2">
-                <MdPaid />
-                pay
-              </Dropdown.Item>
-            )}
+            {!expense?.isPaid &&
+              expense?.status !== ExpenseStatus["ON DAY"] && (
+                <Dropdown.Item onClick={handlePayExpense} className="gap-2">
+                  <MdPaid />
+                  pay
+                </Dropdown.Item>
+              )}
             <Dropdown.Item
               className="gap-2"
               // onClick={() => handlePayExpense(expense)}
