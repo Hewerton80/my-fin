@@ -15,14 +15,17 @@ import { ExpenseWithComputedFields } from "@/modules/expenses/types";
 import { TableExpenseActionsButtons } from "@/modules/expenses/components/TableExpenseActionsButtons";
 import { capitalizeFisrtLetter } from "@/shared/string";
 import { ExpenseUtils } from "@/modules/expenses/utils";
+import { Input } from "@/components/ui/forms/inputs/Input";
 
 export default function ExpensesPage() {
   const {
     expenses,
     isLoadingExpenses,
     expensesError,
+    searchExpenseValue,
     goToPage,
     refetchExpenses,
+    changeSearcheQrCodeInput,
   } = useGetExpenses();
 
   const cols = useMemo<IColmunDataTable<ExpenseWithComputedFields>[]>(
@@ -113,8 +116,8 @@ export default function ExpensesPage() {
         </Card.Actions>
       </Card.Header>
       <Card.Body>
-        {/* <div className="flex items-center gap-2 sm:gap-2 flex-wrap">
-          <HorizontalScrollView>
+        <div className="flex items-center gap-2 sm:gap-2 flex-wrap mb-4">
+          {/* <HorizontalScrollView>
             <Picker
               label="Status"
               value={usersQueryParams.isActive}
@@ -140,15 +143,15 @@ export default function ExpensesPage() {
               hideCloseButton
               options={orderByUserOptions}
             />
-          </HorizontalScrollView>
+          </HorizontalScrollView> */}
           <div className="ml-auto w-full sm:w-auto">
             <Input
-              value={usersQueryParams.keyword}
-              onChange={(e) => changeUserFilter({ keyword: e.target.value })}
-              placeholder="Pesquisar"
+              value={searchExpenseValue}
+              onChange={(e) => changeSearcheQrCodeInput(e.target.value)}
+              placeholder="Search..."
             />
           </div>
-        </div> */}
+        </div>
         {/* <ErrorBoundary> */}
         {/* <Suspense fallback={<div>Loading...</div>}>
           <ExpensesTable

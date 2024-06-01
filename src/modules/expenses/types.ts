@@ -1,3 +1,4 @@
+import { IPaginateArgs } from "@/lib/prismaHelpers";
 import { CreditCard, Expense, SubCategory } from "@prisma/client";
 
 export enum ExpenseQueryKeys {
@@ -19,3 +20,7 @@ export interface ExpenseWithComputedFields extends Expense {
 }
 
 export type BadgeVariatnsType = Record<keyof typeof ExpenseStatus, JSX.Element>;
+
+export interface IGetExpensesQueryParams extends IPaginateArgs {
+  keyword?: string;
+}

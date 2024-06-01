@@ -55,7 +55,7 @@ export async function PATCH(
       where: { id: params?.id },
       data: createExpenseData,
     });
-    const expenseWitchComputedFields = await ExpenseServices.getExpenseById(
+    const expenseWitchComputedFields = await ExpenseServices.getOneById(
       params?.id
     );
     return NextResponse.json(expenseWitchComputedFields, { status: 201 });

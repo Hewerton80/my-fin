@@ -84,10 +84,3 @@ export const parseOrderBy = (orderBy: string | undefined) => {
 //     orderBy: parseOrderBy(searchParams.get("orderBy") || undefined),
 //   };
 // };
-export const parseExpenseSearchParams = (searchParams: URLSearchParams) => {
-  return {
-    currentPage: searchParams.get("currentPage") || 1,
-    perPage: searchParams.get("perPage") || 25,
-    orderBy: parseOrderBy(searchParams.get("orderBy") || undefined),
-  };
-};

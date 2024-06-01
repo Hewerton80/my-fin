@@ -17,7 +17,7 @@ interface Actions {
 }
 
 export const useSideBarStore = create<State & Actions>((set) => ({
-  showOnlyIcons: false,
+  showOnlyIcons: true,
   sideBarWidth: INITIAL_SIDE_BAR_WIDTH,
   resizingSideBar: false,
   setShowOnlyIcons: (showOnlyIcons) => set({ showOnlyIcons }),

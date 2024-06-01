@@ -14,16 +14,31 @@ export const SideBarItems = forwardRef((_, ref?: any) => {
   const { showOnlyIcons } = useSideBar();
 
   return (
-    <ul ref={ref} className="flex flex-col w-full space-y-1 p-2">
+    <ul
+      ref={ref}
+      className={twMerge(
+        "flex flex-col w-full space-y-1 p-2",
+        showOnlyIcons && "items-center"
+      )}
+    >
       {navItems.map(({ title, icon, path, basePath }, i) => {
         const isActive = currentPath.startsWith(`/${basePath}`);
         return (
-          <li key={`${title}-${i}`} className="flex w-full">
+          <li
+            key={`${title}-${i}`}
+            className={twMerge("flex", showOnlyIcons ? "w-fit" : "w-full")}
+          >
             <Link
               href={path}
-              className={twMerge(style.item, isActive && style["is-active"])}
+              className={twMerge(
+                style.item,
+                isActive && style["is-active"],
+                showOnlyIcons && "max-w-fit"
+              )}
             >
-              <span className="text-base">{icon}</span>
+              <span className={twMerge(showOnlyIcons ? "text-xl" : "text-lg")}>
+                {icon}
+              </span>
               {!showOnlyIcons && <span>{title}</span>}
             </Link>
           </li>

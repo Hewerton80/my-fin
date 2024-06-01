@@ -38,7 +38,7 @@ export const NextAuthOptions: AuthOptions = {
       return token;
     },
     async session({ session, token }) {
-      session.user = await UserService.getById(String(token.sub));
+      session.user = await UserService.getOneById(String(token.sub));
       session.accessToken = token as any;
       return { ...session };
     },

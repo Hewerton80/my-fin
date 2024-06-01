@@ -1,8 +1,4 @@
 import prisma from "@/lib/prisma";
-import {
-  parseExpenseSearchParams,
-  prismaPagination,
-} from "@/lib/prismaHelpers";
 import { handleZodValidationError } from "@/lib/zodHelpers";
 import { CONSTANTS } from "@/shared/constants";
 import { endOfDay } from "date-fns/endOfDay";
@@ -12,8 +8,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { isNumber } from "@/shared/isType";
 import { createApiExpenseSchema } from "@/modules/expenses/schemas/apiFormExpenseSchema";
-import { ExpenseWithComputedFields } from "@/modules/expenses/types";
-import { ExpenseUtils } from "@/modules/expenses/utils";
 import { ExpenseServices } from "@/modules/expenses/service";
 import { getServerSession } from "next-auth";
 import { NextAuthOptions } from "@/lib/nextAuthConfig";
@@ -36,29 +30,16 @@ export async function GET(request: NextRequest) {
   const userId = session?.user?.id;
 
   const { searchParams } = new URL(request.url);
-  const { currentPage, perPage } = parseExpenseSearchParams(searchParams);
-  const paginedExpenses = await prismaPagination<
-    ExpenseWithComputedFields,
-    Prisma.ExpenseWhereInput,
-    any,
-    Prisma.ExpenseInclude
-  >({
-    model: prisma.expense,
-    paginationArgs: { currentPage, perPage },
-    where: { userId },
-    orderBy: [{ isPaid: "asc" }, { dueDate: "asc" }],
-    include: {
-      creditCard: { select: { id: true, name: true } },
-    },
-  });
-  paginedExpenses.docs = ExpenseUtils.getListWitchComputedFields(
-    paginedExpenses.docs
+  const paginedExpenses = await ExpenseServices.getListByUserId(
+    String(userId),
+    searchParams
   );
   return NextResponse.json(paginedExpenses, { status: 200 });
 }
 
 export async function POST(request: NextRequest) {
   const session = await getServerSession(NextAuthOptions);
+  // console.log({ session });
   if (!session) {
     return NextResponse.json(
       { message: USER_HAS_NO_PERMISSION },
@@ -161,6 +142,7 @@ export async function POST(request: NextRequest) {
     } else if (dueDate) {
       createExpenseData.dueDate = endOfDay(new Date(dueDate));
     }
+    console.log({ createExpenseData });
     await prisma.expense.create({ data: createExpenseData });
     return NextResponse.json(expense, { status: 201 });
   } catch (error: any) {

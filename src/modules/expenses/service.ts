@@ -1,8 +1,44 @@
 import prisma from "@/lib/prisma";
 import { ExpenseUtils } from "./utils";
 import { ExpenseWithComputedFields } from "./types";
+import { parseOrderBy, prismaPagination } from "@/lib/prismaHelpers";
+import { Prisma } from "@prisma/client";
 
-const getExpenseById = async (id: string) => {
+const parseSearchParams = (searchParams: URLSearchParams) => {
+  return {
+    keyword: searchParams.get("keyword")?.trim() || "",
+    currentPage: searchParams.get("currentPage") || 1,
+    perPage: searchParams.get("perPage") || 25,
+    orderBy: parseOrderBy(searchParams.get("orderBy") || undefined),
+  };
+};
+
+const getListByUserId = async (
+  userId: string,
+  searchParams: URLSearchParams
+) => {
+  const { currentPage, perPage, keyword } = parseSearchParams(searchParams);
+  const paginedExpenses = await prismaPagination<
+    ExpenseWithComputedFields,
+    Prisma.ExpenseWhereInput,
+    any,
+    Prisma.ExpenseInclude
+  >({
+    model: prisma.expense,
+    paginationArgs: { currentPage, perPage },
+    where: { userId, name: { contains: keyword } },
+    orderBy: [{ isPaid: "asc" }, { dueDate: "asc" }],
+    include: {
+      creditCard: { select: { id: true, name: true } },
+    },
+  });
+  paginedExpenses.docs = ExpenseUtils.getListWitchComputedFields(
+    paginedExpenses.docs
+  );
+  return paginedExpenses;
+};
+
+const getOneById = async (id: string) => {
   const expense = await prisma.expense.findUnique({
     where: { id },
     include: {
@@ -33,5 +69,6 @@ const getParsedSubCategoriesByIds = async (ids: string[]) => {
 
 export const ExpenseServices = {
   getParsedSubCategoriesByIds,
-  getExpenseById,
+  getOneById,
+  getListByUserId,
 };

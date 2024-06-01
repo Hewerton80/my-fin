@@ -17,3 +17,7 @@ export const isBoolean = (value: any) => {
 export const isNull = (value: any) => {
   return value === null;
 };
+
+export const isNumberable = (value: any) => {
+  return value && !isNaN(Number(value));
+};
