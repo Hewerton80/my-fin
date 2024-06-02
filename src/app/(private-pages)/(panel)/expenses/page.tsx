@@ -11,11 +11,15 @@ import { useGetExpenses } from "@/modules/expenses/hooks/useGetExpenses";
 import { getCurrencyFormat } from "@/shared/getCurrencyFormat";
 import { format } from "date-fns/format";
 import { ModalTriggerExpenseForm } from "../../../../modules/expenses/components/ModalTriggerExpenseForm";
-import { ExpenseWithComputedFields } from "@/modules/expenses/types";
+import {
+  ExpenseStatus,
+  ExpenseWithComputedFields,
+} from "@/modules/expenses/types";
 import { TableExpenseActionsButtons } from "@/modules/expenses/components/TableExpenseActionsButtons";
 import { capitalizeFisrtLetter } from "@/shared/string";
 import { ExpenseUtils } from "@/modules/expenses/utils";
 import { Input } from "@/components/ui/forms/inputs/Input";
+import { Tabs } from "@/components/ui/navigation/Tabs";
 
 export default function ExpensesPage() {
   const {
@@ -23,9 +27,11 @@ export default function ExpensesPage() {
     isLoadingExpenses,
     expensesError,
     searchExpenseValue,
+    expenseFilterQueryParams,
     goToPage,
     refetchExpenses,
     changeSearcheQrCodeInput,
+    changeExpenseStatus,
   } = useGetExpenses();
 
   const cols = useMemo<IColmunDataTable<ExpenseWithComputedFields>[]>(
@@ -144,6 +150,25 @@ export default function ExpensesPage() {
               options={orderByUserOptions}
             />
           </HorizontalScrollView> */}
+          <Tabs.Root
+            value={expenseFilterQueryParams?.status}
+            onValueChange={(value) => changeExpenseStatus(value)}
+          >
+            <Tabs.List>
+              <Tabs.Trigger disabled={isLoadingExpenses} value="">
+                All
+              </Tabs.Trigger>
+              {Object.values(ExpenseStatus).map((status) => (
+                <Tabs.Trigger
+                  disabled={isLoadingExpenses}
+                  key={status}
+                  value={status}
+                >
+                  {capitalizeFisrtLetter(status)}
+                </Tabs.Trigger>
+              ))}
+            </Tabs.List>
+          </Tabs.Root>
           <div className="ml-auto w-full sm:w-auto">
             <Input
               value={searchExpenseValue}

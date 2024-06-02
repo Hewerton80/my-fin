@@ -9,6 +9,7 @@ import {
 } from "@/shared/parseJsonToSearchParams";
 import {
   ExpenseQueryKeys,
+  ExpenseStatus,
   ExpenseWithComputedFields,
   IGetExpensesQueryParams,
 } from "../types";
@@ -22,13 +23,15 @@ export function useGetExpenses() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  const queryParams = useMemo<IGetExpensesQueryParams>(() => {
+  const expenseFilterQueryParams = useMemo<IGetExpensesQueryParams>(() => {
     console.log({ searchParams });
     return {
       currentPage: isNumberable(searchParams.get("currentPage"))
         ? Number(searchParams.get("currentPage"))
         : 1,
       keyword: searchParams.get("keyword")?.trim() || "",
+      status:
+        ExpenseStatus?.[searchParams.get("status") as ExpenseStatus] || "",
     };
   }, [searchParams]);
 
@@ -36,7 +39,7 @@ export function useGetExpenses() {
   const [isSearching, setIsSearching] = useState(false);
 
   const [searchExpenseValue, setSearchExpenseValue] = useState(
-    queryParams?.keyword
+    expenseFilterQueryParams?.keyword
   );
 
   const {
@@ -48,7 +51,7 @@ export function useGetExpenses() {
     queryFn: () =>
       apiBase
         .get<IPaginatedDocs<ExpenseWithComputedFields>>("/me/expenses", {
-          params: removeEmptyKeys(queryParams),
+          params: removeEmptyKeys(expenseFilterQueryParams),
         })
         .then((res) => res.data || { docs: [] })
         .finally(() => setIsSearching(false)),
@@ -63,21 +66,21 @@ export function useGetExpenses() {
 
   useEffect(() => {
     refetch();
-  }, [queryParams, refetch]);
+  }, [expenseFilterQueryParams, refetch]);
 
   const updateExpensesQueryParams = useCallback(
     (newExpensesQueryParams: IGetExpensesQueryParams) => {
       const mergedQueryParams = parseJsonToSearchParams({
-        ...queryParams,
+        ...expenseFilterQueryParams,
         ...newExpensesQueryParams,
       });
       router.replace(`${pathname}${mergedQueryParams}`);
     },
-    [router, queryParams, pathname]
+    [router, expenseFilterQueryParams, pathname]
   );
 
   const refetchExpenses = useCallback(() => {
-    // updateExpensesQueryParams({});
+    // updateExpensesQueryParams(newExpensesQueryParams || {});
     refetch();
   }, [refetch]);
 
@@ -98,6 +101,13 @@ export function useGetExpenses() {
     1000
   );
 
+  const changeExpenseStatus = useCallback(
+    (status: string) => {
+      updateExpensesQueryParams({ currentPage: 1, status });
+    },
+    [updateExpensesQueryParams]
+  );
+
   const changeSearcheQrCodeInput = useCallback(
     (value: string) => {
       setIsSearching(true);
@@ -112,6 +122,8 @@ export function useGetExpenses() {
     isLoadingExpenses,
     expensesError,
     searchExpenseValue,
+    expenseFilterQueryParams,
+    changeExpenseStatus,
     refetchExpenses,
     goToPage,
     changeSearcheQrCodeInput,

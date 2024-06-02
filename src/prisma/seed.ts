@@ -161,84 +161,84 @@ export async function main() {
   //     },
   //   });
   // }
-  const expensesToCreate = [
-    {
-      name: "Italki - Aula de inglês",
-      registrationDate: "2024-01-11",
-      amount: 56.94,
-      dueDate: "2024-02-05",
-    },
-    {
-      name: "Italki - Aula de inglês",
-      registrationDate: "2024-01-26",
-      amount: 57.33,
-      dueDate: "2024-02-05",
-    },
-    {
-      name: "Italki - Aula de inglês",
-      registrationDate: "2024-01-28",
-      amount: 57.33,
-      dueDate: "2024-02-05",
-    },
-    {
-      name: "Italki - Aula de inglês",
-      registrationDate: "2024-02-21",
-      amount: 57.53,
-      dueDate: "2024-03-05",
-    },
-    {
-      name: "Italki - Aula de inglês",
-      registrationDate: "2024-03-22",
-      amount: 58.22,
-      dueDate: "2024-04-05",
-    },
-    {
-      name: "Italki - Aula de inglês",
-      registrationDate: "2024-04-20",
-      amount: 61.0,
-      dueDate: "2024-05-05",
-    },
-    {
-      name: "Italki - Aula de inglês",
-      registrationDate: "2024-04-20",
-      amount: 61.0,
-      dueDate: "2024-05-05",
-    },
-    {
-      name: "Italki - Aula de inglês",
-      registrationDate: "2024-05-10",
-      amount: 61.06,
-      dueDate: "2024-06-05",
-    },
-    {
-      name: "Italki - Aula de inglês",
-      registrationDate: "2024-05-17",
-      amount: 59.69,
-      dueDate: "2024-06-05",
-    },
-  ];
-  for (const { dueDate, registrationDate, ...expense } of expensesToCreate) {
-    await prisma.expense.create({
-      data: {
-        userId: "clwtbi7wy000008mi1rar1f7f",
-        isPaid: true,
-        iconsName: "🗣️",
-        subCategoriesName: "Languages",
-        subCategories: {
-          connect: [{ id: "clwtbgo7o0012gk0keeix3bnp" }],
-        },
-        paymentType: "CREDIT_CARD",
-        creditCardId: "clwtblzib000208mi0njwgk4r",
-        transitionHistory: {
-          create: { name: expense.name, amount: expense.amount },
-        },
-        registrationDate: new Date(registrationDate),
-        dueDate: new Date(dueDate),
-        ...expense,
-      },
-    });
-    console.log(`Expense ${expense.name} created`);
-  }
+  // const expensesToCreate = [
+  //   {
+  //     name: "Italki - Aula de inglês",
+  //     registrationDate: "2024-01-11",
+  //     amount: 56.94,
+  //     dueDate: "2024-02-05",
+  //   },
+  //   {
+  //     name: "Italki - Aula de inglês",
+  //     registrationDate: "2024-01-26",
+  //     amount: 57.33,
+  //     dueDate: "2024-02-05",
+  //   },
+  //   {
+  //     name: "Italki - Aula de inglês",
+  //     registrationDate: "2024-01-28",
+  //     amount: 57.33,
+  //     dueDate: "2024-02-05",
+  //   },
+  //   {
+  //     name: "Italki - Aula de inglês",
+  //     registrationDate: "2024-02-21",
+  //     amount: 57.53,
+  //     dueDate: "2024-03-05",
+  //   },
+  //   {
+  //     name: "Italki - Aula de inglês",
+  //     registrationDate: "2024-03-22",
+  //     amount: 58.22,
+  //     dueDate: "2024-04-05",
+  //   },
+  //   {
+  //     name: "Italki - Aula de inglês",
+  //     registrationDate: "2024-04-20",
+  //     amount: 61.0,
+  //     dueDate: "2024-05-05",
+  //   },
+  //   {
+  //     name: "Italki - Aula de inglês",
+  //     registrationDate: "2024-04-20",
+  //     amount: 61.0,
+  //     dueDate: "2024-05-05",
+  //   },
+  //   {
+  //     name: "Italki - Aula de inglês",
+  //     registrationDate: "2024-05-10",
+  //     amount: 61.06,
+  //     dueDate: "2024-06-05",
+  //   },
+  //   {
+  //     name: "Italki - Aula de inglês",
+  //     registrationDate: "2024-05-17",
+  //     amount: 59.69,
+  //     dueDate: "2024-06-05",
+  //   },
+  // ];
+  // for (const { dueDate, registrationDate, ...expense } of expensesToCreate) {
+  //   await prisma.expense.create({
+  //     data: {
+  //       userId: "clwtbi7wy000008mi1rar1f7f",
+  //       isPaid: true,
+  //       iconsName: "🗣️",
+  //       subCategoriesName: "Languages",
+  //       subCategories: {
+  //         connect: [{ id: "clwtbgo7o0012gk0keeix3bnp" }],
+  //       },
+  //       paymentType: "CREDIT_CARD",
+  //       creditCardId: "clwtblzib000208mi0njwgk4r",
+  //       transitionHistory: {
+  //         create: { name: expense.name, amount: expense.amount },
+  //       },
+  //       registrationDate: new Date(registrationDate),
+  //       dueDate: new Date(dueDate),
+  //       ...expense,
+  //     },
+  //   });
+  //   console.log(`Expense ${expense.name} created`);
+  // }
 }
 
 main();

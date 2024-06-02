@@ -7,10 +7,10 @@ export enum ExpenseQueryKeys {
 }
 
 export enum ExpenseStatus {
-  PENDING = "PENDING",
-  PAID = "PAID",
   OVERDUE = "OVERDUE",
+  PENDING = "PENDING",
   "ON DAY" = "ON DAY",
+  PAID = "PAID",
 }
 
 export interface ExpenseWithComputedFields extends Expense {
@@ -23,4 +23,5 @@ export type BadgeVariatnsType = Record<keyof typeof ExpenseStatus, JSX.Element>;
 
 export interface IGetExpensesQueryParams extends IPaginateArgs {
   keyword?: string;
+  status?: ExpenseStatus | string;
 }
