@@ -74,25 +74,8 @@ export const createApiExpenseSchema = apiFormExpenseSchema
   })
   .refine(
     ({ paymentType, creditCardId, isPaid }) =>
-      isPaid && paymentType === PaymantType.CREDIT_CARD ? creditCardId : true,
+      paymentType === PaymantType.CREDIT_CARD || !isPaid ? creditCardId : true,
     { message: REQUIRED_FIELD, path: ["creditCard"] }
-  )
-  .refine(
-    ({ paymentType, creditCardId, isPaid }) =>
-      isPaid && paymentType !== PaymantType.CREDIT_CARD && creditCardId
-        ? false
-        : true,
-    { message: "Do not required", path: ["creditCard"] }
-  )
-  .refine(
-    ({ creditCardId, isPaid, dueDate }) =>
-      creditCardId || isPaid ? true : dueDate,
-    { message: REQUIRED_FIELD, path: ["dueDate"] }
   );
 
 export const updateApiExpenseSchema = apiFormExpenseSchema.partial();
-// .refine(
-//   ({ creditCardId, isPaid, dueDate }) =>
-//     creditCardId || isPaid ? true : dueDate,
-//   { message: REQUIRED_FIELD, path: ["dueDate"] }
-// );

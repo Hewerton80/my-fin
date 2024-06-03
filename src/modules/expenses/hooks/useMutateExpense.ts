@@ -25,6 +25,7 @@ export function useMutateExpense() {
     reset: resetExpenseForm,
   } = useForm<ExpenseFormValues>({
     defaultValues: {
+      id: "",
       name: "",
       categoriesOptions: [],
       description: "",
@@ -47,14 +48,24 @@ export function useMutateExpense() {
     ) => apiBase.post("/me/expenses", expenseData),
   });
 
+  const { mutate: updateQrCode, isPending: isUpdatingExpense } = useMutation({
+    mutationFn: ({
+      id,
+      ...expenseData
+    }: Partial<ExpenseFormValues & ExpenseWithComputedFields>) =>
+      apiBase.patch(`/me/expenses/${id}`, expenseData),
+  });
+
   const setValueOptions = useMemo(
     () => ({ shouldDirty: true, shouldTouch: true }),
     []
   );
 
   const isSubmitting = useMemo(() => {
-    return expenseFormState.isValidating || isCreatingExpense;
-  }, [expenseFormState.isValidating, isCreatingExpense]);
+    return (
+      expenseFormState.isValidating || isCreatingExpense || isUpdatingExpense
+    );
+  }, [expenseFormState.isValidating, isCreatingExpense, isUpdatingExpense]);
 
   const clearDueDateField = useCallback(() => {
     setExpenseValue("dueDate", "", setValueOptions);
@@ -138,9 +149,19 @@ export function useMutateExpense() {
           variant: "danger",
         });
       };
-      createQrCode(handledExpenseFormValues, { onSuccess, onError });
+      if (isEdit) {
+        updateQrCode(handledExpenseFormValues, { onSuccess, onError });
+      } else {
+        createQrCode(handledExpenseFormValues, { onSuccess, onError });
+      }
     },
-    [triggerExpenseErrors, showAlert, getHandledExpenseFormValues, createQrCode]
+    [
+      triggerExpenseErrors,
+      updateQrCode,
+      showAlert,
+      getHandledExpenseFormValues,
+      createQrCode,
+    ]
   );
 
   return {

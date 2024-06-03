@@ -1,5 +1,5 @@
 "use client";
-import React, { ComponentPropsWithRef } from "react";
+import React, { ComponentPropsWithRef, forwardRef } from "react";
 import * as RadixDropdown from "@radix-ui/react-dropdown-menu";
 import { twMerge } from "tailwind-merge";
 import slideAndFadeANimation from "@/components/sharedStyles/slideAndFade.module.css";
@@ -13,20 +13,26 @@ export interface DropdowToogleProps
 export interface DropdowMenuProps extends RadixDropdown.MenuContentProps {}
 export interface DropdowItemProps extends RadixDropdown.MenuItemProps {}
 
-function Dropdown({ children }: DropdownProps) {
-  return <RadixDropdown.Root modal={false}>{children}</RadixDropdown.Root>;
-}
+const Root = ({ children }: DropdownProps) => {
+  return <RadixDropdown.Root modal>{children}</RadixDropdown.Root>;
+};
 
-function Toogle({ children, ...restProps }: DropdowToogleProps) {
+const Toogle = ({ children, ...restProps }: DropdowToogleProps, ref?: any) => {
   return (
-    <RadixDropdown.Trigger {...restProps}>{children}</RadixDropdown.Trigger>
+    <RadixDropdown.Trigger ref={ref} {...restProps}>
+      {children}
+    </RadixDropdown.Trigger>
   );
-}
+};
 
-function Menu({ children, className, ...restProps }: DropdowMenuProps) {
+const Menu = (
+  { children, className, ...restProps }: DropdowMenuProps,
+  ref?: any
+) => {
   return (
     <RadixDropdown.Portal>
       <RadixDropdown.Content
+        ref={ref}
         className={twMerge(
           menuStyle.root,
           "origin-top-right min-w-[13rem]",
@@ -42,21 +48,28 @@ function Menu({ children, className, ...restProps }: DropdowMenuProps) {
       </RadixDropdown.Content>
     </RadixDropdown.Portal>
   );
-}
+};
 
-function Item({ children, className, ...restProps }: DropdowItemProps) {
+const Item = (
+  { children, className, ...restProps }: DropdowItemProps,
+  ref?: any
+) => {
   return (
     <RadixDropdown.Item
+      ref={ref}
       className={twMerge(menuStyle.item, className)}
       {...restProps}
     >
       {children}
     </RadixDropdown.Item>
   );
-}
+};
 
-Dropdown.Toogle = Toogle;
-Dropdown.Menu = Menu;
-Dropdown.Item = Item;
+const Dropdown = {
+  Root: forwardRef(Root),
+  Toogle: forwardRef(Toogle),
+  Menu: forwardRef(Menu),
+  Item: forwardRef(Item),
+};
 
 export { Dropdown };

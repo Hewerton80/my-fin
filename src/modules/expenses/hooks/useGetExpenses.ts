@@ -24,7 +24,6 @@ export function useGetExpenses() {
   const searchParams = useSearchParams();
 
   const expenseFilterQueryParams = useMemo<IGetExpensesQueryParams>(() => {
-    console.log({ searchParams });
     return {
       currentPage: isNumberable(searchParams.get("currentPage"))
         ? Number(searchParams.get("currentPage"))

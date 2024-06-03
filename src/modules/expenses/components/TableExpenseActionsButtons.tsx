@@ -26,7 +26,7 @@ export const TableExpenseActionsButtons = memo(
 
     return (
       <>
-        <Dropdown>
+        <Dropdown.Root>
           <Dropdown.Toogle asChild>
             <IconButton
               variantStyle="light-ghost"
@@ -54,7 +54,7 @@ export const TableExpenseActionsButtons = memo(
                 // onClick={() => handlePayExpense(expense)}
               >
                 <MdHistory />
-                Editar
+                Edit
               </Dropdown.Item>
             </ModalTriggerExpenseForm>
             {/* <Dropdown.Item
@@ -90,7 +90,7 @@ export const TableExpenseActionsButtons = memo(
                       </Dropdown.Item>
                     )} */}
           </Dropdown.Menu>
-        </Dropdown>
+        </Dropdown.Root>
       </>
     );
   }

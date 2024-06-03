@@ -67,7 +67,6 @@ export async function POST(request: NextRequest) {
       frequency,
       totalInstallments,
       creditCardId,
-      dueDate,
       registrationDate,
     } = expense;
 
@@ -139,8 +138,6 @@ export async function POST(request: NextRequest) {
         }
       }
       createExpenseData.dueDate = endOfDay(handledDueDate);
-    } else if (dueDate) {
-      createExpenseData.dueDate = endOfDay(new Date(dueDate));
     }
     console.log({ createExpenseData });
     await prisma.expense.create({ data: createExpenseData });

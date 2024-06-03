@@ -9,6 +9,7 @@ const { VALIDATION_ERROR_MESSAGES } = CONSTANTS;
 
 const frontendFormExpenseSchema = z
   .object({
+    id: z.string().optional(),
     name: z.string().min(1, VALIDATION_ERROR_MESSAGES.REQUIRED_FIELD),
     categoriesOptions: z
       .array(z.object({ label: z.string(), value: z.string() }))
@@ -69,19 +70,11 @@ const frontendFormExpenseSchema = z
     path: ["paymentType"],
   })
   .refine(
-    ({ paymentType, creditCardId }) =>
-      paymentType === PaymantType.CREDIT_CARD ? creditCardId : true,
+    ({ paymentType, isPaid, creditCardId }) =>
+      paymentType === PaymantType.CREDIT_CARD || !isPaid ? creditCardId : true,
     {
       message: VALIDATION_ERROR_MESSAGES.REQUIRED_FIELD,
       path: ["creditCardId"],
-    }
-  )
-  .refine(
-    ({ creditCardId, isPaid, dueDate }) =>
-      creditCardId || isPaid ? true : dueDate,
-    {
-      message: VALIDATION_ERROR_MESSAGES.REQUIRED_FIELD,
-      path: ["dueDate"],
     }
   );
 export const createFrontendExpenseSchema = frontendFormExpenseSchema;
