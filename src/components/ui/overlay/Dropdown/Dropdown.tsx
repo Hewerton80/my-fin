@@ -14,7 +14,7 @@ export interface DropdowMenuProps extends RadixDropdown.MenuContentProps {}
 export interface DropdowItemProps extends RadixDropdown.MenuItemProps {}
 
 const Root = ({ children }: DropdownProps) => {
-  return <RadixDropdown.Root modal>{children}</RadixDropdown.Root>;
+  return <RadixDropdown.Root modal={false}>{children}</RadixDropdown.Root>;
 };
 
 const Toogle = ({ children, ...restProps }: DropdowToogleProps, ref?: any) => {

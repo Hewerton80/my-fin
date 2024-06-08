@@ -76,10 +76,15 @@ const getOneById = async (id: string) => {
     where: { id },
     include: {
       creditCard: { select: { id: true, name: true } },
+      subCategories: { select: { id: true, name: true, iconName: true } },
     },
   });
   const expenseWitchComputedFields = ExpenseUtils.getWitchComputedFields(
     expense as ExpenseWithComputedFields
+  );
+  console.log(
+    "expenseWitchComputedFieldssubCategories",
+    expenseWitchComputedFields?.subCategories
   );
   return expenseWitchComputedFields;
 };

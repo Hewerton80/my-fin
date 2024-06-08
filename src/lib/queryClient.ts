@@ -6,10 +6,7 @@ export const queryClient = new QueryClient({
       retry: false,
       refetchOnWindowFocus: false,
       enabled: false,
+      gcTime: 0,
     },
   },
 });
-
-export enum QUERY_KEYS {
-  Todo = "Todo",
-}

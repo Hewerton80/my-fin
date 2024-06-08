@@ -60,6 +60,7 @@ const frontendFormExpenseSchema = z
         VALIDATION_ERROR_MESSAGES.INVALID_DATE
       )
       .optional(),
+    isCloning: z.boolean().optional(),
   })
   .refine(({ isPaid, frequency }) => (isPaid ? true : frequency), {
     message: VALIDATION_ERROR_MESSAGES.REQUIRED_FIELD,

@@ -1,14 +1,12 @@
 import { CONSTANTS } from "@/shared/constants";
 import { z } from "zod";
 import { isValid as isValidDate } from "date-fns";
-import { REGEX } from "@/shared/regex";
 import { PaymantType } from "@prisma/client";
 import { isNumber } from "@/shared/isType";
 
 const {
   REQUIRED_FIELD,
   INVALID_DATE,
-  MUST_BE_VALID,
   MUST_BE_NUMBER,
   MUST_BE_GREATER_THAN_ZERO,
 } = CONSTANTS.VALIDATION_ERROR_MESSAGES;
@@ -20,8 +18,13 @@ const apiFormExpenseSchema = z.object({
     .trim(),
   subCategories: z
     .array(z.string({ required_error: REQUIRED_FIELD }))
+    .nullable()
     .optional(),
-  description: z.string({ required_error: REQUIRED_FIELD }).trim().optional(),
+  description: z
+    .string({ required_error: REQUIRED_FIELD })
+    .trim()
+    .nullable()
+    .optional(),
   amount: z
     .number({
       required_error: REQUIRED_FIELD,
@@ -30,13 +33,33 @@ const apiFormExpenseSchema = z.object({
     .refine((amount) => (isNumber(amount) ? amount > 0 : true), {
       message: MUST_BE_GREATER_THAN_ZERO,
     })
+    .nullable()
     .optional(),
   isPaid: z.boolean({ required_error: REQUIRED_FIELD }),
-  paymentType: z.string({ required_error: REQUIRED_FIELD }).optional(),
-  frequency: z.string({ required_error: REQUIRED_FIELD }).optional(),
+  paymentType: z
+    .string({ required_error: REQUIRED_FIELD })
+    .nullable()
+    .optional(),
+  frequency: z.string({ required_error: REQUIRED_FIELD }).nullable().optional(),
   totalInstallments: z
     .number({ invalid_type_error: MUST_BE_NUMBER })
+    .refine(
+      (totalInstallments) =>
+        isNumber(totalInstallments) ? totalInstallments > 0 : true,
+      {
+        message: MUST_BE_GREATER_THAN_ZERO,
+      }
+    )
+    .refine(
+      (totalInstallments) =>
+        isNumber(totalInstallments) ? totalInstallments > 0 : true,
+      {
+        message: MUST_BE_GREATER_THAN_ZERO,
+      }
+    )
+    .nullable()
     .optional(),
+
   creditCardId: z.string({ required_error: REQUIRED_FIELD }).trim().optional(),
   dueDate: z
     .string()
@@ -45,6 +68,7 @@ const apiFormExpenseSchema = z.object({
       INVALID_DATE
     )
     .transform((dueDate) => new Date(dueDate))
+    .nullable()
     .optional(),
   registrationDate: z
     .string({ required_error: REQUIRED_FIELD })
@@ -55,6 +79,7 @@ const apiFormExpenseSchema = z.object({
       INVALID_DATE
     )
     .transform((registrationDate) => new Date(registrationDate))
+    .nullable()
     .optional(),
 });
 

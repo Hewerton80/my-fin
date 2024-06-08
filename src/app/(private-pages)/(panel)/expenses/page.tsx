@@ -6,7 +6,7 @@ import {
   IColmunDataTable,
 } from "@/components/ui/dataDisplay/DataTable";
 import { isNumber, isUndefined } from "@/shared/isType";
-import { useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useGetExpenses } from "@/modules/expenses/hooks/useGetExpenses";
 import { getCurrencyFormat } from "@/shared/getCurrencyFormat";
 import { format } from "date-fns/format";
@@ -33,6 +33,17 @@ export default function ExpensesPage() {
     changeSearcheQrCodeInput,
     changeExpenseStatus,
   } = useGetExpenses();
+
+  const [showExpenseFormModal, setShowExpenseFormModal] = useState(false);
+  const [expenseIdToEdit, setExpenseIdToEdit] = useState("");
+  const [isCloningExpense, setIsCloningExpense] = useState(false);
+
+  useEffect(() => {
+    console.log("expenseIdToEdit", expenseIdToEdit);
+    if (expenseIdToEdit) {
+      setShowExpenseFormModal(true);
+    }
+  }, [expenseIdToEdit]);
 
   const cols = useMemo<IColmunDataTable<ExpenseWithComputedFields>[]>(
     () => [
@@ -82,6 +93,14 @@ export default function ExpensesPage() {
           expense?.frequency ? capitalizeFisrtLetter(expense?.frequency) : "-",
       },
       {
+        label: "Registration Date",
+        field: "registrationDate",
+        onParse: (expense) =>
+          expense?.registrationDate
+            ? format(new Date(expense?.registrationDate), "dd/MM/yyyy")
+            : "-",
+      },
+      {
         label: "Due Date",
         field: "dueDate",
         onParse: (expense) =>
@@ -104,6 +123,11 @@ export default function ExpensesPage() {
           <TableExpenseActionsButtons
             expense={expense}
             onSuccess={refetchExpenses}
+            onClickToEdit={(expenseId) => setExpenseIdToEdit(expenseId)}
+            onClickToClone={(expenseId) => {
+              setExpenseIdToEdit(expenseId);
+              setIsCloningExpense(true);
+            }}
           />
         ),
       },
@@ -111,19 +135,26 @@ export default function ExpensesPage() {
     [refetchExpenses]
   );
 
+  const handleCloseFormModal = useCallback(() => {
+    setExpenseIdToEdit("");
+    setShowExpenseFormModal(false);
+    setIsCloningExpense(false);
+  }, []);
+
   return (
-    <Card.Root>
-      <Card.Header>
-        <Card.Title>Expenses</Card.Title>
-        <Card.Actions>
-          <ModalTriggerExpenseForm onSuccess={() => refetchExpenses()}>
-            <Button>Add Expense</Button>
-          </ModalTriggerExpenseForm>
-        </Card.Actions>
-      </Card.Header>
-      <Card.Body>
-        <div className="flex items-center gap-2 sm:gap-2 flex-wrap mb-4">
-          {/* <HorizontalScrollView>
+    <>
+      <Card.Root>
+        <Card.Header>
+          <Card.Title>Expenses</Card.Title>
+          <Card.Actions>
+            <Button onClick={() => setShowExpenseFormModal(true)}>
+              Add Expense
+            </Button>
+          </Card.Actions>
+        </Card.Header>
+        <Card.Body>
+          <div className="flex items-center gap-2 sm:gap-2 flex-wrap mb-4">
+            {/* <HorizontalScrollView>
             <Picker
               label="Status"
               value={usersQueryParams.isActive}
@@ -150,54 +181,62 @@ export default function ExpensesPage() {
               options={orderByUserOptions}
             />
           </HorizontalScrollView> */}
-          <Tabs.Root
-            value={expenseFilterQueryParams?.status}
-            onValueChange={(value) => changeExpenseStatus(value)}
-          >
-            <Tabs.List>
-              <Tabs.Trigger disabled={isLoadingExpenses} value="">
-                All
-              </Tabs.Trigger>
-              {Object.values(ExpenseStatus).map((status) => (
-                <Tabs.Trigger
-                  disabled={isLoadingExpenses}
-                  key={status}
-                  value={status}
-                >
-                  {capitalizeFisrtLetter(status)}
+            <Tabs.Root
+              value={expenseFilterQueryParams?.status}
+              onValueChange={(value) => changeExpenseStatus(value)}
+            >
+              <Tabs.List>
+                <Tabs.Trigger disabled={isLoadingExpenses} value="">
+                  All
                 </Tabs.Trigger>
-              ))}
-            </Tabs.List>
-          </Tabs.Root>
-          <div className="ml-auto w-full sm:w-auto">
-            <Input
-              value={searchExpenseValue}
-              onChange={(e) => changeSearcheQrCodeInput(e.target.value)}
-              placeholder="Search..."
-            />
+                {Object.values(ExpenseStatus).map((status) => (
+                  <Tabs.Trigger
+                    disabled={isLoadingExpenses}
+                    key={status}
+                    value={status}
+                  >
+                    {capitalizeFisrtLetter(status)}
+                  </Tabs.Trigger>
+                ))}
+              </Tabs.List>
+            </Tabs.Root>
+            <div className="ml-auto w-full sm:w-auto">
+              <Input
+                value={searchExpenseValue}
+                onChange={(e) => changeSearcheQrCodeInput(e.target.value)}
+                placeholder="Search..."
+              />
+            </div>
           </div>
-        </div>
-        {/* <ErrorBoundary> */}
-        {/* <Suspense fallback={<div>Loading...</div>}>
+          {/* <ErrorBoundary> */}
+          {/* <Suspense fallback={<div>Loading...</div>}>
           <ExpensesTable
           />
         </Suspense> */}
-        {/* </ErrorBoundary> */}
-        <DataTable
-          columns={cols}
-          data={expenses?.docs}
-          onTryAgainIfError={refetchExpenses}
-          isError={Boolean(expensesError)}
-          isLoading={isLoadingExpenses || isUndefined(expenses)}
-          paginationConfig={{
-            currentPage: expenses?.currentPage || 1,
-            totalPages: expenses?.lastPage || 1,
-            perPage: expenses?.perPage || 25,
-            totalRecords: expenses?.total || 1,
-            onChangePage: goToPage,
-          }}
-        />
-      </Card.Body>
-    </Card.Root>
+          {/* </ErrorBoundary> */}
+          <DataTable
+            columns={cols}
+            data={expenses?.docs}
+            onTryAgainIfError={refetchExpenses}
+            isError={Boolean(expensesError)}
+            isLoading={isLoadingExpenses || isUndefined(expenses)}
+            paginationConfig={{
+              currentPage: expenses?.currentPage || 1,
+              totalPages: expenses?.lastPage || 1,
+              perPage: expenses?.perPage || 25,
+              totalRecords: expenses?.total || 1,
+              onChangePage: goToPage,
+            }}
+          />
+        </Card.Body>
+      </Card.Root>
+      <ModalTriggerExpenseForm
+        show={showExpenseFormModal}
+        expenseId={expenseIdToEdit}
+        isCloning={isCloningExpense}
+        onClose={handleCloseFormModal}
+        onSuccess={refetchExpenses}
+      />
+    </>
   );
 }

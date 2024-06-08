@@ -75,7 +75,7 @@
 //     const handlePickDate = useCallback(
 //       (date?: Date) => {
 //         if (date) {
-//           onChange?.(format(date, "dd/MM/yyyy"));
+//           onChange?.(format(date, "DD/MM/yyyy"));
 //         }
 //       },
 //       [onChange]

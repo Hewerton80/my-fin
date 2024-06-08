@@ -14,17 +14,9 @@ import { useAlertModal } from "@/hooks/useAlertModal";
 export function useMutateExpense() {
   const { apiBase } = useAxios();
   const { showAlert } = useAlertModal();
-  const {
-    control: expenseFormControl,
-    watch: watchExpense,
-    setValue: setExpenseValue,
-    getValues: getExpenseValues,
-    trigger: triggerExpenseErrors,
-    formState: expenseFormState,
-    clearErrors: clearExpenseErrors,
-    reset: resetExpenseForm,
-  } = useForm<ExpenseFormValues>({
-    defaultValues: {
+
+  const expenseFormDefaultValues = useMemo<ExpenseFormValues>(
+    () => ({
       id: "",
       name: "",
       categoriesOptions: [],
@@ -37,7 +29,22 @@ export function useMutateExpense() {
       creditCardId: "",
       dueDate: "",
       registrationDate: "",
-    },
+      isCloning: false,
+    }),
+    []
+  );
+
+  const {
+    control: expenseFormControl,
+    watch: watchExpense,
+    setValue: setExpenseValue,
+    getValues: getExpenseValues,
+    trigger: triggerExpenseErrors,
+    formState: expenseFormState,
+    clearErrors: clearExpenseErrors,
+    reset: resetExpenseForm,
+  } = useForm<ExpenseFormValues>({
+    defaultValues: expenseFormDefaultValues,
     mode: "onTouched",
     resolver: zodResolver(createFrontendExpenseSchema),
   });
@@ -109,17 +116,23 @@ export function useMutateExpense() {
 
   const getHandledExpenseFormValues = useCallback(() => {
     const expenseFormValues = { ...getExpenseValues() };
+    console.log("handledExpenseFormValues", expenseFormValues);
     let handledExpenseFormValues: Partial<
       ExpenseFormValues & ExpenseWithComputedFields
     > = {};
-    Object.keys(expenseFormState.dirtyFields).forEach((field) => {
-      const expenseFormValue =
-        expenseFormValues[field as keyof ExpenseFormValues];
-
-      handledExpenseFormValues[field as keyof ExpenseFormValues] = (
-        expenseFormValue === "" ? null : expenseFormValue
-      ) as any;
-    });
+    if (expenseFormValues.isCloning) {
+      handledExpenseFormValues = expenseFormValues as Partial<
+        ExpenseFormValues & ExpenseWithComputedFields
+      >;
+    } else {
+      Object.keys(expenseFormState.dirtyFields).forEach((field) => {
+        const expenseFormValue =
+          expenseFormValues[field as keyof ExpenseFormValues];
+        handledExpenseFormValues[field as keyof ExpenseFormValues] = (
+          expenseFormValue === "" ? null : expenseFormValue
+        ) as any;
+      });
+    }
     if (handledExpenseFormValues?.categoriesOptions) {
       handledExpenseFormValues.subCategories =
         handledExpenseFormValues?.categoriesOptions.map(
@@ -127,6 +140,8 @@ export function useMutateExpense() {
         ) as any;
     }
     delete handledExpenseFormValues?.categoriesOptions;
+    delete handledExpenseFormValues?.isCloning;
+    console.log("handledExpenseFormValues", handledExpenseFormValues);
     return handledExpenseFormValues;
   }, [getExpenseValues, expenseFormState.dirtyFields]);
 
@@ -168,6 +183,7 @@ export function useMutateExpense() {
     expenseFormControl,
     expenseFormState,
     isSubmitting,
+    expenseFormDefaultValues,
     watchExpense,
     handleSubmitExpense,
     setExpenseValue,

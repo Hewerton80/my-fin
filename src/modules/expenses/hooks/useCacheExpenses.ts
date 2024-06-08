@@ -29,5 +29,13 @@ export function useCacheExpenses() {
     [queryClient]
   );
 
-  return { updateCachedExpenseById };
+  const resetExpenseInfoCahce = useCallback(() => {
+    queryClient.resetQueries({
+      queryKey: [ExpenseQueryKeys.INFO],
+      exact: true,
+    });
+    console.log("resetExpenseInfoCahce");
+  }, [queryClient]);
+
+  return { updateCachedExpenseById, resetExpenseInfoCahce };
 }

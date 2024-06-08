@@ -79,7 +79,7 @@ export async function POST(request: NextRequest) {
       registrationDate: startOfDay(new Date(registrationDate!)),
     };
 
-    if (Array.isArray(subCategories)) {
+    if (Array.isArray(subCategories) && subCategories?.length) {
       createExpenseData = {
         ...createExpenseData,
         ...(await ExpenseServices.getParsedSubCategoriesByIds(subCategories)),

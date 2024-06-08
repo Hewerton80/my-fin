@@ -80,16 +80,15 @@ model Category {
 }
 
 model SubCategory {
-    id                 String               @id @default(cuid())
-    name               String
-    description        String?
-    iconName           String?
-    category           Category             @relation(fields: [categoryId], references: [id])
-    categoryId         String
-    createdAt          DateTime             @default(now())
-    expenseSubCategory ExpenseSubCategory[]
-    expense            Expense?             @relation(fields: [expenseId], references: [id])
-    expenseId          String?
+    id                   String               @id @default(cuid())
+    name                 String
+    description          String?
+    iconName             String?
+    category             Category             @relation(fields: [categoryId], references: [id])
+    categoryId           String
+    createdAt            DateTime             @default(now())
+    expenseSubCategories ExpenseSubCategory[]
+    expenses             Expense[]
 }
 
 model ExpenseSubCategory {
