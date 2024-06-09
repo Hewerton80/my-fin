@@ -139,9 +139,11 @@ export function useMutateExpense() {
           (category) => category.value
         ) as any;
     }
+    if (expenseFormValues?.id) {
+      handledExpenseFormValues.id = expenseFormValues.id;
+    }
     delete handledExpenseFormValues?.categoriesOptions;
     delete handledExpenseFormValues?.isCloning;
-    console.log("handledExpenseFormValues", handledExpenseFormValues);
     return handledExpenseFormValues;
   }, [getExpenseValues, expenseFormState.dirtyFields]);
 
@@ -153,6 +155,7 @@ export function useMutateExpense() {
       }
       const handledExpenseFormValues = getHandledExpenseFormValues();
       const isEdit = handledExpenseFormValues?.id;
+      console.log("poshandledExpenseFormValues", handledExpenseFormValues);
       const onSuccess = () => {
         callbacks?.onSuccess?.();
         toast.success(`Expense ${isEdit ? "edited" : "created"} successfully!`);
