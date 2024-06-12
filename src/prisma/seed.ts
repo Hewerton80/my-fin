@@ -1,5 +1,6 @@
 // import axios from "axios";
 import prisma from "../lib/prisma";
+import { addDays } from "date-fns/addDays";
 
 export async function main() {
   console.log("Start seeding...");
@@ -25,6 +26,7 @@ export async function main() {
         { name: "Internet", iconName: "🌐" },
         { name: "Cell phone", iconName: "📱" },
         { name: "Ifood", iconName: "🍔" },
+        { name: "Dating app", iconName: "💑" },
       ],
     },
     {
@@ -173,28 +175,29 @@ export async function main() {
 
   // const allSubCategories = await prisma.subCategory.findMany();
 
-  // const allExpenses = await prisma.expense.findMany();
-  // for (const expense of allExpenses) {
-  //   console.log(`Updating expense ${expense.name}`);
-  //   const subCategories = expense?.subCategoriesName?.split(",");
-  //   let subCategoriesIds: string[] = [];
-  //   subCategories?.forEach((subCategory) => {
-  //     const foundSubCategory = allSubCategories.find(
-  //       (sub) => sub.name === subCategory
-  //     );
-  //     if (foundSubCategory) {
-  //       subCategoriesIds.push(foundSubCategory.id);
-  //     }
-  //   });
-  //   await prisma.expense.update({
-  //     where: { id: expense.id },
-  //     data: {
-  //       subCategories: {
-  //         connect: subCategoriesIds.map((id) => ({ id })),
-  //       },
-  //     },
-  //   });
-  // }
+  const allExpenses = await prisma.expense.findMany();
+  for (const expense of allExpenses) {
+    console.log(`Updating expense ${expense.name}`);
+    console.log(expense?.registrationDate);
+    // const subCategories = expense?.subCategoriesName?.split(",");
+    // let subCategoriesIds: string[] = [];
+    // subCategories?.forEach((subCategory) => {
+    //   const foundSubCategory = allSubCategories.find(
+    //     (sub) => sub.name === subCategory
+    //   );
+    //   if (foundSubCategory) {
+    //     subCategoriesIds.push(foundSubCategory.id);
+    //   }
+    // });
+    await prisma.expense.update({
+      where: { id: expense.id },
+      data: {
+        registrationDate: expense?.registrationDate
+          ? addDays(new Date(expense?.registrationDate), 1)
+          : undefined,
+      },
+    });
+  }
   // const expensesToCreate = [
   //   {
   //     name: "Italki - Aula de inglês",

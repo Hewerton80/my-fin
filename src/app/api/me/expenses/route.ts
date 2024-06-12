@@ -2,7 +2,7 @@ import prisma from "@/lib/prisma";
 import { handleZodValidationError } from "@/lib/zodHelpers";
 import { CONSTANTS } from "@/shared/constants";
 import { endOfDay } from "date-fns/endOfDay";
-import { startOfDay } from "date-fns/startOfDay";
+import { setHours } from "date-fns/setHours";
 import { Frequency, PaymantType, Prisma } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
@@ -76,7 +76,9 @@ export async function POST(request: NextRequest) {
       description,
       amount,
       isPaid,
-      registrationDate: startOfDay(new Date(registrationDate!)),
+      registrationDate: registrationDate
+        ? new Date(`${registrationDate!} 12:00`)
+        : undefined,
     };
 
     if (Array.isArray(subCategories) && subCategories?.length) {

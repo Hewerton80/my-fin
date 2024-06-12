@@ -4,8 +4,6 @@ import { ExpenseStatus, ExpenseWithComputedFields } from "./types";
 import { parseOrderBy, prismaPagination } from "@/lib/prismaHelpers";
 import { Prisma } from "@prisma/client";
 import { addDays } from "date-fns/addDays";
-import { startOfDay } from "date-fns/startOfDay";
-import { endOfDay } from "date-fns/endOfDay";
 
 const getExpenseWhereInputByStatus = (status?: string) => {
   const where: Prisma.ExpenseWhereInput = {};
