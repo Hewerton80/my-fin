@@ -1,6 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { useAxios } from "../../../hooks/useAxios";
-import { CreditCardWitchComputedFields } from "@/types/CreditCard";
+import {
+  CreditCardQueryKeys,
+  CreditCardWitchComputedFields,
+} from "@/modules/creditCard/types";
 
 export function useGetCreditCards() {
   const { apiBase } = useAxios();
@@ -10,7 +13,7 @@ export function useGetCreditCards() {
     refetch: refetchCreditCards,
     error: creditCardsError,
   } = useQuery({
-    queryKey: ["creditCards"],
+    queryKey: [CreditCardQueryKeys.LIST],
     queryFn: () =>
       apiBase
         .get<CreditCardWitchComputedFields[]>("/me/credit-cards")

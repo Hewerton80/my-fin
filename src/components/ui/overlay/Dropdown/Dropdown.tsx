@@ -66,7 +66,7 @@ const Item = (
 };
 
 const Dropdown = {
-  Root: forwardRef(Root),
+  Root: Root,
   Toogle: forwardRef(Toogle),
   Menu: forwardRef(Menu),
   Item: forwardRef(Item),

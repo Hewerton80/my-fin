@@ -13,7 +13,7 @@ const frontendFormExpenseSchema = z
     name: z.string().min(1, VALIDATION_ERROR_MESSAGES.REQUIRED_FIELD),
     categoriesOptions: z
       .array(z.object({ label: z.string(), value: z.string() }))
-      .optional(),
+      .min(1, VALIDATION_ERROR_MESSAGES.REQUIRED_FIELD),
     subCategories: z.array(z.string()).optional(),
     description: z.string().optional(),
     amount: z

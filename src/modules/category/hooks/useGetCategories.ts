@@ -1,7 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
-import { useAxios } from "../../../hooks/useAxios";
-import { CategoryWitchComputedFields } from "@/types/Category";
+import { useAxios } from "@/hooks/useAxios";
 import { useMemo } from "react";
+import {
+  CategoryQueryKeys,
+  CategoryWitchComputedFields,
+  SubCategoryWitchComputedFields,
+} from "@/modules/category/types";
 
 export function useGetCategories() {
   const { apiBase } = useAxios();
@@ -11,7 +15,8 @@ export function useGetCategories() {
     refetch: refetchCategories,
     error: categoriesError,
   } = useQuery({
-    queryKey: ["categories"],
+    queryKey: [CategoryQueryKeys.LIST],
+    gcTime: 1000 * 60 * 10,
     queryFn: () =>
       apiBase
         .get<CategoryWitchComputedFields[]>("/categories")
@@ -39,8 +44,23 @@ export function useGetCategories() {
     });
   }, [categories]);
 
+  const subCategories = useMemo<
+    SubCategoryWitchComputedFields[] | undefined
+  >(() => {
+    if (!categories) return undefined;
+    const subCategoriesTmp: SubCategoryWitchComputedFields[] = [];
+    categories.forEach((category) => {
+      category?.subCategories?.forEach((subCategory) => {
+        subCategoriesTmp.push(subCategory);
+      });
+    });
+
+    return subCategoriesTmp;
+  }, [categories]);
+
   return {
     categories: handleCategories,
+    subCategories,
     isLoadingCategories,
     categoriesError,
     refetchCategories,

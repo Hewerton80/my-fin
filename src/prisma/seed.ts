@@ -189,14 +189,14 @@ export async function main() {
     //     subCategoriesIds.push(foundSubCategory.id);
     //   }
     // });
-    await prisma.expense.update({
-      where: { id: expense.id },
-      data: {
-        registrationDate: expense?.registrationDate
-          ? addDays(new Date(expense?.registrationDate), 1)
-          : undefined,
-      },
-    });
+    // await prisma.expense.update({
+    //   where: { id: expense.id },
+    //   data: {
+    //     registrationDate: expense?.registrationDate
+    //       ? addDays(new Date(expense?.registrationDate), 1)
+    //       : undefined,
+    //   },
+    // });
   }
   // const expensesToCreate = [
   //   {

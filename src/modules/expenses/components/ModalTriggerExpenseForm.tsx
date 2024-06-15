@@ -199,6 +199,7 @@ export function ModalTriggerExpenseForm({
                     render={({ field, fieldState }) => (
                       <MultSelect
                         {...field}
+                        required
                         onFocus={handleFocusCategoriesSelect}
                         isLoading={isLoadingCategories}
                         label="Categories"

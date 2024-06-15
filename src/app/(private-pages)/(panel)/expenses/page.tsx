@@ -39,7 +39,6 @@ export default function ExpensesPage() {
   const [isCloningExpense, setIsCloningExpense] = useState(false);
 
   useEffect(() => {
-    console.log("expenseIdToEdit", expenseIdToEdit);
     if (expenseIdToEdit) {
       setShowExpenseFormModal(true);
     }
@@ -208,12 +207,6 @@ export default function ExpensesPage() {
               />
             </div>
           </div>
-          {/* <ErrorBoundary> */}
-          {/* <Suspense fallback={<div>Loading...</div>}>
-          <ExpensesTable
-          />
-        </Suspense> */}
-          {/* </ErrorBoundary> */}
           <DataTable
             columns={cols}
             data={expenses?.docs}
