@@ -5,8 +5,12 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 import { FaPen, FaClone } from "react-icons/fa";
 import { MdPaid, MdHistory } from "react-icons/md";
 import { ExpenseStatus, ExpenseWithComputedFields } from "../types";
-import { memo, useCallback } from "react";
+import { memo, useCallback, useState } from "react";
 import { usePayExpense } from "../hooks/usePayExpense";
+import { Modal } from "@/components/ui/overlay/Modal";
+import { Controller } from "react-hook-form";
+import { Input } from "@/components/ui/forms/inputs/Input";
+import { Button } from "@/components/ui/buttons/Button";
 
 type OnClickType = (expenseId: string) => void;
 
@@ -24,11 +28,24 @@ export const TableExpenseActionsButtons = memo(
     onClickToEdit,
     onClickToClone,
   }: TableExpenseActionsButtonsProps) {
-    const { payExpense } = usePayExpense();
+    const {
+      payExpense,
+      payExpenseControl,
+      payExpenseFormState,
+      resetPayExpenseForm,
+      isPaying,
+    } = usePayExpense();
+
+    const [showModalPaidAt, setShowModalPaidAt] = useState(false);
 
     const handlePayExpense = useCallback(() => {
       payExpense(expense?.id!, { onSuccess });
     }, [expense, payExpense, onSuccess]);
+
+    const handleCloseModal = useCallback(() => {
+      setShowModalPaidAt(false);
+      resetPayExpenseForm({ paidAt: "" });
+    }, [resetPayExpenseForm]);
 
     return (
       <>
@@ -42,7 +59,10 @@ export const TableExpenseActionsButtons = memo(
           <Dropdown.Menu>
             {!expense?.isPaid &&
               expense?.status !== ExpenseStatus["ON DAY"] && (
-                <Dropdown.Item onClick={handlePayExpense} className="gap-2">
+                <Dropdown.Item
+                  onClick={() => setShowModalPaidAt(true)}
+                  className="gap-2"
+                >
                   <MdPaid />
                   pay
                 </Dropdown.Item>
@@ -68,6 +88,38 @@ export const TableExpenseActionsButtons = memo(
             </Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown.Root>
+        <Modal.Root show={showModalPaidAt} onClose={handleCloseModal}>
+          <Modal.Title>Pay Expense</Modal.Title>
+          <Modal.Body>
+            <Controller
+              control={payExpenseControl}
+              name="paidAt"
+              render={({ field, fieldState }) => {
+                return (
+                  <Input
+                    {...field}
+                    label="Paid Date"
+                    required
+                    type="date"
+                    error={fieldState.error?.message}
+                  />
+                );
+              }}
+            />
+          </Modal.Body>
+          <Modal.Footer className="gap-2">
+            <Button
+              variantStyle="light"
+              onClick={handleCloseModal}
+              disabled={isPaying}
+            >
+              Cancel
+            </Button>
+            <Button onClick={handlePayExpense} isLoading={isPaying}>
+              Pay
+            </Button>
+          </Modal.Footer>
+        </Modal.Root>
       </>
     );
   }

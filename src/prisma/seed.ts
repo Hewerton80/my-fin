@@ -173,108 +173,32 @@ export async function main() {
   //   });
   // }
 
-  // const allSubCategories = await prisma.subCategory.findMany();
-
-  const allExpenses = await prisma.expense.findMany();
-  for (const expense of allExpenses) {
-    console.log(`Updating expense ${expense.name}`);
-    console.log(expense?.registrationDate);
-    // const subCategories = expense?.subCategoriesName?.split(",");
-    // let subCategoriesIds: string[] = [];
-    // subCategories?.forEach((subCategory) => {
-    //   const foundSubCategory = allSubCategories.find(
-    //     (sub) => sub.name === subCategory
-    //   );
-    //   if (foundSubCategory) {
-    //     subCategoriesIds.push(foundSubCategory.id);
-    //   }
-    // });
-    // await prisma.expense.update({
-    //   where: { id: expense.id },
-    //   data: {
-    //     registrationDate: expense?.registrationDate
-    //       ? addDays(new Date(expense?.registrationDate), 1)
-    //       : undefined,
-    //   },
-    // });
-  }
-  // const expensesToCreate = [
-  //   {
-  //     name: "Italki - Aula de inglês",
-  //     registrationDate: "2024-01-11",
-  //     amount: 56.94,
-  //     dueDate: "2024-02-05",
+  // const allExpense = await prisma.expense.findMany({
+  //   where: {
+  //     OR: [{ frequency: "DO_NOT_REPEAT" }, { frequency: null }],
   //   },
-  //   {
-  //     name: "Italki - Aula de inglês",
-  //     registrationDate: "2024-01-26",
-  //     amount: 57.33,
-  //     dueDate: "2024-02-05",
-  //   },
-  //   {
-  //     name: "Italki - Aula de inglês",
-  //     registrationDate: "2024-01-28",
-  //     amount: 57.33,
-  //     dueDate: "2024-02-05",
-  //   },
-  //   {
-  //     name: "Italki - Aula de inglês",
-  //     registrationDate: "2024-02-21",
-  //     amount: 57.53,
-  //     dueDate: "2024-03-05",
-  //   },
-  //   {
-  //     name: "Italki - Aula de inglês",
-  //     registrationDate: "2024-03-22",
-  //     amount: 58.22,
-  //     dueDate: "2024-04-05",
-  //   },
-  //   {
-  //     name: "Italki - Aula de inglês",
-  //     registrationDate: "2024-04-20",
-  //     amount: 61.0,
-  //     dueDate: "2024-05-05",
-  //   },
-  //   {
-  //     name: "Italki - Aula de inglês",
-  //     registrationDate: "2024-04-20",
-  //     amount: 61.0,
-  //     dueDate: "2024-05-05",
-  //   },
-  //   {
-  //     name: "Italki - Aula de inglês",
-  //     registrationDate: "2024-05-10",
-  //     amount: 61.06,
-  //     dueDate: "2024-06-05",
-  //   },
-  //   {
-  //     name: "Italki - Aula de inglês",
-  //     registrationDate: "2024-05-17",
-  //     amount: 59.69,
-  //     dueDate: "2024-06-05",
-  //   },
-  // ];
-  // for (const { dueDate, registrationDate, ...expense } of expensesToCreate) {
-  //   await prisma.expense.create({
-  //     data: {
-  //       userId: "clwtbi7wy000008mi1rar1f7f",
-  //       isPaid: true,
-  //       iconsName: "🗣️",
-  //       subCategoriesName: "Languages",
-  //       subCategories: {
-  //         connect: [{ id: "clwtbgo7o0012gk0keeix3bnp" }],
+  // });
+  // for (const expense of allExpense) {
+  //   console.log(expense?.frequency);
+  // }
+  // const allTranstionHistory = await prisma.transitionHistory.findMany({
+  //   include: { expense: true },
+  // });
+  // for (const transtionHistory of allTranstionHistory) {
+  //   console.log(transtionHistory?.expense?.name);
+  //   if (
+  //     !transtionHistory?.expense?.frequency ||
+  //     transtionHistory?.expense?.frequency === "DO_NOT_REPEAT"
+  //   ) {
+  //     await prisma.transitionHistory.update({
+  //       where: {
+  //         id: transtionHistory?.id,
   //       },
-  //       paymentType: "CREDIT_CARD",
-  //       creditCardId: "clwtblzib000208mi0njwgk4r",
-  //       transitionHistory: {
-  //         create: { name: expense.name, amount: expense.amount },
+  //       data: {
+  //         paidAt: new Date(transtionHistory?.expense?.registrationDate!),
   //       },
-  //       registrationDate: new Date(registrationDate),
-  //       dueDate: new Date(dueDate),
-  //       ...expense,
-  //     },
-  //   });
-  //   console.log(`Expense ${expense.name} created`);
+  //     });
+  //   }
   // }
 }
 

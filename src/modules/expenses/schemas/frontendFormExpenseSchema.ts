@@ -78,8 +78,19 @@ const frontendFormExpenseSchema = z
       path: ["creditCardId"],
     }
   );
+
+export const payFrontendExpenseSchema = z.object({
+  paidAt: z.string().refine((paidAt) => isValidDate(new Date(paidAt)), {
+    message: VALIDATION_ERROR_MESSAGES.INVALID_DATE,
+  }),
+});
+
 export const createFrontendExpenseSchema = frontendFormExpenseSchema;
 type InferBaseExpenseFormSchema = z.infer<typeof frontendFormExpenseSchema>;
 type InferCreateExpenseFormSchema = z.infer<typeof createFrontendExpenseSchema>;
 export type ExpenseFormValues = InferBaseExpenseFormSchema &
   InferCreateExpenseFormSchema;
+
+export type InferPayExpenseFormSchema = z.infer<
+  typeof payFrontendExpenseSchema
+>;

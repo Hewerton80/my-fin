@@ -104,3 +104,11 @@ export const createApiExpenseSchema = apiFormExpenseSchema
   );
 
 export const updateApiExpenseSchema = apiFormExpenseSchema.partial();
+
+export const payExpenseSchema = z.object({
+  paidAt: z
+    .string({ required_error: REQUIRED_FIELD })
+    .min(1, REQUIRED_FIELD)
+    .refine((paidAt) => isValidDate(new Date(paidAt)), INVALID_DATE)
+    .transform((paidAt) => new Date(paidAt)),
+});

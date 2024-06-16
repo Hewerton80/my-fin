@@ -23,18 +23,16 @@ export async function GET(
   date.setFullYear(year);
   const startOfYearDate = startOfYear(date);
   const endOfYearDate = endOfYear(date);
-
+  // console.log({ startOfYearDate, endOfYearDate });
   const transitionsHistory = await prisma.transitionHistory.findMany({
     where: {
       expense: {
         userId,
-        subCategories: { every: { id: params["category-id"] } },
-        registrationDate: { gte: startOfYearDate, lte: endOfYearDate },
+        subCategories: { some: { id: params["category-id"] } },
       },
+      paidAt: { gte: startOfYearDate, lte: endOfYearDate },
     },
-    orderBy: {
-      expense: { registrationDate: "asc" },
-    },
+    orderBy: { paidAt: "asc" },
     include: { expense: true },
   });
   return NextResponse.json(transitionsHistory, { status: 200 });

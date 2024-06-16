@@ -21,7 +21,7 @@ export function useGetTransiontionsHistotyByCategory(categoryId: string) {
           `/me/transition-history/category/${categoryId}`
         )
         .then((res) => res.data || []),
-    enabled: true,
+    enabled: false,
   });
 
   return {

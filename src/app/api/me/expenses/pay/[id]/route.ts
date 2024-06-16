@@ -5,14 +5,17 @@ import { Frequency, Prisma } from "@prisma/client";
 import { isNumber } from "@/shared/isType";
 import { ExpenseUtils } from "@/modules/expenses/utils";
 import { getServerSession } from "next-auth";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { NextAuthOptions } from "@/lib/nextAuthConfig";
+import { payExpenseSchema } from "@/modules/expenses/schemas/apiFormExpenseSchema";
+import { z } from "zod";
+import { handleZodValidationError } from "@/lib/zodHelpers";
 
 const { USER_HAS_NO_PERMISSION, EXPENSE_NOT_FOUND, EXPENSE_ALREADY_PAID } =
   CONSTANTS.API_RESPONSE_MESSAGES;
 
 export async function PATCH(
-  _: unknown,
+  request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   const session = await getServerSession(NextAuthOptions);
@@ -23,6 +26,15 @@ export async function PATCH(
     );
   }
   const userId = session?.user?.id;
+  const expenseUpdateData = (await request.json()) as z.infer<
+    typeof payExpenseSchema
+  >;
+  try {
+    payExpenseSchema.parse(expenseUpdateData);
+  } catch (error: any) {
+    return NextResponse.json(handleZodValidationError(error), { status: 400 });
+  }
+
   const expense = await prisma.expense.findUnique({
     where: { id: params?.id, userId },
   });
@@ -52,6 +64,9 @@ export async function PATCH(
       amount: expense?.amount || null,
       totalInstallments: expense?.totalInstallments || null,
       currentInstallment: expense?.currentInstallment || null,
+      paidAt: expenseUpdateData?.paidAt
+        ? new Date(`${expenseUpdateData?.paidAt!} 12:00`)
+        : undefined,
     },
   };
 
