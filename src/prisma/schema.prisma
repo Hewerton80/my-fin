@@ -36,27 +36,25 @@ model User {
 }
 
 model Expense {
-    id                   String               @id @default(cuid())
-    name                 String
-    description          String?
-    amount               Float?
-    iconsName            String?
-    subCategoriesName    String?
-    isPaid               Boolean              @default(false)
-    dueDate              DateTime?
-    registrationDate     DateTime?
-    creditCardId         String?
-    userId               String
-    frequency            Frequency?
-    totalInstallments    Int?
-    currentInstallment   Int?
-    user                 User                 @relation(fields: [userId], references: [id])
-    paymentType          PaymantType
-    creditCard           CreditCard?          @relation(fields: [creditCardId], references: [id])
-    expenseSubCategories ExpenseSubCategory[]
-    subCategories        SubCategory[]
-    createdAt            DateTime             @default(now())
-    transitionHistory    TransitionHistory[]
+    id                 String              @id @default(cuid())
+    name               String
+    description        String?
+    amount             Float?
+    isPaid             Boolean             @default(false)
+    dueDate            DateTime?
+    registrationDate   DateTime?
+    creditCardId       String?
+    userId             String
+    frequency          Frequency?
+    totalInstallments  Int?
+    currentInstallment Int?
+    user               User                @relation(fields: [userId], references: [id])
+    paymentType        PaymantType
+    creditCard         CreditCard?         @relation(fields: [creditCardId], references: [id])
+    createdAt          DateTime            @default(now())
+    transitionHistory  TransitionHistory[]
+    Category           Category?           @relation(fields: [categoryId], references: [id])
+    categoryId         String?
 }
 
 model CreditCard {
@@ -71,34 +69,23 @@ model CreditCard {
     expenses          Expense[]
 }
 
+model GroupCategory {
+    id          String     @id @default(cuid())
+    name        String
+    description String?
+    createdAt   DateTime   @default(now())
+    categories  Category[]
+}
+
 model Category {
-    id            String        @id @default(cuid())
-    name          String
-    description   String?
-    createdAt     DateTime      @default(now())
-    subCategories SubCategory[]
-}
-
-model SubCategory {
-    id                   String               @id @default(cuid())
-    name                 String
-    description          String?
-    iconName             String?
-    category             Category             @relation(fields: [categoryId], references: [id])
-    categoryId           String
-    createdAt            DateTime             @default(now())
-    expenseSubCategories ExpenseSubCategory[]
-    expenses             Expense[]
-}
-
-model ExpenseSubCategory {
-    expenseId     String
-    subCategoryId String
-    createdAt     DateTime    @default(now())
-    expense       Expense     @relation(fields: [expenseId], references: [id])
-    subCategory   SubCategory @relation(fields: [subCategoryId], references: [id])
-
-    @@id([expenseId, subCategoryId])
+    id              String        @id @default(cuid())
+    name            String
+    description     String?
+    iconName        String?
+    groupCategory   GroupCategory @relation(fields: [groupCategoryId], references: [id])
+    groupCategoryId String
+    createdAt       DateTime      @default(now())
+    expenses        Expense[]
 }
 
 model TransitionHistory {

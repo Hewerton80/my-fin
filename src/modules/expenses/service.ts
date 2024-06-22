@@ -54,7 +54,7 @@ const getListByUserId = async (
       userId,
       OR: [
         { name: { contains: keyword } },
-        { subCategoriesName: { contains: keyword } },
+        // { subCategoriesName: { contains: keyword } },
       ],
       ...getExpenseWhereInputByStatus(status),
     },
@@ -74,15 +74,11 @@ const getOneById = async (id: string) => {
     where: { id },
     include: {
       creditCard: { select: { id: true, name: true } },
-      subCategories: { select: { id: true, name: true, iconName: true } },
+      // subCategories: { select: { id: true, name: true, iconName: true } },
     },
   });
   const expenseWitchComputedFields = ExpenseUtils.getWitchComputedFields(
     expense as ExpenseWithComputedFields
-  );
-  console.log(
-    "expenseWitchComputedFieldssubCategories",
-    expenseWitchComputedFields?.subCategories
   );
   return expenseWitchComputedFields;
 };
@@ -90,15 +86,15 @@ const getOneById = async (id: string) => {
 const getParsedSubCategoriesByIds = async (ids: string[]) => {
   const expenseData: any = {};
   const subCategoriesIds = ids.map((id) => ({ id }));
-  const foundSubCategories = await prisma.subCategory.findMany({
-    where: { id: { in: ids } },
-  });
-  expenseData.iconsName = foundSubCategories
-    .map((subCategory) => subCategory.iconName)
-    ?.join(",");
-  expenseData.subCategoriesName = foundSubCategories
-    .map((subCategory) => subCategory.name)
-    ?.join(",");
+  // const foundSubCategories = await prisma.subCategory.findMany({
+  //   where: { id: { in: ids } },
+  // });
+  // expenseData.iconsName = foundSubCategories
+  //   .map((subCategory) => subCategory.iconName)
+  //   ?.join(",");
+  // expenseData.subCategoriesName = foundSubCategories
+  //   .map((subCategory) => subCategory.name)
+  //   ?.join(",");
   expenseData.subCategories = { connect: subCategoriesIds };
   return expenseData;
 };

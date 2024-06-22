@@ -25,33 +25,23 @@ export async function GET(
   const startOfYearDate = startOfYear(date);
   const endOfYearDate = endOfYear(date);
   // console.log({ startOfYearDate, endOfYearDate });
-  const totalAmount = await prisma.transitionHistory.aggregate({
-    _sum: { amount: true },
-    _count: true,
-    where: {
-      expense: { userId },
-      paidAt: { gte: startOfYearDate, lte: endOfYearDate },
-    },
-  });
-  const isights = await prisma.$queryRaw`
-    select SubCategory.name, SUM(TransitionHistory.amount) as amount, COUNT(TransitionHistory.name) as count
-    FROM Expense
-    JOIN TransitionHistory on Expense.id = TransitionHistory.expenseId 
-    JOIN _ExpenseToSubCategory on Expense.id = _ExpenseToSubCategory.A
-    JOIN  SubCategory on _ExpenseToSubCategory.B = SubCategory.id
-    where TransitionHistory.paidAt BETWEEN '2024-01-01 00:00:00' and '2024-12-31 23:59:59'
-    GROUP BY SubCategory.name;
-  `;
+  // const totalAmount = await prisma.transitionHistory.aggregate({
+  //   _sum: { amount: true },
+  //   _count: true,
+  //   where: {
+  //     expense: { userId },
+  //     paidAt: { gte: startOfYearDate, lte: endOfYearDate },
+  //   },
+  // });
+  // const isights = await prisma.$queryRaw`
+  //   select SubCategory.name, SUM(TransitionHistory.amount) as amount, COUNT(TransitionHistory.name) as count
+  //   FROM Expense
+  //   JOIN TransitionHistory on Expense.id = TransitionHistory.expenseId
+  //   JOIN _ExpenseToSubCategory on Expense.id = _ExpenseToSubCategory.A
+  //   JOIN  SubCategory on _ExpenseToSubCategory.B = SubCategory.id
+  //   where TransitionHistory.paidAt BETWEEN '2024-01-01 00:00:00' and '2024-12-31 23:59:59'
+  //   GROUP BY SubCategory.name;
+  // `;
 
-  //   select SubCategory.name, SUM(TransitionHistory.amount) as amount
-  // FROM Expense
-  // JOIN TransitionHistory on Expense.id = TransitionHistory.expenseId
-  // JOIN _ExpenseToSubCategory on Expense.id = _ExpenseToSubCategory.A
-  // JOIN  SubCategory on _ExpenseToSubCategory.B = SubCategory.id
-  // where TransitionHistory.paidAt BETWEEN '2024-01-01 00:00:00' and '2024-12-31 23:59:59'
-  // GROUP BY SubCategory.name;
-
-  // select Expense.name, Expense.subCategoriesName from Expense
-  // where Expense.subCategoriesName like '%,%'
-  return NextResponse.json(isights, { status: 200 });
+  return NextResponse.json({}, { status: 200 });
 }
