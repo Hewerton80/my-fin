@@ -1,5 +1,5 @@
 import { IPaginateArgs } from "@/lib/prismaHelpers";
-import { CreditCard, Expense, SubCategory } from "@prisma/client";
+import { Category, CreditCard, Expense } from "@prisma/client";
 
 export enum ExpenseQueryKeys {
   LIST = "EXPENSE_LIST",
@@ -15,7 +15,7 @@ export enum ExpenseStatus {
 
 export interface ExpenseWithComputedFields extends Expense {
   status?: ExpenseStatus;
-  subCategories?: SubCategory[];
+  category?: Category;
   creditCard?: CreditCard;
 }
 

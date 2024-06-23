@@ -8,7 +8,7 @@ import { CategoryInsights } from "@/modules/category/components/CategoryInsights
 import { FeedBackLoading } from "@/components/ui/feedback/FeedBackLoading";
 
 export default function CategoriesPage() {
-  const { subCategories, isLoadingCategories, refetchCategories } =
+  const { categories, isLoadingCategories, refetchCategories } =
     useGetCategories();
 
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -44,7 +44,7 @@ export default function CategoriesPage() {
         </Card.Header>
         <Card.Body>
           <div className="flex flex-wrap gap-1.5">
-            {subCategories?.map((category) => (
+            {categories?.map((category) => (
               <Button
                 variantStyle={
                   selectedCategory === category?.id

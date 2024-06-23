@@ -39,7 +39,7 @@ export function ModalTriggerExpenseForm({
   onSuccess,
 }: ModalTriggerExpenseFormProps) {
   const { resetExpenseInfoCahce } = useCacheExpenses();
-  const { categories, isLoadingCategories, refetchCategories } =
+  const { groupCategories, isLoadingCategories, refetchCategories } =
     useGetCategories();
 
   const { creditCards, isLoadingCreditCards, refetchCreditCards } =
@@ -66,27 +66,27 @@ export function ModalTriggerExpenseForm({
   );
 
   const categoriesOptions = useMemo<SelectOption[]>(() => {
-    if (
-      Array.isArray(currentExpense?.subCategories) &&
-      !Array.isArray(categories)
-    ) {
-      return currentExpense?.subCategories?.map((category) => ({
-        label: category?.name,
-        value: category?.id,
-      })) as SelectOption[];
-    }
-    if (!Array.isArray(categories)) {
-      return [];
-    }
-    return categories.map((category) => ({
-      label: category.name,
+    // if (
+    //   Array.isArray(currentExpense?.subCategories) &&
+    //   !Array.isArray(categories)
+    // ) {
+    //   return currentExpense?.subCategories?.map((category) => ({
+    //     label: category?.name,
+    //     value: category?.id,
+    //   })) as SelectOption[];
+    // }
+    // if (!Array.isArray(categories)) {
+    //   return [];
+    // }
+    return groupCategories?.map((groupCategory) => ({
+      label: groupCategory.name,
       options:
-        category?.subCategories?.map((subCategory) => ({
-          label: subCategory?.name,
-          value: subCategory?.id,
+        groupCategory?.categories?.map((category) => ({
+          label: category?.name,
+          value: category?.id,
         })) || [],
     })) as SelectOption[];
-  }, [categories, currentExpense]);
+  }, [groupCategories, currentExpense]);
 
   const creditCardsOptions = useMemo<SelectOption[]>(() => {
     if (currentExpense?.creditCard?.id && !Array.isArray(creditCards)) {
@@ -134,20 +134,21 @@ export function ModalTriggerExpenseForm({
           : "",
         creditCardId: currentExpense?.creditCardId || "",
         categoriesOptions:
-          currentExpense?.subCategories?.map((category) => ({
-            label: category?.name,
-            value: category?.id,
-          })) || [],
+          // currentExpense?.subCategories?.map((category) => ({
+          //   label: category?.name,
+          //   value: category?.id,
+          // })) ||
+          [],
         isCloning,
       });
     }
   }, [currentExpense, isCloning, resetExpenseForm]);
 
   const handleFocusCategoriesSelect = useCallback(() => {
-    if (!Array.isArray(categories) && !isLoadingCategories) {
+    if (!Array.isArray(groupCategories) && !isLoadingCategories) {
       refetchCategories();
     }
-  }, [categories, isLoadingCategories, refetchCategories]);
+  }, [groupCategories, isLoadingCategories, refetchCategories]);
 
   const handleFocusCreditCardsSelect = useCallback(() => {
     if (!Array.isArray(creditCards) && !isLoadingCreditCards) {

@@ -1,10 +1,11 @@
+import { GroupCategory } from "@prisma/client";
 import { Category } from "@prisma/client";
-import { SubCategory } from "@prisma/client";
 
-export interface SubCategoryWitchComputedFields extends Partial<SubCategory> {}
+export interface CategoryWitchComputedFields extends Partial<Category> {}
 
-export interface CategoryWitchComputedFields extends Partial<Category> {
-  subCategories?: SubCategoryWitchComputedFields[];
+export interface GroupCategoryWitchComputedFields
+  extends Partial<GroupCategory> {
+  categories?: CategoryWitchComputedFields[];
 }
 
 export enum CategoryQueryKeys {

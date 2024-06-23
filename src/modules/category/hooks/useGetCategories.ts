@@ -3,14 +3,14 @@ import { useAxios } from "@/hooks/useAxios";
 import { useMemo } from "react";
 import {
   CategoryQueryKeys,
+  GroupCategoryWitchComputedFields,
   CategoryWitchComputedFields,
-  SubCategoryWitchComputedFields,
 } from "@/modules/category/types";
 
 export function useGetCategories() {
   const { apiBase } = useAxios();
   const {
-    data: categories,
+    data: groupCategories,
     isLoading: isLoadingCategories,
     refetch: refetchCategories,
     error: categoriesError,
@@ -19,20 +19,20 @@ export function useGetCategories() {
     gcTime: 1000 * 60 * 10,
     queryFn: () =>
       apiBase
-        .get<CategoryWitchComputedFields[]>("/categories")
-        .then((res) => res.data || { docs: [] }),
+        .get<GroupCategoryWitchComputedFields[]>("/categories")
+        .then((res) => res.data || []),
     enabled: false,
   });
 
   const handleCategories = useMemo<
-    CategoryWitchComputedFields[] | undefined
+    GroupCategoryWitchComputedFields[] | undefined
   >(() => {
-    if (!categories) return undefined;
-    return [...categories].map((category) => {
+    if (!groupCategories) return undefined;
+    return [...groupCategories].map((groupCategory) => {
       return {
-        ...category,
-        subCategories:
-          [...(category?.subCategories || [])]?.map((subCategory) => {
+        ...groupCategory,
+        categories:
+          [...(groupCategory?.categories || [])]?.map((subCategory) => {
             return {
               ...subCategory,
               name: subCategory.iconName
@@ -42,25 +42,23 @@ export function useGetCategories() {
           }) || [],
       };
     });
-  }, [categories]);
+  }, [groupCategories]);
 
-  const subCategories = useMemo<
-    SubCategoryWitchComputedFields[] | undefined
-  >(() => {
-    if (!categories) return undefined;
-    const subCategoriesTmp: SubCategoryWitchComputedFields[] = [];
-    categories.forEach((category) => {
-      category?.subCategories?.forEach((subCategory) => {
-        subCategoriesTmp.push(subCategory);
+  const categories = useMemo<CategoryWitchComputedFields[] | undefined>(() => {
+    if (!groupCategories) return undefined;
+    const categoriesTmp: CategoryWitchComputedFields[] = [];
+    groupCategories.forEach((category) => {
+      category?.categories?.forEach((subCategory) => {
+        categoriesTmp.push(subCategory);
       });
     });
 
-    return subCategoriesTmp;
-  }, [categories]);
+    return categoriesTmp;
+  }, [groupCategories]);
 
   return {
-    categories: handleCategories,
-    subCategories,
+    groupCategories: handleCategories,
+    categories,
     isLoadingCategories,
     categoriesError,
     refetchCategories,

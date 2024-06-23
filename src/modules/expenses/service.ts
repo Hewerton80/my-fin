@@ -61,6 +61,7 @@ const getListByUserId = async (
     orderBy: [{ isPaid: "asc" }, { dueDate: "asc" }],
     include: {
       creditCard: { select: { id: true, name: true } },
+      category: { select: { id: true, name: true, iconName: true } },
     },
   });
   paginedExpenses.docs = ExpenseUtils.getListWitchComputedFields(

@@ -172,6 +172,59 @@ export async function main() {
   //     password,
   //   },
   // });
-}
 
+  // const expenseToCreate = [
+
+  // ]
+  const uberExpensese = [
+    {
+      name: "Uber - CFC Império Natal",
+      registrationDate: "2024-01-05 12:00:00",
+      amount: 7.98,
+    },
+    {
+      name: "Uber - Casa",
+      registrationDate: "2024-01-05 12:00:00",
+      amount: 7.98,
+    },
+  ];
+  // for (const uberExpense of uberExpensese) {
+  //   await prisma.expense.create({
+  //     data: {
+  //       name: uberExpense.name,
+  //       userId: "clxqkp44r0000bjq2spxzrfry",
+  //       categoryId: "clxqkkice000ltyu6cvo0tcfd",
+  //       creditCardId: "clxrujim1000011hppkr14gym",
+  //       paymentType: "CREDIT_CARD",
+  //       isPaid: true,
+  //       registrationDate: new Date(uberExpense.registrationDate),
+  //       amount: uberExpense.amount,
+  //       transitionHistory: {
+  //         create: {
+  //           name: uberExpense.name,
+  //           amount: uberExpense.amount,
+  //           paidAt: new Date(uberExpense.registrationDate),
+  //         },
+  //       },
+  //     },
+  //   });
+  //   console.log(`Expense ${uberExpense.name} created`);
+  // }
+  // await prisma.creditCard.createMany({
+  //   data: [
+  //     {
+  //       name: "Nubank",
+  //       userId: "clxqkp44r0000bjq2spxzrfry",
+  //       invoiceClosingDay: 29,
+  //       dueDay: 5,
+  //     },
+  //     {
+  //       name: "Riachuelo",
+  //       userId: "clxqkp44r0000bjq2spxzrfry",
+  //       invoiceClosingDay: 22,
+  //       dueDay: 30,
+  //     },
+  //   ],
+  // });
+}
 main();

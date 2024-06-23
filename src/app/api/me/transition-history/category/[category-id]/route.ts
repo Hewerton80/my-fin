@@ -28,7 +28,7 @@ export async function GET(
     where: {
       expense: {
         userId,
-        subCategories: { some: { id: params["category-id"] } },
+        categoryId: { equals: params["category-id"] },
       },
       paidAt: { gte: startOfYearDate, lte: endOfYearDate },
     },

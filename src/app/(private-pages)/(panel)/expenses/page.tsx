@@ -51,8 +51,8 @@ export default function ExpensesPage() {
         field: "name",
         onParse: (expense) => (
           <>
-            {expense?.iconsName
-              ? `${expense?.iconsName?.replaceAll(",", "")} `
+            {expense?.category?.iconName
+              ? `${expense?.category?.iconName} `
               : ""}
             {expense?.name}
           </>
@@ -74,11 +74,8 @@ export default function ExpensesPage() {
       },
       {
         label: "Categories",
-        field: "subCategoriesName",
-        onParse: (expense) =>
-          expense?.subCategoriesName
-            ? expense?.subCategoriesName?.replaceAll(",", ", ")
-            : "-",
+        field: "category",
+        onParse: (expense) => expense?.category?.name || "-",
       },
       {
         label: "Credit Card",
