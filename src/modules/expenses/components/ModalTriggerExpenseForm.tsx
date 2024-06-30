@@ -39,8 +39,12 @@ export function ModalTriggerExpenseForm({
   onSuccess,
 }: ModalTriggerExpenseFormProps) {
   const { resetExpenseInfoCahce } = useCacheExpenses();
-  const { groupCategories, isLoadingCategories, refetchCategories } =
-    useGetCategories();
+  const {
+    groupCategories,
+    categories,
+    isLoadingCategories,
+    refetchCategories,
+  } = useGetCategories();
 
   const { creditCards, isLoadingCreditCards, refetchCreditCards } =
     useGetCreditCards();
@@ -133,12 +137,7 @@ export function ModalTriggerExpenseForm({
           ? format(new Date(currentExpense?.registrationDate), "yyyy-MM-dd")
           : "",
         creditCardId: currentExpense?.creditCardId || "",
-        categoriesOptions:
-          // currentExpense?.subCategories?.map((category) => ({
-          //   label: category?.name,
-          //   value: category?.id,
-          // })) ||
-          [],
+        categoryId: currentExpense?.categoryId || "",
         isCloning,
       });
     }
@@ -196,14 +195,19 @@ export function ModalTriggerExpenseForm({
                   />
                   <Controller
                     control={expenseFormControl}
-                    name="categoriesOptions"
-                    render={({ field, fieldState }) => (
-                      <MultSelect
-                        {...field}
+                    name="categoryId"
+                    render={({
+                      field: { onChange, ...restField },
+                      fieldState,
+                    }) => (
+                      <Select
+                        {...restField}
                         required
+                        isSearchable
                         onFocus={handleFocusCategoriesSelect}
+                        onChange={(option) => onChange(option?.value)}
                         isLoading={isLoadingCategories}
-                        label="Categories"
+                        label="Category"
                         options={categoriesOptions}
                         error={fieldState.error?.message}
                       />

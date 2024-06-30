@@ -16,10 +16,9 @@ const apiFormExpenseSchema = z.object({
     .string({ required_error: REQUIRED_FIELD })
     .min(1, REQUIRED_FIELD)
     .trim(),
-  subCategories: z
-    .array(z.string({ required_error: REQUIRED_FIELD }))
-    .nullable()
-    .optional(),
+  categoryId: z
+    .string({ required_error: REQUIRED_FIELD })
+    .min(1, REQUIRED_FIELD),
   description: z
     .string({ required_error: REQUIRED_FIELD })
     .trim()

@@ -51,21 +51,15 @@ export async function PATCH(
     return NextResponse.json(handleZodValidationError(error), { status: 400 });
   }
   try {
-    const { name, subCategories, description, amount } = expense;
+    const { name, categoryId, description, amount } = expense;
 
     let createExpenseData: any = {
       userId,
+      categoryId,
       name,
       description,
       amount,
     };
-
-    if (Array.isArray(subCategories)) {
-      createExpenseData = {
-        ...createExpenseData,
-        ...(await ExpenseServices.getParsedSubCategoriesByIds(subCategories)),
-      };
-    }
 
     await prisma.expense.update({
       where: { id: params?.id },

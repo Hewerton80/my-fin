@@ -1,9 +1,10 @@
 // import axios from "axios";
 import prisma from "../lib/prisma";
-import { addDays } from "date-fns/addDays";
+import { format } from "date-fns/format";
+import { isValid } from "date-fns/isValid";
 import { getRandomRGBColor } from "../shared/colors";
 import { hash } from "bcrypt";
-
+import expenses from "./tmp.json";
 export async function main() {
   console.log("Start seeding...");
   // const groupCategories = [
@@ -173,43 +174,107 @@ export async function main() {
   //   },
   // });
 
-  // const expenseToCreate = [
-
-  // ]
-  const uberExpensese = [
-    {
-      name: "Uber - CFC Império Natal",
-      registrationDate: "2024-01-05 12:00:00",
-      amount: 7.98,
-    },
-    {
-      name: "Uber - Casa",
-      registrationDate: "2024-01-05 12:00:00",
-      amount: 7.98,
-    },
-  ];
-  // for (const uberExpense of uberExpensese) {
+  // for (const uberExpense of expenses) {
+  //   const name = `Uber - ${uberExpense.title}`;
+  //   const date = format(
+  //     new Date(uberExpense.subtitle.split(" • ")[0]),
+  //     "yyyy-MM-dd"
+  //   );
+  //   const time = uberExpense.subtitle
+  //     .split(" • ")[1]
+  //     .replace(" AM", "")
+  //     .replace(" PM", "");
+  //   const dateTime = `${date} ${time}`;
+  //   const amount = Number(
+  //     uberExpense.description.replace("R$", "").replace(",", ".")
+  //   );
   //   await prisma.expense.create({
   //     data: {
-  //       name: uberExpense.name,
+  //       name,
   //       userId: "clxqkp44r0000bjq2spxzrfry",
   //       categoryId: "clxqkkice000ltyu6cvo0tcfd",
   //       creditCardId: "clxrujim1000011hppkr14gym",
   //       paymentType: "CREDIT_CARD",
   //       isPaid: true,
-  //       registrationDate: new Date(uberExpense.registrationDate),
-  //       amount: uberExpense.amount,
+  //       registrationDate: new Date(dateTime),
+  //       amount,
   //       transitionHistory: {
   //         create: {
-  //           name: uberExpense.name,
-  //           amount: uberExpense.amount,
-  //           paidAt: new Date(uberExpense.registrationDate),
+  //           name,
+  //           amount,
+  //           paidAt: new Date(dateTime),
   //         },
   //       },
   //     },
   //   });
-  //   console.log(`Expense ${uberExpense.name} created`);
+  //   console.log(`Expense ${name}`);
   // }
+  const getHandledName = (name: string) => {
+    if (name.includes("Travessa Nemésio")) {
+      return "Uber - casa";
+    }
+    if (name.includes("Alberto Maranhão")) {
+      return "Uber - Clínica integrada";
+    }
+    if (name.includes("João Câmara")) {
+      return "Uber - CFC Auto Escola";
+    }
+    if (name.includes("Lima e Silva")) {
+      return "Uber - Clínica Trauma center";
+    }
+    return name;
+  };
+  const expenses = await prisma.expense.findMany({
+    where: { name: { contains: "uber" } },
+  });
+  for (const expense of expenses) {
+    const handledName = getHandledName(expense.name);
+    if (handledName !== expense.name) {
+      await prisma.expense.update({
+        where: { id: expense.id },
+        data: { name: handledName },
+      });
+    }
+  }
+  const transitions = await prisma.transitionHistory.findMany({
+    where: { name: { contains: "uber" } },
+  });
+  for (const transition of transitions) {
+    const handledName = getHandledName(transition.name);
+    if (handledName !== transition.name) {
+      await prisma.transitionHistory.update({
+        where: { id: transition.id },
+        data: { name: handledName },
+      });
+    }
+  }
+
+  // for (const ifood of ifoods) {
+  //   const name = `Ifood - ${ifood.merchant.name}`;
+  //   const date = new Date(ifood.closedAt);
+  //   const amount = ifood.payments.total.value / 10;
+  //   await prisma.expense.create({
+  //     data: {
+  //       name,
+  //       userId: "clxqkp44r0000bjq2spxzrfry",
+  //       categoryId: "clxqkkgq50002tyu6jjfdpegl",
+  //       creditCardId: "clxrujim1000011hppkr14gym",
+  //       paymentType: "CREDIT_CARD",
+  //       isPaid: true,
+  //       registrationDate: date,
+  //       amount,
+  //       transitionHistory: {
+  //         create: {
+  //           name,
+  //           amount,
+  //           paidAt: date,
+  //         },
+  //       },
+  //     },
+  //   });
+  //   console.log(`Expense ${name}`);
+  // }
+
   // await prisma.creditCard.createMany({
   //   data: [
   //     {

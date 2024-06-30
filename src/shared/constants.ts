@@ -32,6 +32,7 @@ export const CONSTANTS = {
     EXPENSE_NOT_FOUND: "expense not found",
     EXPENSE_ALREADY_PAID: "This expense has already been paid",
     CREDIT_CARD_NOT_FOUND: "Credit card not found",
+    CATEGORY_NOT_FOUND: "Category not found",
     SUB_CATEGORY_NOT_FOUND: "Sub category not found",
     USER_ALREADY_EXISTS: "User with this email already exists",
     INTERNAL_SERVER_ERROR: "Internal server error",

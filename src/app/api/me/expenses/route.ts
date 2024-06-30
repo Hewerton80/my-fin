@@ -2,7 +2,6 @@ import prisma from "@/lib/prisma";
 import { handleZodValidationError } from "@/lib/zodHelpers";
 import { CONSTANTS } from "@/shared/constants";
 import { endOfDay } from "date-fns/endOfDay";
-import { setHours } from "date-fns/setHours";
 import { Frequency, PaymantType, Prisma } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
@@ -15,6 +14,7 @@ import { NextAuthOptions } from "@/lib/nextAuthConfig";
 const {
   USER_HAS_NO_PERMISSION,
   CREDIT_CARD_NOT_FOUND,
+  CATEGORY_NOT_FOUND,
   USER_NOT_FOUND,
   SUB_CATEGORY_NOT_FOUND,
 } = CONSTANTS.API_RESPONSE_MESSAGES;
@@ -59,7 +59,7 @@ export async function POST(request: NextRequest) {
   try {
     const {
       name,
-      subCategories,
+      categoryId,
       description,
       amount,
       isPaid,
@@ -72,6 +72,7 @@ export async function POST(request: NextRequest) {
 
     let createExpenseData: any = {
       userId,
+      categoryId,
       name,
       description,
       amount,
@@ -80,13 +81,6 @@ export async function POST(request: NextRequest) {
         ? new Date(`${registrationDate!} 12:00`)
         : undefined,
     };
-
-    if (Array.isArray(subCategories) && subCategories?.length) {
-      createExpenseData = {
-        ...createExpenseData,
-        ...(await ExpenseServices.getParsedSubCategoriesByIds(subCategories)),
-      };
-    }
 
     if (isPaid) {
       createExpenseData.paymentType = paymentType as PaymantType;
@@ -158,6 +152,12 @@ export async function POST(request: NextRequest) {
       if (error?.meta?.field_name === "creditCardId") {
         return NextResponse.json(
           { message: CREDIT_CARD_NOT_FOUND },
+          { status: 404 }
+        );
+      }
+      if (error?.meta?.field_name === "categoryId") {
+        return NextResponse.json(
+          { message: CATEGORY_NOT_FOUND },
           { status: 404 }
         );
       }

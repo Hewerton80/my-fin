@@ -84,24 +84,7 @@ const getOneById = async (id: string) => {
   return expenseWitchComputedFields;
 };
 
-const getParsedSubCategoriesByIds = async (ids: string[]) => {
-  const expenseData: any = {};
-  const subCategoriesIds = ids.map((id) => ({ id }));
-  // const foundSubCategories = await prisma.subCategory.findMany({
-  //   where: { id: { in: ids } },
-  // });
-  // expenseData.iconsName = foundSubCategories
-  //   .map((subCategory) => subCategory.iconName)
-  //   ?.join(",");
-  // expenseData.subCategoriesName = foundSubCategories
-  //   .map((subCategory) => subCategory.name)
-  //   ?.join(",");
-  expenseData.subCategories = { connect: subCategoriesIds };
-  return expenseData;
-};
-
 export const ExpenseServices = {
-  getParsedSubCategoriesByIds,
   getOneById,
   getListByUserId,
 };

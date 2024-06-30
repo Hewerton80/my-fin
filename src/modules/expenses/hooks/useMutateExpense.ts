@@ -19,7 +19,7 @@ export function useMutateExpense() {
     () => ({
       id: "",
       name: "",
-      categoriesOptions: [],
+      categoryId: "",
       description: "",
       amount: null,
       isPaid: null,
@@ -133,16 +133,9 @@ export function useMutateExpense() {
         ) as any;
       });
     }
-    if (handledExpenseFormValues?.categoriesOptions) {
-      handledExpenseFormValues.subCategories =
-        handledExpenseFormValues?.categoriesOptions.map(
-          (category) => category.value
-        ) as any;
-    }
     if (expenseFormValues?.id) {
       handledExpenseFormValues.id = expenseFormValues.id;
     }
-    delete handledExpenseFormValues?.categoriesOptions;
     delete handledExpenseFormValues?.isCloning;
     return handledExpenseFormValues;
   }, [getExpenseValues, expenseFormState.dirtyFields]);
