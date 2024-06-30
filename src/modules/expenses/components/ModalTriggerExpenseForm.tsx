@@ -39,12 +39,8 @@ export function ModalTriggerExpenseForm({
   onSuccess,
 }: ModalTriggerExpenseFormProps) {
   const { resetExpenseInfoCahce } = useCacheExpenses();
-  const {
-    groupCategories,
-    categories,
-    isLoadingCategories,
-    refetchCategories,
-  } = useGetCategories();
+  const { groupCategories, isLoadingCategories, refetchCategories } =
+    useGetCategories();
 
   const { creditCards, isLoadingCreditCards, refetchCreditCards } =
     useGetCreditCards();
@@ -70,18 +66,20 @@ export function ModalTriggerExpenseForm({
   );
 
   const categoriesOptions = useMemo<SelectOption[]>(() => {
-    // if (
-    //   Array.isArray(currentExpense?.subCategories) &&
-    //   !Array.isArray(categories)
-    // ) {
-    //   return currentExpense?.subCategories?.map((category) => ({
-    //     label: category?.name,
-    //     value: category?.id,
-    //   })) as SelectOption[];
-    // }
-    // if (!Array.isArray(categories)) {
-    //   return [];
-    // }
+    if (
+      Array.isArray(currentExpense?.categoryId) &&
+      !Array.isArray(groupCategories)
+    ) {
+      return [
+        {
+          label: currentExpense?.category?.name,
+          value: currentExpense?.category?.id || "",
+        },
+      ];
+    }
+    if (!Array.isArray(groupCategories)) {
+      return [];
+    }
     return groupCategories?.map((groupCategory) => ({
       label: groupCategory.name,
       options:

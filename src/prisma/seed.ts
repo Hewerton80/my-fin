@@ -13,6 +13,7 @@ export async function main() {
   //     categories: [
   //       { name: "Supermarket", iconName: "🛒" },
   //       { name: "Restaurant", iconName: "🍝" },
+  //        {name: "Supplements", iconName: "🥛"},
   //     ],
   //   },
   //   {
@@ -29,6 +30,7 @@ export async function main() {
   //       { name: "Internet", iconName: "🌐" },
   //       { name: "Cell phone", iconName: "📱" },
   //       { name: "Dating app", iconName: "💑" },
+  //       { name: "Credit card", iconName: "💳" },
   //     ],
   //   },
   //   {
@@ -115,9 +117,7 @@ export async function main() {
   //   {
   //     name: "Clothing",
   //     categories: [
-  //       { name: "T-Shirts", iconName: "👕" },
-  //       { name: "Pants", iconName: "👖" },
-  //       { name: "Shoes", iconName: "👟" },
+  //       { name: "Clothes", iconName: "👕" },
   //     ],
   //   },
   //   {
@@ -141,14 +141,6 @@ export async function main() {
   //       { name: "Computer", iconName: "💻" },
   //       { name: "Video game", iconName: "👾" },
   //       { name: "peripherals", iconName: "🖱️" },
-  //     ],
-  //   },
-  //   {
-  //     name: "Supplements",
-  //     categories: [
-  //       { name: "Proteins", iconName: "🥛" },
-  //       { name: "Vitamins", iconName: "🍊" },
-  //       { name: "Creatine", iconName: "💪" },
   //     ],
   //   },
   //   {
@@ -209,45 +201,71 @@ export async function main() {
   //   });
   //   console.log(`Expense ${name}`);
   // }
-  const getHandledName = (name: string) => {
-    if (name.includes("Travessa Nemésio")) {
-      return "Uber - casa";
-    }
-    if (name.includes("Alberto Maranhão")) {
-      return "Uber - Clínica integrada";
-    }
-    if (name.includes("João Câmara")) {
-      return "Uber - CFC Auto Escola";
-    }
-    if (name.includes("Lima e Silva")) {
-      return "Uber - Clínica Trauma center";
-    }
-    return name;
-  };
-  const expenses = await prisma.expense.findMany({
-    where: { name: { contains: "uber" } },
-  });
-  for (const expense of expenses) {
-    const handledName = getHandledName(expense.name);
-    if (handledName !== expense.name) {
-      await prisma.expense.update({
-        where: { id: expense.id },
-        data: { name: handledName },
-      });
-    }
-  }
-  const transitions = await prisma.transitionHistory.findMany({
-    where: { name: { contains: "uber" } },
-  });
-  for (const transition of transitions) {
-    const handledName = getHandledName(transition.name);
-    if (handledName !== transition.name) {
-      await prisma.transitionHistory.update({
-        where: { id: transition.id },
-        data: { name: handledName },
-      });
-    }
-  }
+  // const getHandledName = (name: string) => {
+  //   if (name.includes("Travessa Nemésio")) {
+  //     return "Uber - casa";
+  //   }
+  //   if (name.includes("Alberto Maranhão")) {
+  //     return "Uber - Clínica integrada";
+  //   }
+  //   if (name.includes("João Câmara")) {
+  //     return "Uber - CFC Auto Escola";
+  //   }
+  //   if (name.includes("Lima e Silva")) {
+  //     return "Uber - Clínica Trauma center";
+  //   }
+  //   return name;
+  // };
+  // const expenses = await prisma.expense.findMany({
+  //   where: { name: { contains: "uber" } },
+  // });
+  // for (const expense of expenses) {
+  //   const handledName = getHandledName(expense.name);
+  //   if (handledName !== expense.name) {
+  //     await prisma.expense.update({
+  //       where: { id: expense.id },
+  //       data: { name: handledName },
+  //     });
+  //   }
+  // }
+  // const transitions = await prisma.transitionHistory.findMany({
+  //   where: { name: { contains: "uber" } },
+  // });
+  // for (const transition of transitions) {
+  //   const handledName = getHandledName(transition.name);
+  //   if (handledName !== transition.name) {
+  //     await prisma.transitionHistory.update({
+  //       where: { id: transition.id },
+  //       data: { name: handledName },
+  //     });
+  //   }
+  // }
+
+  // for (const expense of italkiExpenses) {
+  //   const date = new Date(expense.registrationDate);
+  //   const name = `Italki - Aula de inglês`;
+  //   const amount = expense.amount;
+  //   await prisma.expense.create({
+  //     data: {
+  //       name,
+  //       userId: "clxqkp44r0000bjq2spxzrfry",
+  //       categoryId: "clxqkkkpq0015tyu6zyp76t7b",
+  //       creditCardId: "clxrujim1000011hppkr14gym",
+  //       paymentType: "CREDIT_CARD",
+  //       isPaid: true,
+  //       registrationDate: date,
+  //       amount,
+  //       transitionHistory: {
+  //         create: {
+  //           name,
+  //           amount,
+  //           paidAt: date,
+  //         },
+  //       },
+  //     },
+  //   });
+  //   console.log(`Expense ${name}`);
+  // }
 
   // for (const ifood of ifoods) {
   //   const name = `Ifood - ${ifood.merchant.name}`;
