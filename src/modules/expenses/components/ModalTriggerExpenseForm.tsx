@@ -16,7 +16,7 @@ import { getRange } from "@/shared/getRange";
 import { stringToBoolean } from "@/shared/stringToBoolean";
 import { isBoolean, isNull, isNumber } from "@/shared/isType";
 import { getCurrencyFormat } from "@/shared/getCurrencyFormat";
-import { useGetCategories } from "@/modules/category/hooks/useGetCategories";
+import { useGetGroupCategories } from "@/modules/category/hooks/useGetGroupCategories";
 import { useGetCreditCards } from "@/modules/creditCard/hooks/useGetCreditCards";
 import { useGetExpense } from "../hooks/useGetExpense";
 import { format } from "date-fns/format";
@@ -40,7 +40,7 @@ export function ModalTriggerExpenseForm({
 }: ModalTriggerExpenseFormProps) {
   const { resetExpenseInfoCahce } = useCacheExpenses();
   const { groupCategories, isLoadingCategories, refetchCategories } =
-    useGetCategories();
+    useGetGroupCategories();
 
   const { creditCards, isLoadingCreditCards, refetchCreditCards } =
     useGetCreditCards();
@@ -66,14 +66,11 @@ export function ModalTriggerExpenseForm({
   );
 
   const categoriesOptions = useMemo<SelectOption[]>(() => {
-    if (
-      Array.isArray(currentExpense?.categoryId) &&
-      !Array.isArray(groupCategories)
-    ) {
+    if (currentExpense?.category?.id && !Array.isArray(groupCategories)) {
       return [
         {
-          label: currentExpense?.category?.name,
-          value: currentExpense?.category?.id || "",
+          value: currentExpense?.category?.id,
+          label: currentExpense?.category?.name!,
         },
       ];
     }

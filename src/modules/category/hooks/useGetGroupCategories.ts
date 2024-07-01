@@ -7,7 +7,7 @@ import {
   CategoryWitchComputedFields,
 } from "@/modules/category/types";
 
-export function useGetCategories() {
+export function useGetGroupCategories() {
   const { apiBase } = useAxios();
   const {
     data: groupCategories,
@@ -19,7 +19,7 @@ export function useGetCategories() {
     gcTime: 1000 * 60 * 10,
     queryFn: () =>
       apiBase
-        .get<GroupCategoryWitchComputedFields[]>("/categories")
+        .get<GroupCategoryWitchComputedFields[]>("/group-categories")
         .then((res) => res.data || []),
     enabled: false,
   });
