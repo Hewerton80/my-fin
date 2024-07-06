@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useAxios } from "@/hooks/useAxios";
 import { useMemo } from "react";
 import {
-  CategoryQueryKeys,
+  GroupCategoryQueryKeys,
   GroupCategoryWitchComputedFields,
   CategoryWitchComputedFields,
 } from "@/modules/category/types";
@@ -15,13 +15,12 @@ export function useGetGroupCategories() {
     refetch: refetchCategories,
     error: categoriesError,
   } = useQuery({
-    queryKey: [CategoryQueryKeys.LIST],
+    queryKey: [GroupCategoryQueryKeys.LIST],
     gcTime: 1000 * 60 * 10,
     queryFn: () =>
       apiBase
         .get<GroupCategoryWitchComputedFields[]>("/group-categories")
         .then((res) => res.data || []),
-    enabled: false,
   });
 
   const handleCategories = useMemo<

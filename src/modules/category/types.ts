@@ -8,6 +8,10 @@ export interface GroupCategoryWitchComputedFields
   categories?: CategoryWitchComputedFields[];
 }
 
+export enum GroupCategoryQueryKeys {
+  LIST = "GROUP_CATEGORY_LIST",
+}
+
 export enum CategoryQueryKeys {
   LIST = "CATEGORY_LIST",
 }

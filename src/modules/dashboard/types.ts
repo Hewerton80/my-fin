@@ -1,10 +1,12 @@
-export enum InsightsQueryKeys {
-  LIST = "INSIGHTS_LIST",
+export enum DashboardQueryKeys {
+  LIST = "DASHBOARD_LIST",
 }
 
 export interface Insights {
-  _sum?: {
-    amount?: number;
-  };
-  _count?: number;
+  name?: string;
+  amount?: number;
+  count?: number | string;
+}
+export interface Dashboard {
+  insights: Insights[];
 }

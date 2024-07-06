@@ -1,10 +1,7 @@
 // import axios from "axios";
 import prisma from "../lib/prisma";
-import { format } from "date-fns/format";
-import { isValid } from "date-fns/isValid";
-import { getRandomRGBColor } from "../shared/colors";
-import { hash } from "bcrypt";
-import expenses from "./tmp.json";
+// import { format } from "date-fns/set";
+
 export async function main() {
   console.log("Start seeding...");
   const groupCategories = [
@@ -331,5 +328,28 @@ export async function main() {
   //   });
   //   console.log(`Group Category ${groupCategory.name}`);
   // }
+  const uberExpenses = await prisma.expense.findMany({
+    where: { categoryId: "clxqkkice000ltyu6cvo0tcfd" },
+  });
+  for (const uberExpense of uberExpenses) {
+    const date = new Date(uberExpense?.registrationDate!);
+    date.setFullYear(2024);
+    await prisma.expense.update({
+      where: { id: uberExpense.id },
+      data: {
+        registrationDate: date,
+        transitionHistory: {
+          updateMany: {
+            where: { expenseId: uberExpense.id },
+            data: { paidAt: date },
+          },
+        },
+      },
+    });
+    console.log(`Expense ${uberExpense.name}`);
+  }
+  // const uberTransictions = await prisma.transitionHistory.findMany({
+  //   where: { expense: { categoryId: "clxqkkice000ltyu6cvo0tcfd" } },
+  // });
 }
 main();

@@ -23,8 +23,8 @@ export const Root = forwardRef(
       <Comp
         ref={ref}
         className={twMerge(
-          "flex flex-col w-full rounded-[0.5rem] overflow-hidden",
-          "bg-card dark:bg-dark-card/70",
+          "flex flex-col w-full rounded-lg overflow-hidden",
+          "bg-card dark:bg-dark-card",
           "border border-border dark:border-dark-border",
           "shadow-md md:shadow-xl",
           className

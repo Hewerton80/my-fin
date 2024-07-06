@@ -1,23 +1,24 @@
 import { useQuery } from "@tanstack/react-query";
-import { Insights, InsightsQueryKeys } from "../types";
+import { Dashboard, DashboardQueryKeys } from "../types";
 import { apiBase } from "@/lib/axios";
 
-export function useGetInsights() {
+export function useGetDashboard() {
   const {
-    data: insights,
-    error: insightsError,
-    isFetching: isLoadingInsights,
-    refetch: refetchInsights,
+    data: dashboard,
+    error: dashboardError,
+    isFetching: isLoadingDashboard,
+    refetch: refetchDashboard,
   } = useQuery({
     queryFn: () =>
-      apiBase.get<Insights>("/me/insights").then((res) => res.data),
-    queryKey: [InsightsQueryKeys.LIST],
+      apiBase.get<Dashboard>("/me/dashboard").then((res) => res.data),
+    queryKey: [DashboardQueryKeys.LIST],
     enabled: true,
   });
+
   return {
-    insights,
-    insightsError,
-    isLoadingInsights,
-    refetchInsights,
+    dashboard,
+    dashboardError,
+    isLoadingDashboard,
+    refetchDashboard,
   };
 }

@@ -1,19 +1,37 @@
+import { ComponentProps } from "react";
 import {
+  Tooltip,
   LineChart as LineChartRecharts,
   Line,
   XAxis,
   YAxis,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
 } from "recharts";
+import { Card } from "@/components/ui/cards/Card";
 import assets from "../../../../../assets.json";
+import { ChartContainer } from "../ChartContainer";
+
 interface LineChartProps {
   lineDaraKey: string;
   xAxisDataKey: string;
   data: any[];
 }
-import { Card } from "@/components/ui/cards/Card";
+
+const CustomTooltip = ({ active, payload }: ComponentProps<typeof Tooltip>) => {
+  if (active && payload?.[0]?.payload) {
+    const data = payload?.[0]?.payload;
+    return (
+      <Card.Root className="p-1">
+        {Object.entries(data).map(([key, value]) => (
+          <div key={key}>
+            <span className="text-xs">{key}: </span>
+            <span className="text-xs font-bold">{String(value)}</span>
+          </div>
+        ))}
+      </Card.Root>
+    );
+  }
+  return <></>;
+};
 
 function CustomLabel(props: any) {
   return (
@@ -22,7 +40,6 @@ function CustomLabel(props: any) {
       x={props?.x}
       y={props?.y}
       dy={-4}
-      // fill={props?.stroke}
       textAnchor="middle"
     >
       {props?.value}
@@ -67,12 +84,7 @@ function CustomizedYAxisTick(props: any) {
 
 export function LineChart({ data, lineDaraKey, xAxisDataKey }: LineChartProps) {
   return (
-    <ResponsiveContainer
-      width="100%"
-      height="100%"
-      minWidth={150}
-      minHeight={150}
-    >
+    <ChartContainer>
       <LineChartRecharts
         data={data}
         margin={{ top: 60, right: 30, left: 0, bottom: 20 }}
@@ -83,24 +95,7 @@ export function LineChart({ data, lineDaraKey, xAxisDataKey }: LineChartProps) {
           allowDataOverflow
         />
         <YAxis tick={<CustomizedYAxisTick />} />
-        <Tooltip
-          content={({ active, payload }) => {
-            if (active && payload?.[0]?.payload) {
-              const data = payload?.[0]?.payload;
-              return (
-                <Card.Root className="p-1">
-                  {Object.entries(data).map(([key, value]) => (
-                    <div key={key}>
-                      <span className="text-xs">{key}: </span>
-                      <span className="text-xs font-bold">{String(value)}</span>
-                    </div>
-                  ))}
-                </Card.Root>
-              );
-            }
-            return <></>;
-          }}
-        />
+        <Tooltip content={<CustomTooltip />} />
         <Line
           type="monotone"
           dataKey={lineDaraKey}
@@ -109,6 +104,6 @@ export function LineChart({ data, lineDaraKey, xAxisDataKey }: LineChartProps) {
           label={<CustomLabel />}
         />
       </LineChartRecharts>
-    </ResponsiveContainer>
+    </ChartContainer>
   );
 }

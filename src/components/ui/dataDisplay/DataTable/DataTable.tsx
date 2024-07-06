@@ -31,7 +31,7 @@ export interface DataTableProps
 
 export function DataTable({
   columns,
-  data,
+  data = [],
   isError,
   isLoading,
   numSkeletonRows = 15,

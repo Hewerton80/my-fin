@@ -33,7 +33,17 @@ export async function GET(
       paidAt: { gte: startOfYearDate, lte: endOfYearDate },
     },
     orderBy: { paidAt: "asc" },
-    include: { expense: true },
+    select: {
+      id: true,
+      expense: {
+        select: { name: true },
+      },
+      amount: true,
+      paidAt: true,
+      currentInstallment: true,
+      totalInstallments: true,
+    },
+    // include: { expense: { select: { name: true } } },
   });
   return NextResponse.json(transitionsHistory, { status: 200 });
 }

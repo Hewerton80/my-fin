@@ -5,6 +5,7 @@ import { FeedBackError } from "@/components/ui/feedback/FeedBackError";
 import { FeedBackLoading } from "@/components/ui/feedback/FeedBackLoading";
 import { TransitionHistoryWitchConputedFields } from "@/modules/transitionHistory/types";
 import { getCurrencyFormat } from "@/shared/getCurrencyFormat";
+import { isNumber } from "@/shared/isType";
 import { format } from "date-fns/format";
 import { useMemo } from "react";
 import { MdPayment } from "react-icons/md";
@@ -25,11 +26,19 @@ export function CategoryInsights({
 }: CategoryInsightsProps) {
   const parsedDataChart = useMemo(() => {
     return (
-      transitionsHistory?.map((transitionHistory) => ({
-        date: format(new Date(transitionHistory?.paidAt!), "dd MMM"),
-        description: transitionHistory?.name,
-        amount: transitionHistory?.amount,
-      })) || []
+      transitionsHistory?.map((transitionHistory) => {
+        const currentInstallment = transitionHistory?.currentInstallment;
+        const totalInstallments = transitionHistory?.totalInstallments;
+        const installmentsString =
+          isNumber(currentInstallment) && isNumber(totalInstallments)
+            ? ` ${currentInstallment}/${totalInstallments}`
+            : "";
+        return {
+          date: format(new Date(transitionHistory?.paidAt!), "dd MMM"),
+          description: `${transitionHistory?.expense?.name}${installmentsString}`,
+          amount: transitionHistory?.amount,
+        };
+      }) || []
     );
   }, [transitionsHistory]);
 

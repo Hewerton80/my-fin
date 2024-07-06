@@ -2,10 +2,11 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/buttons/Button";
 import { Card } from "@/components/ui/cards/Card";
-import { useGetCategories } from "@/modules/category/hooks/useGetCategories";
+import { useGetGroupCategories } from "@/modules/category/hooks/useGetGroupCategories";
 import { useGetTransiontionsHistotyByCategory } from "@/modules/transitionHistory/hooks/useGetTransiontionsHistotyByCategory";
 import { CategoryInsights } from "@/modules/category/components/CategoryInsights";
 import { FeedBackLoading } from "@/components/ui/feedback/FeedBackLoading";
+import { useGetCategories } from "@/modules/category/hooks/useGetCategories";
 
 export default function CategoriesPage() {
   const { categories, isLoadingCategories, refetchCategories } =
@@ -20,9 +21,9 @@ export default function CategoriesPage() {
     refetchTransitionsHistory,
   } = useGetTransiontionsHistotyByCategory(selectedCategory);
 
-  useEffect(() => {
-    refetchCategories();
-  }, [refetchCategories]);
+  // useEffect(() => {
+  //   refetchCategories();
+  // }, [refetchCategories]);
 
   useEffect(() => {
     if (selectedCategory) {
@@ -31,9 +32,11 @@ export default function CategoriesPage() {
   }, [selectedCategory, refetchTransitionsHistory]);
 
   if (isLoadingCategories) {
-    <Card.Root>
-      <FeedBackLoading />
-    </Card.Root>;
+    return (
+      <Card.Root>
+        <FeedBackLoading />
+      </Card.Root>
+    );
   }
 
   return (
