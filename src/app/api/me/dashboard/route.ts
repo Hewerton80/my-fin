@@ -6,7 +6,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { endOfYear } from "date-fns/endOfYear";
 import { startOfYear } from "date-fns/startOfYear";
 import { Prisma } from "@prisma/client";
-import { Dashboard, Insights } from "@/modules/dashboard/types";
+import {
+  CreditCardInsights,
+  Dashboard,
+  Insights,
+} from "@/modules/dashboard/types";
 import { sortObjectsByProperty } from "@/shared/array";
 
 export async function GET(
@@ -30,14 +34,26 @@ export async function GET(
 
   const insights =
     (await prisma.$queryRaw<Insights[]>`
-    select Category.name, ROUND(SUM(TransitionHistory.amount), 2) as amount, CAST(COUNT(TransitionHistory.name) AS CHAR(32)) as count
-    FROM Expense
-    JOIN TransitionHistory on Expense.id = TransitionHistory.expenseId
-    JOIN  Category on Expense.categoryId  = Category.id
-    where TransitionHistory.paidAt BETWEEN ${startOfYearDate} and ${endOfYearDate} AND 
-    Expense.userId = ${userId}
-    GROUP BY Category.name;
+      SELECT Category.name, ROUND(SUM(TransitionHistory.amount), 2) as amount, CAST(COUNT(TransitionHistory.id) AS CHAR(32)) as count
+      FROM Expense
+      JOIN TransitionHistory on Expense.id = TransitionHistory.expenseId
+      JOIN  Category on Expense.categoryId  = Category.id
+      WHERE TransitionHistory.paidAt BETWEEN ${startOfYearDate} and ${endOfYearDate} AND 
+      Expense.userId = ${userId}
+      GROUP BY Category.name;
   `) || [];
+
+  const creditCardInsights =
+    (await prisma.$queryRaw<CreditCardInsights[]>`
+      SELECT CreditCard.name, CreditCard.color as color, ROUND(SUM(TransitionHistory.amount), 2) as amount, CAST(COUNT(TransitionHistory.id) AS CHAR(32)) as count
+      FROM Expense 
+      JOIN TransitionHistory on Expense.id = TransitionHistory.expenseId
+      JOIN  CreditCard on Expense.creditCardId  = CreditCard.id
+      WHERE TransitionHistory.paidAt BETWEEN ${startOfYearDate} and ${endOfYearDate} AND 
+      Expense.userId = ${userId}
+      GROUP BY CreditCard.name;
+  `) || [];
+
   return NextResponse.json(
     {
       insights: sortObjectsByProperty({
@@ -45,6 +61,7 @@ export async function GET(
         sortBy: "amount",
         order: "desc",
       }),
+      creditCardInsights,
     },
     { status: 200 }
   );

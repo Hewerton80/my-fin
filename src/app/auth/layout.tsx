@@ -9,7 +9,7 @@ export default async function AuthLayout({
   children: ReactNode;
 }) {
   const userSessions = await getServerSession(NextAuthOptions);
-  if (userSessions) {
+  if (userSessions?.user) {
     return redirect("/home");
   }
   return <> {children} </>;

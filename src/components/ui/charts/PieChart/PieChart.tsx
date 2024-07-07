@@ -1,8 +1,9 @@
 import { ComponentProps, useMemo } from "react";
 import { Card } from "../../cards/Card";
-import { Pie, Tooltip, PieChart as PieChartRecharts } from "recharts";
+import { Pie, Tooltip, PieChart as PieChartRecharts, Legend } from "recharts";
 import { ChartContainer } from "../ChartContainer";
-import { getRandomRGBColor } from "@/shared/colors";
+import { getContrastColor, getRandomRGBColor } from "@/shared/colors";
+import { getCurrencyFormat } from "@/shared/getCurrencyFormat";
 
 export interface PieChart {
   amount: number;
@@ -11,7 +12,6 @@ export interface PieChart {
 }
 interface PieChartProps {
   data: PieChart[];
-  dataKey: string;
 }
 
 const CustomTooltip = ({ active, payload }: ComponentProps<typeof Tooltip>) => {
@@ -28,7 +28,9 @@ const CustomTooltip = ({ active, payload }: ComponentProps<typeof Tooltip>) => {
               style={{ backgroundColor: data?.fill }}
             />
             <span className="text-xs">{data.name} </span>
-            <span className="text-xs ml-8">{data.amount} </span>
+            <span className="text-xs ml-8">
+              {getCurrencyFormat(data?.amount)}
+            </span>
           </div>
         </Card.Root>
       );
@@ -38,8 +40,32 @@ const CustomTooltip = ({ active, payload }: ComponentProps<typeof Tooltip>) => {
 
   return <>{tooltipLabel}</>;
 };
+const RADIAN = Math.PI / 180;
+const CustomizedLabel = (props: any) => {
+  // console.log(props);
+  const { cx, cy, midAngle, innerRadius, outerRadius, payload } = props;
 
-export const PieChart = ({ data, dataKey }: PieChartProps) => {
+  const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+  const x = cx + radius * Math.cos(-midAngle * RADIAN);
+  const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+  const data = payload?.payload as PieChart & { fill: string };
+
+  return (
+    <text
+      className="text-[0.5rem] md:text-xs"
+      x={x}
+      y={y}
+      fill={getContrastColor(data?.fill)}
+      textAnchor={x > cx ? "start" : "end"}
+      dominantBaseline="central"
+    >
+      {getCurrencyFormat(data?.amount)}
+    </text>
+  );
+};
+
+export const PieChart = ({ data }: PieChartProps) => {
   const dataWithFill = useMemo(() => {
     return data.map((item) => ({
       ...item,
@@ -48,13 +74,35 @@ export const PieChart = ({ data, dataKey }: PieChartProps) => {
   }, [data]);
 
   return (
-    <ChartContainer
-      // minWidth={300} minHeight={300}
-      className="!min-w-[150px] !min-h-[150px] lg:!min-w-[300px]  lg:!min-h-[300px]"
-    >
+    <ChartContainer className="!min-w-[150px] !min-h-[150px] lg:!min-w-[300px]  lg:!min-h-[300px]">
       <PieChartRecharts>
         <Tooltip content={<CustomTooltip />} />
-        <Pie data={dataWithFill} dataKey={dataKey} label />
+        <Pie
+          labelLine={false}
+          data={dataWithFill}
+          dataKey="amount"
+          label={CustomizedLabel}
+        />
+        <Legend
+          name="name"
+          content={(props) => {
+            const payload = props?.payload;
+
+            return (
+              <div className="flex flex-wrap items-center justify-center gap-4">
+                {payload?.map((data, i) => (
+                  <div key={`legend-chart-${i}`} className="flex gap-2">
+                    <span
+                      className="h-4 w-4 rounded-sm"
+                      style={{ backgroundColor: data?.color }}
+                    />
+                    <span className="text-xs">{data.value} </span>
+                  </div>
+                ))}
+              </div>
+            );
+          }}
+        />
       </PieChartRecharts>
     </ChartContainer>
   );

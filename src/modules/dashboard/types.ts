@@ -3,10 +3,16 @@ export enum DashboardQueryKeys {
 }
 
 export interface Insights {
-  name?: string;
-  amount?: number;
-  count?: number | string;
+  name: string;
+  amount: number;
+  count: number | string;
 }
+
+export interface CreditCardInsights extends Insights {
+  color?: string;
+}
+
 export interface Dashboard {
   insights: Insights[];
+  creditCardInsights: CreditCardInsights[];
 }

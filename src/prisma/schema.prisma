@@ -60,6 +60,7 @@ model Expense {
 model CreditCard {
     id                String    @id @default(cuid())
     iconName          String?
+    color             String?
     name              String
     dueDay            Int
     invoiceClosingDay Int
@@ -90,7 +91,6 @@ model Category {
 
 model TransitionHistory {
     id                 String    @id @default(cuid())
-    name               String
     amount             Float?
     totalInstallments  Int?
     currentInstallment Int?

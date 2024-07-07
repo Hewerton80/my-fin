@@ -6,7 +6,7 @@ import { ReactNode } from "react";
 
 export default async function AppLayout({ children }: { children: ReactNode }) {
   const userSessions = await getServerSession(NextAuthOptions);
-  if (!userSessions) {
+  if (!userSessions?.user) {
     return redirect("/auth/login");
   }
   return <PrivatePagesTamplate>{children}</PrivatePagesTamplate>;
