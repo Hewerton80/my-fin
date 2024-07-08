@@ -85,7 +85,7 @@ export async function POST(request: NextRequest) {
     if (isPaid) {
       createExpenseData.paymentType = paymentType as PaymantType;
       createExpenseData.transitionHistory = {
-        create: { name, amount, paidAt: createExpenseData.registrationDate },
+        create: { amount, paidAt: createExpenseData.registrationDate },
       };
       if (paymentType === PaymantType.CREDIT_CARD) {
         createExpenseData.creditCardId = creditCardId;

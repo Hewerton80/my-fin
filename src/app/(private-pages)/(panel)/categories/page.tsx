@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/buttons/Button";
 import { Card } from "@/components/ui/cards/Card";
 import { useGetGroupCategories } from "@/modules/category/hooks/useGetGroupCategories";
@@ -9,27 +9,25 @@ import { FeedBackLoading } from "@/components/ui/feedback/FeedBackLoading";
 import { useGetCategories } from "@/modules/category/hooks/useGetCategories";
 
 export default function CategoriesPage() {
-  const { categories, isLoadingCategories, refetchCategories } =
-    useGetCategories();
-
-  const [selectedCategory, setSelectedCategory] = useState("");
+  const { categories, isLoadingCategories } = useGetCategories();
 
   const {
     isLoadingTransitionsHistory,
     transitionsHistory,
     transitionsHistoryError,
-    refetchTransitionsHistory,
-  } = useGetTransiontionsHistotyByCategory(selectedCategory);
+    transionHistoriesQueryParams,
+    fetchTransitionsHistory,
+  } = useGetTransiontionsHistotyByCategory();
 
   // useEffect(() => {
   //   refetchCategories();
   // }, [refetchCategories]);
 
-  useEffect(() => {
-    if (selectedCategory) {
-      refetchTransitionsHistory();
-    }
-  }, [selectedCategory, refetchTransitionsHistory]);
+  // useEffect(() => {
+  //   if (selectedCategory) {
+  //     fetchTransitionsHistory();
+  //   }
+  // }, [selectedCategory, fetchTransitionsHistory]);
 
   if (isLoadingCategories) {
     return (
@@ -50,12 +48,12 @@ export default function CategoriesPage() {
             {categories?.map((category) => (
               <Button
                 variantStyle={
-                  selectedCategory === category?.id
+                  transionHistoriesQueryParams?.categoryId === category?.id
                     ? "primary"
                     : "primary-ghost"
                 }
                 key={category?.id}
-                onClick={() => setSelectedCategory(category?.id!)}
+                onClick={() => fetchTransitionsHistory(category?.id!)}
                 leftIcon={<>{category?.iconName}</>}
               >
                 {category.name}
@@ -68,7 +66,7 @@ export default function CategoriesPage() {
         isLoadingTransitionsHistory={isLoadingTransitionsHistory}
         transitionsHistory={transitionsHistory}
         transitionsHistoryError={transitionsHistoryError}
-        refetchTransitionsHistory={refetchTransitionsHistory}
+        refetchTransitionsHistory={fetchTransitionsHistory}
       />
     </div>
   );

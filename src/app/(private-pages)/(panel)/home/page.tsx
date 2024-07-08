@@ -10,48 +10,75 @@ import {
 import { FeedBackError } from "@/components/ui/feedback/FeedBackError";
 import { FeedBackLoading } from "@/components/ui/feedback/FeedBackLoading";
 import { useGetDashboard } from "@/modules/dashboard/hooks/useGetInsights";
-import { Insights } from "@/modules/dashboard/types";
+import { CategoryInsights } from "@/modules/dashboard/types";
 import { getCurrencyFormat } from "@/shared/getCurrencyFormat";
 import { useMemo } from "react";
 import { MdPayment } from "react-icons/md";
 import { TbCurrencyReal } from "react-icons/tb";
 import { CiCreditCard1 } from "react-icons/ci";
+import Link from "next/link";
+import { IoEyeOutline } from "react-icons/io5";
+import { capitalizeFisrtLetter } from "@/shared/string";
 
 export default function HomePage() {
   const { dashboard, isLoadingDashboard, dashboardError, refetchDashboard } =
     useGetDashboard();
 
-  const insights = useMemo(() => {
-    return dashboard?.insights;
+  const categoryInsights = useMemo(() => {
+    return dashboard?.categoryInsights;
   }, [dashboard]);
 
   const creditCardInsights = useMemo(() => {
     return dashboard?.creditCardInsights;
   }, [dashboard]);
 
+  const frequencyInsights = useMemo(() => {
+    return dashboard?.frequencyInsights;
+  }, [dashboard]);
+
   const totalAmount = useMemo(() => {
-    return insights?.reduce(
+    return categoryInsights?.reduce(
       (total, insight) => total + Number(insight?.amount),
       0
     );
-  }, [insights]);
+  }, [categoryInsights]);
 
   const totalPayments = useMemo(() => {
-    return insights?.reduce(
+    return categoryInsights?.reduce(
       (total, insight) => total + Number(insight?.count),
       0
     );
-  }, [insights]);
+  }, [categoryInsights]);
 
-  const colsCategories = useMemo<IColmunDataTable<Insights>[]>(() => {
+  const colsCategories = useMemo<IColmunDataTable<CategoryInsights>[]>(() => {
     return [
-      { field: "name", label: "Name" },
+      {
+        field: "name",
+        label: "Name",
+        onParse: (category) => (
+          <Link
+            className="hover:underline"
+            href={`/categories?categoryId=${category?.id}`}
+          >
+            {category?.iconName} {category?.name!}
+          </Link>
+        ),
+      },
       {
         field: "amount",
         label: "Amount",
-        onParse: (insight) => getCurrencyFormat(insight?.amount!),
+        onParse: (category) => getCurrencyFormat(category?.amount!),
       },
       { field: "count", label: "Payments" },
+      {
+        field: "actions",
+        label: "",
+        onParse: (category) => (
+          <Link href={`/categories?categoryId=${category?.id}`}>
+            <IoEyeOutline className="text-lg" />
+          </Link>
+        ),
+      },
     ];
   }, []);
 
@@ -106,7 +133,7 @@ export default function HomePage() {
           {creditCardInsights && (
             <CardStats.Root className="col-span-12 md:col-span-6">
               <CardStats.Header icon={<CiCreditCard1 />}>
-                CreditCard Insights
+                Credit Card Insights
               </CardStats.Header>
               <CardStats.Body>
                 <PieChart
@@ -119,11 +146,27 @@ export default function HomePage() {
               </CardStats.Body>
             </CardStats.Root>
           )}
+          {frequencyInsights && (
+            <CardStats.Root className="col-span-12 md:col-span-6">
+              <CardStats.Header icon={<CiCreditCard1 />}>
+                CreditCard Insights
+              </CardStats.Header>
+              <CardStats.Body>
+                <PieChart
+                  labelType="lined"
+                  data={frequencyInsights?.map((insight) => ({
+                    amount: insight?.amount,
+                    name: capitalizeFisrtLetter(insight?.name),
+                  }))}
+                />
+              </CardStats.Body>
+            </CardStats.Root>
+          )}
           <div className="col-span-12">
             <DataTable
               columns={colsCategories}
-              data={insights}
-              isLoading={isLoadingDashboard || !insights}
+              data={categoryInsights}
+              isLoading={isLoadingDashboard || !categoryInsights}
             />
           </div>
         </div>

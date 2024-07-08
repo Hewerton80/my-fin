@@ -2,17 +2,28 @@ export enum DashboardQueryKeys {
   LIST = "DASHBOARD_LIST",
 }
 
-export interface Insights {
+interface BaseInsights {
   name: string;
   amount: number;
   count: number | string;
 }
 
-export interface CreditCardInsights extends Insights {
+export interface CategoryInsights extends BaseInsights {
+  id: string;
+  iconName: string;
+}
+
+export interface CreditCardInsights extends BaseInsights {
   color?: string;
 }
 
+export interface FrequencyInsights extends BaseInsights {}
+
+export interface PaymentTypeInsights extends BaseInsights {}
+
 export interface Dashboard {
-  insights: Insights[];
+  categoryInsights: CategoryInsights[];
   creditCardInsights: CreditCardInsights[];
+  paymentTypeInsights: PaymentTypeInsights[];
+  frequencyInsights: FrequencyInsights[];
 }

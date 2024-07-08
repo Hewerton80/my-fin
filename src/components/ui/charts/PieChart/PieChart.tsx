@@ -12,6 +12,7 @@ export interface PieChart {
 }
 interface PieChartProps {
   data: PieChart[];
+  labelType?: "lined" | "default";
 }
 
 const CustomTooltip = ({ active, payload }: ComponentProps<typeof Tooltip>) => {
@@ -40,9 +41,9 @@ const CustomTooltip = ({ active, payload }: ComponentProps<typeof Tooltip>) => {
 
   return <>{tooltipLabel}</>;
 };
-const RADIAN = Math.PI / 180;
 const CustomizedLabel = (props: any) => {
   // console.log(props);
+  const RADIAN = Math.PI / 180;
   const { cx, cy, midAngle, innerRadius, outerRadius, payload } = props;
 
   const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
@@ -65,7 +66,7 @@ const CustomizedLabel = (props: any) => {
   );
 };
 
-export const PieChart = ({ data }: PieChartProps) => {
+export const PieChart = ({ data, labelType }: PieChartProps) => {
   const dataWithFill = useMemo(() => {
     return data.map((item) => ({
       ...item,
@@ -78,10 +79,27 @@ export const PieChart = ({ data }: PieChartProps) => {
       <PieChartRecharts>
         <Tooltip content={<CustomTooltip />} />
         <Pie
-          labelLine={false}
           data={dataWithFill}
           dataKey="amount"
-          label={CustomizedLabel}
+          label={
+            labelType === "lined" ? (
+              ({ x, y, payload, ...props }: any) => {
+                console.log({ props, payload: payload?.payload });
+                return (
+                  <text
+                    x={x}
+                    y={y}
+                    className="text-[0.5rem] md:text-xs font-bold fill-body-text dark:fill-light"
+                  >
+                    {getCurrencyFormat(payload?.payload?.amount)}
+                  </text>
+                );
+              }
+            ) : (
+              <CustomizedLabel />
+            )
+          }
+          labelLine={labelType === "lined"}
         />
         <Legend
           name="name"
@@ -89,7 +107,7 @@ export const PieChart = ({ data }: PieChartProps) => {
             const payload = props?.payload;
 
             return (
-              <div className="flex flex-wrap items-center justify-center gap-4">
+              <div className="flex flex-wrap items-center justify-center gap-4 mt-4">
                 {payload?.map((data, i) => (
                   <div key={`legend-chart-${i}`} className="flex gap-2">
                     <span

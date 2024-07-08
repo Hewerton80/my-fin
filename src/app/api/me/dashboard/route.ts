@@ -9,7 +9,7 @@ import { Prisma } from "@prisma/client";
 import {
   CreditCardInsights,
   Dashboard,
-  Insights,
+  CategoryInsights,
 } from "@/modules/dashboard/types";
 import { sortObjectsByProperty } from "@/shared/array";
 
@@ -33,8 +33,8 @@ export async function GET(
   const endOfYearDate = endOfYear(date).toISOString();
 
   const insights =
-    (await prisma.$queryRaw<Insights[]>`
-      SELECT Category.name, ROUND(SUM(TransitionHistory.amount), 2) as amount, CAST(COUNT(TransitionHistory.id) AS CHAR(32)) as count
+    (await prisma.$queryRaw<CategoryInsights[]>`
+      SELECT Category.id, Category.name, Category.iconName, ROUND(SUM(TransitionHistory.amount), 2) as amount, CAST(COUNT(TransitionHistory.id) AS CHAR(32)) as count
       FROM Expense
       JOIN TransitionHistory on Expense.id = TransitionHistory.expenseId
       JOIN  Category on Expense.categoryId  = Category.id
@@ -54,14 +54,25 @@ export async function GET(
       GROUP BY CreditCard.name;
   `) || [];
 
+  const frequencyInsights =
+    (await prisma.$queryRaw<CreditCardInsights[]>`
+    select Expense.frequency as name, ROUND(SUM(TransitionHistory.amount), 2) as amount, CAST(COUNT(Expense.id) AS CHAR(32)) as count
+    FROM Expense
+    JOIN TransitionHistory on Expense.id = TransitionHistory.expenseId
+      WHERE TransitionHistory.paidAt BETWEEN ${startOfYearDate} and ${endOfYearDate} AND 
+      Expense.userId = ${userId}
+      GROUP BY Expense.frequency;
+  `) || [];
+
   return NextResponse.json(
     {
-      insights: sortObjectsByProperty({
+      categoryInsights: sortObjectsByProperty({
         array: insights,
         sortBy: "amount",
         order: "desc",
       }),
       creditCardInsights,
+      frequencyInsights,
     },
     { status: 200 }
   );

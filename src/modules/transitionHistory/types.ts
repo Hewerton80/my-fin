@@ -6,6 +6,10 @@ export interface TransitionHistoryWitchConputedFields
   expense?: ExpenseWithComputedFields;
 }
 
+export interface GetTransionsTransitionHistoryParams {
+  categoryId?: string;
+}
+
 export enum TransitionHistoryQueryKeys {
   LIST_BY_CATEGORY = "LIST_BY_CATEGORY",
 }

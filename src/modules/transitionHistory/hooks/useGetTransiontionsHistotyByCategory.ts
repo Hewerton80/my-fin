@@ -1,33 +1,69 @@
 import { useAxios } from "@/hooks/useAxios";
 import { useQuery } from "@tanstack/react-query";
 import {
+  GetTransionsTransitionHistoryParams,
   TransitionHistoryQueryKeys,
   TransitionHistoryWitchConputedFields,
 } from "../types";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useCallback, useEffect, useMemo } from "react";
 
-export function useGetTransiontionsHistotyByCategory(categoryId: string) {
+export function useGetTransiontionsHistotyByCategory() {
   const { apiBase } = useAxios();
+
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const router = useRouter();
+
+  const transionHistoriesQueryParams =
+    useMemo<GetTransionsTransitionHistoryParams>(() => {
+      return {
+        categoryId: searchParams.get("categoryId") || "",
+      };
+    }, [searchParams]);
+
   const {
     data: transitionsHistory,
     isLoading: isLoadingTransitionsHistory,
-    refetch: refetchTransitionsHistory,
+    refetch,
     error: transitionsHistoryError,
   } = useQuery({
-    queryKey: [TransitionHistoryQueryKeys.LIST_BY_CATEGORY, categoryId],
-    gcTime: 1000 * 60 * 10,
     queryFn: () =>
       apiBase
         .get<TransitionHistoryWitchConputedFields[]>(
-          `/me/transition-history/category/${categoryId}`
+          `/me/transition-history/category/${transionHistoriesQueryParams?.categoryId}`
         )
         .then((res) => res.data || []),
+    gcTime: 1000 * 60 * 10,
+    queryKey: [
+      TransitionHistoryQueryKeys.LIST_BY_CATEGORY,
+      transionHistoriesQueryParams?.categoryId,
+    ],
     enabled: false,
   });
+
+  useEffect(() => {
+    if (transionHistoriesQueryParams?.categoryId) {
+      refetch();
+    }
+  }, [transionHistoriesQueryParams, refetch]);
+
+  const fetchTransitionsHistory = useCallback(
+    (categoryId?: string) => {
+      if (categoryId) {
+        router.push(`${pathname}?categoryId=${categoryId}`);
+      } else {
+        refetch();
+      }
+    },
+    [refetch, router, pathname]
+  );
 
   return {
     transitionsHistory,
     isLoadingTransitionsHistory,
-    refetchTransitionsHistory,
+    fetchTransitionsHistory,
+    transionHistoriesQueryParams,
     transitionsHistoryError,
   };
 }
