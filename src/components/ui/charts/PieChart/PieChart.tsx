@@ -4,6 +4,7 @@ import { Pie, Tooltip, PieChart as PieChartRecharts, Legend } from "recharts";
 import { ChartContainer } from "../ChartContainer";
 import { getContrastColor, getRandomRGBColor } from "@/shared/colors";
 import { getCurrencyFormat } from "@/shared/getCurrencyFormat";
+import { twMerge } from "tailwind-merge";
 
 export interface PieChart {
   amount: number;
@@ -66,7 +67,7 @@ const CustomizedLabel = (props: any) => {
   );
 };
 
-export const PieChart = ({ data, labelType }: PieChartProps) => {
+export const PieChart = ({ data, labelType = "lined" }: PieChartProps) => {
   const dataWithFill = useMemo(() => {
     return data.map((item) => ({
       ...item,
@@ -89,7 +90,9 @@ export const PieChart = ({ data, labelType }: PieChartProps) => {
                   <text
                     x={x}
                     y={y}
-                    className="text-[0.5rem] md:text-xs font-bold fill-body-text dark:fill-light"
+                    className={twMerge(
+                      "text-[0.5rem] md:text-xs font-bold fill-body-text dark:fill-light"
+                    )}
                   >
                     {getCurrencyFormat(payload?.payload?.amount)}
                   </text>

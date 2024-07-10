@@ -19,6 +19,7 @@ import { CiCreditCard1 } from "react-icons/ci";
 import Link from "next/link";
 import { IoEyeOutline } from "react-icons/io5";
 import { capitalizeFisrtLetter } from "@/shared/string";
+import { Frequency } from "@prisma/client";
 
 export default function HomePage() {
   const { dashboard, isLoadingDashboard, dashboardError, refetchDashboard } =
@@ -149,14 +150,16 @@ export default function HomePage() {
           {frequencyInsights && (
             <CardStats.Root className="col-span-12 md:col-span-6">
               <CardStats.Header icon={<CiCreditCard1 />}>
-                CreditCard Insights
+                Expense Frequency Insights
               </CardStats.Header>
               <CardStats.Body>
                 <PieChart
                   labelType="lined"
                   data={frequencyInsights?.map((insight) => ({
                     amount: insight?.amount,
-                    name: capitalizeFisrtLetter(insight?.name),
+                    name: capitalizeFisrtLetter(
+                      insight?.name || Frequency.DO_NOT_REPEAT
+                    ),
                   }))}
                 />
               </CardStats.Body>
