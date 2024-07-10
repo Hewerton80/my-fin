@@ -5,6 +5,6 @@
     "react-hooks/exhaustive-deps": "warn",
     "react/display-name": "off",
     "postcss(unknownAtRules)": "off",
-    "no-unused-vars": "warn"
+    "no-unused-vars": "off"
   }
 }
