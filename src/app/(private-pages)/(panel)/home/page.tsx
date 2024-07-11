@@ -20,6 +20,9 @@ import Link from "next/link";
 import { IoEyeOutline } from "react-icons/io5";
 import { capitalizeFisrtLetter } from "@/shared/string";
 import { Frequency } from "@prisma/client";
+import { LineChart } from "@/components/ui/charts/LineChart";
+import { BsGraphUp } from "react-icons/bs";
+import { IoPieChartOutline } from "react-icons/io5";
 
 export default function HomePage() {
   const { dashboard, isLoadingDashboard, dashboardError, refetchDashboard } =
@@ -35,6 +38,10 @@ export default function HomePage() {
 
   const frequencyInsights = useMemo(() => {
     return dashboard?.frequencyInsights;
+  }, [dashboard]);
+
+  const historicInsights = useMemo(() => {
+    return dashboard?.historicInsights;
   }, [dashboard]);
 
   const totalAmount = useMemo(() => {
@@ -133,7 +140,7 @@ export default function HomePage() {
           )}
           {creditCardInsights && (
             <CardStats.Root className="col-span-12 md:col-span-6">
-              <CardStats.Header icon={<CiCreditCard1 />}>
+              <CardStats.Header icon={<IoPieChartOutline />}>
                 Credit Card Insights
               </CardStats.Header>
               <CardStats.Body>
@@ -149,18 +156,37 @@ export default function HomePage() {
           )}
           {frequencyInsights && (
             <CardStats.Root className="col-span-12 md:col-span-6">
-              <CardStats.Header icon={<CiCreditCard1 />}>
+              <CardStats.Header icon={<IoPieChartOutline />}>
                 Expense Frequency Insights
               </CardStats.Header>
               <CardStats.Body>
                 <PieChart
-                  labelType="lined"
                   data={frequencyInsights?.map((insight) => ({
                     amount: insight?.amount,
                     name: capitalizeFisrtLetter(
                       insight?.name || Frequency.DO_NOT_REPEAT
                     ),
                   }))}
+                />
+              </CardStats.Body>
+            </CardStats.Root>
+          )}
+          {historicInsights && (
+            <CardStats.Root className="col-span-12">
+              <CardStats.Header icon={<BsGraphUp />}>
+                Paymants historics Insights
+              </CardStats.Header>
+              <CardStats.Body>
+                <LineChart
+                  data={
+                    historicInsights?.map((insight) => ({
+                      amount: insight?.amount,
+                      count: insight?.count,
+                      name: insight?.name,
+                    })) || []
+                  }
+                  lineDaraKey="amount"
+                  xAxisDataKey="name"
                 />
               </CardStats.Body>
             </CardStats.Root>

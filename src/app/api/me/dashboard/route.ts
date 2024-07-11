@@ -56,12 +56,23 @@ export async function GET(
 
   const frequencyInsights =
     (await prisma.$queryRaw<CreditCardInsights[]>`
-    select Expense.frequency as name, ROUND(SUM(TransitionHistory.amount), 2) as amount, CAST(COUNT(Expense.id) AS CHAR(32)) as count
+    SELECT Expense.frequency as name, ROUND(SUM(TransitionHistory.amount), 2) as amount, CAST(COUNT(Expense.id) AS CHAR(32)) as count
     FROM Expense
     JOIN TransitionHistory on Expense.id = TransitionHistory.expenseId
-      WHERE TransitionHistory.paidAt BETWEEN ${startOfYearDate} and ${endOfYearDate} AND 
-      Expense.userId = ${userId}
-      GROUP BY Expense.frequency;
+    WHERE TransitionHistory.paidAt BETWEEN ${startOfYearDate} and ${endOfYearDate} AND 
+    Expense.userId = ${userId}
+    GROUP BY Expense.frequency;
+  `) || [];
+
+  const historicInsights =
+    (await prisma.$queryRaw<CreditCardInsights[]>`
+    SELECT DATE_FORMAT(TransitionHistory.paidAt, '%b') AS name, ROUND(SUM(TransitionHistory.amount), 2) as amount, CAST(COUNT(TransitionHistory.id) AS CHAR(32)) as count
+    FROM Expense
+    JOIN TransitionHistory on Expense.id = TransitionHistory.expenseId
+    WHERE TransitionHistory.paidAt BETWEEN ${startOfYearDate} and ${endOfYearDate} AND 
+    Expense.userId = ${userId}
+    GROUP BY DATE_FORMAT(TransitionHistory.paidAt, '%b')
+    ORDER BY DATE_FORMAT(TransitionHistory.paidAt, '%m')
   `) || [];
 
   return NextResponse.json(
@@ -73,6 +84,7 @@ export async function GET(
       }),
       creditCardInsights,
       frequencyInsights,
+      historicInsights,
     },
     { status: 200 }
   );

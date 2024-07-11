@@ -21,9 +21,12 @@ export interface FrequencyInsights extends BaseInsights {}
 
 export interface PaymentTypeInsights extends BaseInsights {}
 
+export interface HistoricInsights extends BaseInsights {}
+
 export interface Dashboard {
   categoryInsights: CategoryInsights[];
   creditCardInsights: CreditCardInsights[];
   paymentTypeInsights: PaymentTypeInsights[];
   frequencyInsights: FrequencyInsights[];
+  historicInsights: HistoricInsights[];
 }
