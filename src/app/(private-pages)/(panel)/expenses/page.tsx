@@ -10,7 +10,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useGetExpenses } from "@/modules/expenses/hooks/useGetExpenses";
 import { getCurrencyFormat } from "@/shared/getCurrencyFormat";
 import { format } from "date-fns/format";
-import { ModalTriggerExpenseForm } from "../../../../modules/expenses/components/ModalTriggerExpenseForm";
+import { ModalExpenseForm } from "../../../../modules/expenses/components/ModalExpenseForm";
 import {
   ExpenseStatus,
   ExpenseWithComputedFields,
@@ -220,7 +220,7 @@ export default function ExpensesPage() {
           />
         </Card.Body>
       </Card.Root>
-      <ModalTriggerExpenseForm
+      <ModalExpenseForm
         show={showExpenseFormModal}
         expenseId={expenseIdToEdit}
         isCloning={isCloningExpense}

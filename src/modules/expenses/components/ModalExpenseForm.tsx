@@ -23,7 +23,7 @@ import { format } from "date-fns/format";
 import { Spinner } from "@/components/ui/feedback/Spinner";
 import { useCacheExpenses } from "../hooks/useCacheExpenses";
 
-interface ModalTriggerExpenseFormProps {
+interface ModalExpenseFormProps {
   expenseId?: string;
   show: boolean;
   isCloning?: boolean;
@@ -31,13 +31,13 @@ interface ModalTriggerExpenseFormProps {
   onSuccess?: () => void;
 }
 
-export function ModalTriggerExpenseForm({
+export function ModalExpenseForm({
   expenseId,
   show,
   isCloning = false,
   onClose,
   onSuccess,
-}: ModalTriggerExpenseFormProps) {
+}: ModalExpenseFormProps) {
   const { resetExpenseInfoCahce } = useCacheExpenses();
   const { groupCategories, isLoadingCategories, refetchCategories } =
     useGetGroupCategories();

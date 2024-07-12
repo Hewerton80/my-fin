@@ -53,12 +53,12 @@ export function DataTable({
 
   const handledMobileData = useMemo(() => {
     return data?.map((cellData, i) => (
-      <div
-        className="flex flex-col divide-y divide-border text-xs py-2"
-        key={`${i}-resposive`}
-      >
+      <div className="flex flex-col text-xs py-2" key={`${i}-resposive`}>
         {columns.map((column, j) => (
-          <div className="flex gap-1 py-1" key={`column-${i}-${j}-responsive`}>
+          <div
+            className="flex gap-1 p-1 odd:bg-muted/50 rounded"
+            key={`column-${i}-${j}-responsive`}
+          >
             {columns[j].label && (
               <div className="text-black dark:text-light font-bold">
                 {columns[j].label}:
@@ -101,7 +101,7 @@ export function DataTable({
         )}
       </Table.Container>
       <div
-        className="flex sm:hidden flex-col divide-y-2 divide-black dark:divide-white"
+        className="flex sm:hidden flex-col divide-y divide-border dark:divide-dark-border"
         role="table"
       >
         {handledMobileData}

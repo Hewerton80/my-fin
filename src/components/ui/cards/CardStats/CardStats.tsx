@@ -26,7 +26,7 @@ export const Header = (
   return (
     <Card.Header
       ref={ref}
-      className={twMerge("px-6 sm:px-6 py-6 pb-2 [&_h4]:text-sm", className)}
+      className={twMerge("px-4 sm:px-4 py-6 pb-2 [&_h4]:text-sm", className)}
       {...restProps}
     >
       <Card.Title>{children}</Card.Title>
@@ -42,7 +42,7 @@ export const Body = (
   return (
     <Card.Body
       ref={ref}
-      className={twMerge("p-6 sm:p-6 pt-0 sm:pt-0", className)}
+      className={twMerge("p-4 sm:p-6 pt-0 sm:pt-0", className)}
       {...restProps}
     >
       {children}
