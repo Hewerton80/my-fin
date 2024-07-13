@@ -2,11 +2,13 @@
 import { twMerge } from "tailwind-merge";
 import { Input } from "@/components/ui/forms/inputs/Input";
 import { Button } from "@/components/ui/buttons/Button";
-import { useAuth } from "@/hooks/auth/useAuth";
+import { useAuth } from "@/modules/auth/useAuth";
 import { Controller } from "react-hook-form";
+import { useAuthLogin } from "@/modules/auth/hooks/useAuthLogin";
 
 export default function LoginPage() {
-  const { login, loginFormControl, isLogging } = useAuth();
+  // const { login, loginFormControl, isLogging } = useAuth();
+  const { login, loginFormControl, isLogging } = useAuthLogin();
 
   return (
     <div className="flex flex-col lg:flex-row min-h-screen items-center">

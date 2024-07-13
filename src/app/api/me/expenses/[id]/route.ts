@@ -8,15 +8,16 @@ import { handleZodValidationError } from "@/lib/zodHelpers";
 import { Prisma } from "@prisma/client";
 import { z } from "zod";
 import { updateApiExpenseSchema } from "@/modules/expenses/schemas/apiFormExpenseSchema";
+import { AuthService } from "@/modules/auth/service";
 
 const { USER_HAS_NO_PERMISSION, USER_NOT_FOUND, SUB_CATEGORY_NOT_FOUND } =
   CONSTANTS.API_RESPONSE_MESSAGES;
 export async function GET(
-  _: NextRequest,
+  request: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  const session = await getServerSession(NextAuthOptions);
-  if (!session) {
+  const { loggedUser } = await AuthService.getLoggedUser(request);
+  if (!loggedUser) {
     return NextResponse.json(
       { message: USER_HAS_NO_PERMISSION },
       { status: 401 }
@@ -32,14 +33,14 @@ export async function PATCH(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  const session = await getServerSession(NextAuthOptions);
-  if (!session) {
+  const { loggedUser } = await AuthService.getLoggedUser(request);
+  if (!loggedUser) {
     return NextResponse.json(
       { message: USER_HAS_NO_PERMISSION },
       { status: 401 }
     );
   }
-  const userId = session?.user?.id;
+  const userId = loggedUser?.id;
 
   const expense = (await request.json()) as z.infer<
     typeof updateApiExpenseSchema

@@ -1,13 +1,12 @@
 import { PrivatePagesTamplate } from "@/components/templates/PrivatePagesTamplate";
-import { NextAuthOptions } from "@/lib/nextAuthConfig";
-import { getServerSession } from "next-auth";
+import { AuthService } from "@/modules/auth/service";
 import { redirect } from "next/navigation";
 import { ReactNode } from "react";
 
 export default async function AppLayout({ children }: { children: ReactNode }) {
-  const userSessions = await getServerSession(NextAuthOptions);
-  if (!userSessions?.user) {
+  const { user } = await AuthService.fetchUser();
+  if (!user) {
     return redirect("/auth/login");
   }
-  return <PrivatePagesTamplate>{children}</PrivatePagesTamplate>;
+  return <PrivatePagesTamplate user={user}>{children}</PrivatePagesTamplate>;
 }

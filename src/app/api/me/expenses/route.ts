@@ -8,8 +8,7 @@ import { z } from "zod";
 import { isNumber } from "@/shared/isType";
 import { createApiExpenseSchema } from "@/modules/expenses/schemas/apiFormExpenseSchema";
 import { ExpenseServices } from "@/modules/expenses/service";
-import { getServerSession } from "next-auth";
-import { NextAuthOptions } from "@/lib/nextAuthConfig";
+import { AuthService } from "@/modules/auth/service";
 
 const {
   USER_HAS_NO_PERMISSION,
@@ -20,14 +19,14 @@ const {
 } = CONSTANTS.API_RESPONSE_MESSAGES;
 
 export async function GET(request: NextRequest) {
-  const session = await getServerSession(NextAuthOptions);
-  if (!session) {
+  const { loggedUser } = await AuthService.getLoggedUser(request);
+  if (!loggedUser) {
     return NextResponse.json(
       { message: USER_HAS_NO_PERMISSION },
       { status: 401 }
     );
   }
-  const userId = session?.user?.id;
+  const userId = loggedUser?.id;
 
   const { searchParams } = new URL(request.url);
   const paginedExpenses = await ExpenseServices.getListByUserId(
@@ -38,15 +37,14 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  const session = await getServerSession(NextAuthOptions);
-  // console.log({ session });
-  if (!session) {
+  const { loggedUser } = await AuthService.getLoggedUser(request);
+  if (!loggedUser) {
     return NextResponse.json(
       { message: USER_HAS_NO_PERMISSION },
       { status: 401 }
     );
   }
-  const userId = session?.user?.id;
+  const userId = loggedUser?.id;
   const expense = (await request.json()) as z.infer<
     typeof createApiExpenseSchema
   >;
@@ -137,7 +135,6 @@ export async function POST(request: NextRequest) {
       }
       createExpenseData.dueDate = endOfDay(handledDueDate);
     }
-    console.log({ createExpenseData });
     await prisma.expense.create({ data: createExpenseData });
     return NextResponse.json(expense, { status: 201 });
   } catch (error: any) {

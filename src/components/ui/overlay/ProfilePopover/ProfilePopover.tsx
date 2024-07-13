@@ -12,26 +12,30 @@ import menuStyle from "@/components/sharedStyles/menu.module.css";
 import { LuPaintbrush2 } from "react-icons/lu";
 import { signOut, useSession } from "next-auth/react";
 import { getContrastColor } from "@/shared/colors";
+import { useGetLoggedUser } from "@/modules/auth/hooks/useGetLoggedUser";
+import { useAuthLogin } from "@/modules/auth/hooks/useAuthLogin";
 
 export function ProfilePopover() {
   const { theme, setTheme } = useTheme();
-  const { data: session } = useSession();
+  // const { data: session } = useSession();
+  const { loggedUser } = useGetLoggedUser();
+  const { logout } = useAuthLogin();
 
   return (
     <Menubar.Root>
       <Menubar.Menu>
         <Menubar.Trigger asChild>
           <div className="flex gap-2 sm:gap-4 items-center cursor-pointer max-w-[220px]">
-            {session?.user && (
+            {loggedUser && (
               <>
                 <Avatar
-                  username={session?.user?.name}
-                  bgColor={session?.user?.avatarBgColor}
-                  color={getContrastColor(session?.user?.avatarBgColor!)}
+                  username={loggedUser?.name}
+                  bgColor={loggedUser?.avatarBgColor}
+                  color={getContrastColor(loggedUser?.avatarBgColor!)}
                 />
                 <div className="flex flex-col">
                   <strong className="text-black dark:text-white text-sm sm:text-base line-clamp-1">
-                    {session?.user?.name}
+                    {loggedUser?.name}
                   </strong>
                 </div>
               </>
@@ -84,10 +88,7 @@ export function ProfilePopover() {
               </Menubar.Portal>
             </Menubar.Sub>
             <Menubar.Separator className={menuStyle.separator} />
-            <Menubar.Item
-              className={menuStyle.item}
-              onClick={() => signOut({ callbackUrl: "/auth/login" })}
-            >
+            <Menubar.Item className={menuStyle.item} onClick={logout}>
               <FiLogOut size={20} /> Sair
             </Menubar.Item>
           </Menubar.Content>

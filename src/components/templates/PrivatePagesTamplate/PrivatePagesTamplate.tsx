@@ -1,21 +1,26 @@
+"use client";
 import { ReactNode } from "react";
 import { twMerge } from "tailwind-merge";
 import { Sidebar } from "@/components/common/Sidebar";
 import { Header } from "@/components/common/Header";
+import { useGetLoggedUser } from "@/modules/auth/hooks/useGetLoggedUser";
+import { UserWithComputedFields } from "@/modules/user/types";
 
 interface IPrivatePagesTamplateProps {
   children: ReactNode;
+  user: UserWithComputedFields;
 }
 
-export function PrivatePagesTamplate({ children }: IPrivatePagesTamplateProps) {
+export function PrivatePagesTamplate({
+  user,
+  children,
+}: IPrivatePagesTamplateProps) {
+  const { setContextLoggedUser } = useGetLoggedUser();
+  setContextLoggedUser(user);
+
   return (
     <>
-      <div
-        className={twMerge(
-          "flex h-screen overflow-y-hidden"
-          // "dark:bg-[url('/images/bg-dark.svg')] bg-cover bg-no-repeat"
-        )}
-      >
+      <div className="flex h-screen overflow-y-hidden">
         <Sidebar />
         <div className="flex flex-col flex-1 overflow-x-hidden">
           <Header />

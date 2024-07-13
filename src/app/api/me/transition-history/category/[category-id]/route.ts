@@ -5,19 +5,20 @@ import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 import { endOfYear } from "date-fns/endOfYear";
 import { startOfYear } from "date-fns/startOfYear";
+import { AuthService } from "@/modules/auth/service";
 
 export async function GET(
-  _: NextRequest,
+  request: NextRequest,
   { params }: { params: { "category-id": string } }
 ) {
-  const session = await getServerSession(NextAuthOptions);
-  if (!session) {
+  const { loggedUser } = await AuthService.getLoggedUser(request);
+  if (!loggedUser) {
     return NextResponse.json(
       { message: CONSTANTS.API_RESPONSE_MESSAGES.USER_HAS_NO_PERMISSION },
       { status: 401 }
     );
   }
-  const userId = session?.user?.id;
+  const userId = loggedUser?.id;
   const year = new Date().getFullYear();
   const date = new Date();
   date.setFullYear(year);
@@ -43,7 +44,6 @@ export async function GET(
       currentInstallment: true,
       totalInstallments: true,
     },
-    // include: { expense: { select: { name: true } } },
   });
   return NextResponse.json(transitionsHistory, { status: 200 });
 }

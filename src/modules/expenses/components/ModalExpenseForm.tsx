@@ -89,12 +89,6 @@ export function ModalExpenseForm({
 
   const creditCardsOptions = useMemo<SelectOption[]>(() => {
     if (currentExpense?.creditCard?.id && !Array.isArray(creditCards)) {
-      console.log([
-        {
-          label: currentExpense?.creditCard?.name,
-          value: currentExpense?.creditCard?.id,
-        },
-      ]);
       return [
         {
           label: currentExpense?.creditCard?.name,
@@ -118,7 +112,6 @@ export function ModalExpenseForm({
   }, [fetchExpense, expenseId, show]);
 
   useEffect(() => {
-    console.log({ currentExpense });
     if (currentExpense) {
       resetExpenseForm({
         id: isCloning ? "" : currentExpense?.id || "",

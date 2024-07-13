@@ -85,7 +85,6 @@ export const PieChart = ({ data, labelType = "lined" }: PieChartProps) => {
           label={
             labelType === "lined" ? (
               ({ x, y, payload, ...props }: any) => {
-                console.log({ props, payload: payload?.payload });
                 return (
                   <text
                     x={x}

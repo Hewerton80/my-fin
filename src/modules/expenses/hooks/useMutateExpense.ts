@@ -116,7 +116,6 @@ export function useMutateExpense() {
 
   const getHandledExpenseFormValues = useCallback(() => {
     const expenseFormValues = { ...getExpenseValues() };
-    console.log("handledExpenseFormValues", expenseFormValues);
     let handledExpenseFormValues: Partial<
       ExpenseFormValues & ExpenseWithComputedFields
     > = {};
@@ -148,7 +147,6 @@ export function useMutateExpense() {
       }
       const handledExpenseFormValues = getHandledExpenseFormValues();
       const isEdit = handledExpenseFormValues?.id;
-      console.log("poshandledExpenseFormValues", handledExpenseFormValues);
       const onSuccess = () => {
         callbacks?.onSuccess?.();
         toast.success(`Expense ${isEdit ? "edited" : "created"} successfully!`);

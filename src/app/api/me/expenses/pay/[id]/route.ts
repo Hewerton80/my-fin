@@ -10,6 +10,7 @@ import { NextAuthOptions } from "@/lib/nextAuthConfig";
 import { payExpenseSchema } from "@/modules/expenses/schemas/apiFormExpenseSchema";
 import { z } from "zod";
 import { handleZodValidationError } from "@/lib/zodHelpers";
+import { AuthService } from "@/modules/auth/service";
 
 const { USER_HAS_NO_PERMISSION, EXPENSE_NOT_FOUND, EXPENSE_ALREADY_PAID } =
   CONSTANTS.API_RESPONSE_MESSAGES;
@@ -18,14 +19,14 @@ export async function PATCH(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  const session = await getServerSession(NextAuthOptions);
-  if (!session) {
+  const { loggedUser } = await AuthService.getLoggedUser(request);
+  if (!loggedUser) {
     return NextResponse.json(
       { message: USER_HAS_NO_PERMISSION },
       { status: 401 }
     );
   }
-  const userId = session?.user?.id;
+  const userId = loggedUser?.id;
   const expenseUpdateData = (await request.json()) as z.infer<
     typeof payExpenseSchema
   >;
