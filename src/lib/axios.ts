@@ -1,9 +1,10 @@
 import axios, { CreateAxiosDefaults } from "axios";
-import { getCurretToken } from "./cookie";
+import { getRequestHeaders } from "@/shared/getRequestHeader";
+
 export const axiosConfig: CreateAxiosDefaults = {
   baseURL: "/api",
   headers: {
-    Authorization: `Bearer ${getCurretToken()}`,
+    ...getRequestHeaders(),
   },
 };
 

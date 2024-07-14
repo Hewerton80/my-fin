@@ -1,19 +1,19 @@
-import { UserWithComputedFields } from "@/modules/user/types";
-import {
-  MutationCache,
-  QueryCache,
-  useQueryClient,
-} from "@tanstack/react-query";
-import { useCallback, useMemo } from "react";
-import { AuthQueryKeys } from "../types";
-import { queryClient } from "@/lib/queryClient";
 import { useShallow } from "zustand/react/shallow";
 import { useAuthStore } from "@/stores/useAuthStore";
+import { useQueryClient } from "@tanstack/react-query";
+import { useMemo } from "react";
+import { AuthQueryKeys } from "../types";
+import { UserWithComputedFields } from "@/modules/user/types";
 
 export function useGetLoggedUser() {
-  const { loggedUser, setContextLoggedUser } = useAuthStore(
-    useShallow((state) => state)
-  );
+  const queryClient = useQueryClient();
 
-  return { loggedUser, setContextLoggedUser };
+  const loggedUser = useMemo(() => {
+    const foundUser = queryClient.getQueryData<UserWithComputedFields>([
+      AuthQueryKeys.ME,
+    ]);
+    return foundUser;
+  }, [queryClient]);
+
+  return { loggedUser };
 }

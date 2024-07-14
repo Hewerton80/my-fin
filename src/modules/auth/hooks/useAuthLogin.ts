@@ -5,16 +5,10 @@ import { loginFormSchema } from "../schemas";
 import { useCallback, useEffect, useMemo } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAxios } from "@/hooks/useAxios";
-import { UserWithComputedFields } from "@/modules/user/types";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import { CONSTANTS } from "@/shared/constants";
 import { handleErrorMessage } from "@/shared/handleErrorMessage";
-
-interface IResponseLogin {
-  token: string;
-  user: UserWithComputedFields;
-}
 
 export function useAuthLogin() {
   const { apiBase } = useAxios();
@@ -36,7 +30,7 @@ export function useAuthLogin() {
   });
 
   const onLoginSuccess = useCallback(
-    async ({ token }: IResponseLogin) => {
+    async (token: string) => {
       Cookies.set(CONSTANTS.COOKIES_KEYS.TOKEN, token);
       router.replace("/home");
     },
@@ -49,9 +43,7 @@ export function useAuthLogin() {
     mutate: mutateLogin,
   } = useMutation({
     mutationFn: () =>
-      apiBase
-        .post<IResponseLogin>("/auth/login", getValues())
-        .then((res) => res.data),
+      apiBase.post<string>("/auth/login", getValues()).then((res) => res.data),
     onSuccess: onLoginSuccess,
   });
 

@@ -1,12 +1,18 @@
+"use client";
 import { PrivatePagesTamplate } from "@/components/templates/PrivatePagesTamplate";
-import { AuthService } from "@/modules/auth/service";
+import { SplashScreen } from "@/components/ui/feedback/SplashScreen";
+import { useGetme } from "@/modules/auth/hooks/useGetMe";
 import { redirect } from "next/navigation";
 import { ReactNode } from "react";
 
-export default async function AppLayout({ children }: { children: ReactNode }) {
-  const { user } = await AuthService.fetchUser();
-  if (!user) {
+export default function AppLayout({ children }: { children: ReactNode }) {
+  const { fetchedSuccessfully, meError } = useGetme();
+
+  if (fetchedSuccessfully) {
+    return <PrivatePagesTamplate>{children}</PrivatePagesTamplate>;
+  }
+  if (meError) {
     return redirect("/auth/login");
   }
-  return <PrivatePagesTamplate user={user}>{children}</PrivatePagesTamplate>;
+  return <SplashScreen />;
 }

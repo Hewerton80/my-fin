@@ -107,7 +107,9 @@ export default function HomePage() {
   if (dashboardError) {
     return (
       <Card.Root>
-        <FeedBackError onTryAgain={refetchDashboard} />
+        <Card.Body>
+          <FeedBackError onTryAgain={refetchDashboard} />
+        </Card.Body>
       </Card.Root>
     );
   }

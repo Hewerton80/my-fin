@@ -25,6 +25,5 @@ export async function POST(request: NextRequest) {
   }
 
   const token = await AuthService.signJWT({ sub: foundUser?.id });
-  delete (foundUser as any)?.password;
-  return NextResponse.json({ token, user: foundUser }, { status: 201 });
+  return NextResponse.json(token, { status: 201 });
 }

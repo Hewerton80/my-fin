@@ -1,8 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { Dashboard, DashboardQueryKeys } from "../types";
-import { apiBase } from "@/lib/axios";
+import { useAxios } from "@/hooks/useAxios";
 
 export function useGetDashboard() {
+  const { apiBase } = useAxios();
   const {
     data: dashboard,
     error: dashboardError,

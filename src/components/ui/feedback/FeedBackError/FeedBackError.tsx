@@ -3,6 +3,7 @@ import Image from "next/image";
 import { twMerge } from "tailwind-merge";
 import { Button } from "@/components/ui/buttons/Button";
 import { IoReload } from "react-icons/io5";
+
 interface FeedBackErrorProps {
   onTryAgain?: () => void;
 }
@@ -25,13 +26,9 @@ export function FeedBackError({ onTryAgain }: FeedBackErrorProps) {
       <Button
         className="mx-auto !px-2 !py-1 !text-xs"
         rightIcon={<IoReload />}
-        onClick={() => {
-          onTryAgain?.();
-          // ("use server");
-          // revalidateTag("ExpensesTable");
-        }}
+        onClick={onTryAgain}
       >
-        Tentar novamente
+        Try again
       </Button>
     </div>
   );
