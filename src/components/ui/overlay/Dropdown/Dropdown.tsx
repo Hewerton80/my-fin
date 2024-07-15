@@ -7,11 +7,17 @@ import menuStyle from "@/components/sharedStyles/menu.module.css";
 
 export interface DropdownProps
   extends ComponentPropsWithRef<typeof RadixDropdown.Root> {}
-export interface DropdowToogleProps
-  extends RadixDropdown.DropdownMenuTriggerProps {}
 
-export interface DropdowMenuProps extends RadixDropdown.MenuContentProps {}
-export interface DropdowItemProps extends RadixDropdown.MenuItemProps {}
+export interface DropdowToogleProps
+  extends ComponentPropsWithRef<typeof RadixDropdown.Trigger> {}
+
+export interface DropdowMenuProps
+  extends ComponentPropsWithRef<typeof RadixDropdown.Content> {}
+
+export interface DropdowItemProps
+  extends ComponentPropsWithRef<typeof RadixDropdown.Item> {}
+{
+}
 
 const Root = ({ children }: DropdownProps) => {
   return <RadixDropdown.Root modal={false}>{children}</RadixDropdown.Root>;
