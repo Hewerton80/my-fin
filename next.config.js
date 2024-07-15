@@ -10,14 +10,6 @@ const nextConfig = {
       },
     ];
   },
-  images: {
-    remotePatterns: [{ hostname: "raw.githubusercontent.com" }],
-  },
-  logging:{
-    fetches:{
-      fullUrl: true,
-    }
-  }
 };
 
 module.exports = nextConfig;
