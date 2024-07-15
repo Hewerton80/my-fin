@@ -1,7 +1,5 @@
-import { NextAuthOptions } from "@/lib/nextAuthConfig";
 import prisma from "@/lib/prisma";
 import { CONSTANTS } from "@/shared/constants";
-import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 import { endOfYear } from "date-fns/endOfYear";
 import { startOfYear } from "date-fns/startOfYear";

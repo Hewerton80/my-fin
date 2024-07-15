@@ -1,7 +1,5 @@
-import { NextAuthOptions } from "@/lib/nextAuthConfig";
 import { ExpenseServices } from "@/modules/expenses/service";
 import { CONSTANTS } from "@/shared/constants";
-import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { handleZodValidationError } from "@/lib/zodHelpers";

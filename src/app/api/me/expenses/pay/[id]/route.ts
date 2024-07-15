@@ -1,12 +1,9 @@
 import prisma from "@/lib/prisma";
 import { CONSTANTS } from "@/shared/constants";
 import { Frequency, Prisma } from "@prisma/client";
-
 import { isNumber } from "@/shared/isType";
 import { ExpenseUtils } from "@/modules/expenses/utils";
-import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
-import { NextAuthOptions } from "@/lib/nextAuthConfig";
 import { payExpenseSchema } from "@/modules/expenses/schemas/apiFormExpenseSchema";
 import { z } from "zod";
 import { handleZodValidationError } from "@/lib/zodHelpers";

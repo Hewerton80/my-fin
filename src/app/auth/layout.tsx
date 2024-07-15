@@ -1,7 +1,3 @@
-import { NextAuthOptions } from "@/lib/nextAuthConfig";
-import { AuthService } from "@/modules/auth/service";
-import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
 import { ReactNode } from "react";
 
 export default async function AuthLayout({

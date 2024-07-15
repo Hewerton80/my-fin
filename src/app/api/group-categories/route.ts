@@ -1,9 +1,6 @@
-// import { verifyIfUserIsTeacher } from "@/lib/auth";
-import { NextAuthOptions } from "@/lib/nextAuthConfig";
 import prisma from "@/lib/prisma";
 import { AuthService } from "@/modules/auth/service";
 import { CONSTANTS } from "@/shared/constants";
-import { getServerSession } from "next-auth";
 
 import { NextRequest, NextResponse } from "next/server";
 
