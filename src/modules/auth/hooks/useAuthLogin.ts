@@ -6,15 +6,17 @@ import { useCallback, useEffect, useMemo } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAxios } from "@/hooks/useAxios";
 import { useRouter } from "next/navigation";
-import Cookies from "js-cookie";
 import { CONSTANTS } from "@/shared/constants";
 import { handleErrorMessage } from "@/shared/handleErrorMessage";
+import { useCookies } from "next-client-cookies";
+import { useGetLoggedUser } from "./useGetLoggedUser";
 
 export function useAuthLogin() {
   const { apiBase } = useAxios();
-
+  const cookies = useCookies();
   const router = useRouter();
   const queryClient = useQueryClient();
+  const { setContextLoggedUser } = useGetLoggedUser();
 
   const {
     control: loginFormControl,
@@ -31,10 +33,10 @@ export function useAuthLogin() {
 
   const onLoginSuccess = useCallback(
     async (token: string) => {
-      Cookies.set(CONSTANTS.COOKIES_KEYS.TOKEN, token);
+      cookies.set(CONSTANTS.COOKIES_KEYS.TOKEN, token);
       router.replace("/home");
     },
-    [router]
+    [router, cookies]
   );
 
   const {
@@ -75,10 +77,11 @@ export function useAuthLogin() {
   }, [trigger, mutateLogin]);
 
   const logout = useCallback(() => {
-    Cookies.remove(CONSTANTS.COOKIES_KEYS.TOKEN);
+    cookies.remove(CONSTANTS.COOKIES_KEYS.TOKEN);
     queryClient.clear();
     router.replace("/auth/login");
-  }, [queryClient, router]);
+    setContextLoggedUser(null);
+  }, [queryClient, cookies, router, setContextLoggedUser]);
 
   return { login: handleSubmit(login), logout, loginFormControl, isLogging };
 }

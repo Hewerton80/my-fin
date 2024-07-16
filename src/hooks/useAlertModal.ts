@@ -1,4 +1,3 @@
-"use client";
 import { useCallback, useMemo } from "react";
 import { AlertArgs, useAlertModalStore } from "@/stores/useAlertModalStore";
 import { useShallow } from "zustand/react/shallow";

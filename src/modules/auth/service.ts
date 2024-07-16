@@ -54,8 +54,37 @@ const getLoggedUser = async (request: NextRequest) => {
   return { loggedUser };
 };
 
+const fetchUser = async (): Promise<{
+  user?: UserWithComputedFields;
+  error?: any;
+}> => {
+  // console.log({ allCokies: Cookies.get() });
+  const cookieStore = cookies();
+
+  const token = cookieStore.get(CONSTANTS.COOKIES_KEYS.TOKEN);
+
+  // console.log({ token: token?.value });
+  if (!token?.value) {
+    return { error: CONSTANTS.API_RESPONSE_MESSAGES.TOKEN_NOT_PROVIDED };
+  }
+  try {
+    const response = await fetch(`${process.env.CLIENT_URL}/api/me`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token?.value}`,
+      },
+    });
+    const user = (await response.json()) as UserWithComputedFields;
+    return { user };
+  } catch (error) {
+    console.log({ fetchUserError: error });
+    return { error };
+  }
+};
+
 export const AuthService = {
   signJWT,
   verifyJWT,
   getLoggedUser,
+  fetchUser,
 };

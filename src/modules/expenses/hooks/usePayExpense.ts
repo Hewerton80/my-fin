@@ -1,4 +1,3 @@
-"use client";
 import { useAxios } from "../../../hooks/useAxios";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";

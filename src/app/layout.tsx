@@ -6,6 +6,7 @@ import { Toast } from "@/components/ui/feedback/Toast";
 import { ptBR } from "date-fns/locale/pt-BR";
 import { setDefaultOptions } from "date-fns/setDefaultOptions";
 import { ThemeTamplate } from "@/components/templates/ThemeTamplate";
+import { CookiesProvider } from "next-client-cookies/server";
 import "./globals.css";
 
 setDefaultOptions({ locale: ptBR });
@@ -25,16 +26,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <ThemeTamplate>
-      <html lang="pt-bt" suppressHydrationWarning={true}>
-        <body className={inter.className}>
-          <Providers>
-            {children}
-            <AlertModal />
-            <Toast />
-          </Providers>
-        </body>
-      </html>
-    </ThemeTamplate>
+    <CookiesProvider>
+      <ThemeTamplate>
+        <html lang="pt-bt" suppressHydrationWarning={true}>
+          <body className={inter.className}>
+            <Providers>
+              {children}
+              <AlertModal />
+              <Toast />
+            </Providers>
+          </body>
+        </html>
+      </ThemeTamplate>
+    </CookiesProvider>
   );
 }
