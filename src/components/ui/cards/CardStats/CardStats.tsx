@@ -42,7 +42,7 @@ export const Body = (
   return (
     <Card.Body
       ref={ref}
-      className={twMerge("p-4 sm:p-6 pt-0 sm:pt-0", className)}
+      className={twMerge("p-4 sm:p-4 pt-0 sm:pt-0", className)}
       {...restProps}
     >
       {children}

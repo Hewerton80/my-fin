@@ -12,6 +12,7 @@ import { LuPaintbrush2 } from "react-icons/lu";
 import { getContrastColor } from "@/shared/colors";
 import { useGetLoggedUser } from "@/modules/auth/hooks/useGetLoggedUser";
 import { useAuthLogin } from "@/modules/auth/hooks/useAuthLogin";
+import assets from "../../../../../assets.json";
 
 export function ProfilePopover() {
   const { theme, setTheme } = useTheme();
@@ -29,7 +30,11 @@ export function ProfilePopover() {
                 <Avatar
                   username={loggedUser?.name}
                   bgColor={loggedUser?.avatarBgColor}
-                  color={getContrastColor(loggedUser?.avatarBgColor!)}
+                  color={
+                    loggedUser?.avatarBgColor
+                      ? getContrastColor(loggedUser?.avatarBgColor!)
+                      : assets.colors.primary
+                  }
                 />
                 <div className="flex flex-col">
                   <strong className="text-black dark:text-white text-sm sm:text-base line-clamp-1">

@@ -10,7 +10,7 @@ import { format } from "date-fns/format";
 import { useMemo } from "react";
 import { MdPayment } from "react-icons/md";
 import { TbCurrencyReal } from "react-icons/tb";
-
+import assets from "../../../../assets.json";
 interface CategoryInsightsProps {
   transitionsHistory?: TransitionHistoryWitchConputedFields[];
   isLoadingTransitionsHistory?: boolean;
@@ -89,7 +89,7 @@ export function CategoryInsights({
         <Card.Body>
           <LineChart
             data={parsedDataChart}
-            lineDaraKey="amount"
+            lineDataKeys={[{ name: "amount", color: assets.colors.primary }]}
             xAxisDataKey="date"
           />
         </Card.Body>

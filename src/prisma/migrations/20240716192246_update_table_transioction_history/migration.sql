@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE `TransitionHistory` ADD COLUMN `type` ENUM('PAYMENT', 'RECEIPT') NOT NULL DEFAULT 'PAYMENT';

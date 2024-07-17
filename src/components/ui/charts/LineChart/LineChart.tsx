@@ -5,14 +5,18 @@ import {
   Line,
   XAxis,
   YAxis,
+  Legend,
 } from "recharts";
 import { Card } from "@/components/ui/cards/Card";
 import assets from "../../../../../assets.json";
 import { ChartContainer } from "../ChartContainer";
+import { getRandomRGBColor } from "@/shared/colors";
+import { LegendChart } from "../LegendChart/LegendChart";
 
 interface LineChartProps {
-  lineDaraKey: string;
+  lineDataKeys: { name: string; color: string }[];
   xAxisDataKey: string;
+  yAxisRange?: [number, number];
   data: any[];
 }
 
@@ -82,27 +86,38 @@ function CustomizedYAxisTick(props: any) {
   );
 }
 
-export function LineChart({ data, lineDaraKey, xAxisDataKey }: LineChartProps) {
+export function LineChart({
+  data,
+  lineDataKeys,
+  xAxisDataKey,
+  yAxisRange,
+}: LineChartProps) {
   return (
-    <ChartContainer>
+    <ChartContainer className="!min-h-[450px]">
       <LineChartRecharts
         data={data}
         margin={{ top: 60, right: 30, left: 0, bottom: 20 }}
+        width={500}
+        height={300}
       >
         <XAxis
           dataKey={xAxisDataKey}
           tick={<CustomizedXAxisTick />}
           allowDataOverflow
         />
-        <YAxis tick={<CustomizedYAxisTick />} />
+        <YAxis range={yAxisRange} tick={<CustomizedYAxisTick />} />
         <Tooltip content={<CustomTooltip />} />
-        <Line
-          type="monotone"
-          dataKey={lineDaraKey}
-          stroke={assets.colors.primary}
-          activeDot={{ r: 8 }}
-          label={<CustomLabel />}
-        />
+        {lineDataKeys.map(({ color, name }) => (
+          <Line
+            key={name}
+            type="monotone"
+            dataKey={name}
+            stroke={color}
+            activeDot={{ r: 8 }}
+            label={<CustomLabel />}
+          />
+        ))}
+        <Legend name="name" content={<LegendChart />} />
       </LineChartRecharts>
     </ChartContainer>
   );

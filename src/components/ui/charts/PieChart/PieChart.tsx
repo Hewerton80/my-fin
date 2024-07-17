@@ -5,6 +5,8 @@ import { ChartContainer } from "../ChartContainer";
 import { getContrastColor, getRandomRGBColor } from "@/shared/colors";
 import { getCurrencyFormat } from "@/shared/getCurrencyFormat";
 import { twMerge } from "tailwind-merge";
+import colors from "tailwindcss/colors";
+import { LegendChart } from "../LegendChart/LegendChart";
 
 export interface PieChart {
   amount: number;
@@ -58,7 +60,7 @@ const CustomizedLabel = (props: any) => {
       className="text-[0.5rem] md:text-xs"
       x={x}
       y={y}
-      fill={getContrastColor(data?.fill)}
+      fill={data?.fill ? getContrastColor(data?.fill) : colors.white}
       textAnchor={x > cx ? "start" : "end"}
       dominantBaseline="central"
     >
@@ -103,26 +105,7 @@ export const PieChart = ({ data, labelType = "lined" }: PieChartProps) => {
           }
           labelLine={labelType === "lined"}
         />
-        <Legend
-          name="name"
-          content={(props) => {
-            const payload = props?.payload;
-
-            return (
-              <div className="flex flex-wrap items-center justify-center gap-4 mt-4">
-                {payload?.map((data, i) => (
-                  <div key={`legend-chart-${i}`} className="flex gap-2">
-                    <span
-                      className="h-4 w-4 rounded-sm"
-                      style={{ backgroundColor: data?.color }}
-                    />
-                    <span className="text-xs">{data.value} </span>
-                  </div>
-                ))}
-              </div>
-            );
-          }}
-        />
+        <Legend name="name" content={<LegendChart />} />
       </PieChartRecharts>
     </ChartContainer>
   );

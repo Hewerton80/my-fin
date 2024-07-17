@@ -21,7 +21,13 @@ export interface FrequencyInsights extends BaseInsights {}
 
 export interface PaymentTypeInsights extends BaseInsights {}
 
-export interface HistoricInsights extends BaseInsights {}
+export interface HistoricInsights {
+  name: string;
+  receiptsAmount: number;
+  paymentsAmount: number;
+}
+export interface HistoricPaymentsInsights extends BaseInsights {}
+export interface HistoricReceiptsInsights extends BaseInsights {}
 
 export interface Dashboard {
   categoryInsights: CategoryInsights[];

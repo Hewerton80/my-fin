@@ -13,9 +13,7 @@ import { useGetDashboard } from "@/modules/dashboard/hooks/useGetInsights";
 import { CategoryInsights } from "@/modules/dashboard/types";
 import { getCurrencyFormat } from "@/shared/getCurrencyFormat";
 import { useMemo } from "react";
-import { MdPayment } from "react-icons/md";
 import { TbCurrencyReal } from "react-icons/tb";
-import { CiCreditCard1 } from "react-icons/ci";
 import Link from "next/link";
 import { IoEyeOutline } from "react-icons/io5";
 import { capitalizeFisrtLetter } from "@/shared/string";
@@ -24,6 +22,11 @@ import { LineChart } from "@/components/ui/charts/LineChart";
 import { BsGraphUp } from "react-icons/bs";
 import { IoPieChartOutline } from "react-icons/io5";
 import { IconButton } from "@/components/ui/buttons/IconButton";
+import { isNumber } from "@/shared/isType";
+import { twMerge } from "tailwind-merge";
+import { FaChevronDown } from "react-icons/fa";
+import { FaChevronUp } from "react-icons/fa";
+import assets from "../../../../../assets.json";
 
 export default function HomePage() {
   const { dashboard, isLoadingDashboard, dashboardError, refetchDashboard } =
@@ -45,19 +48,43 @@ export default function HomePage() {
     return dashboard?.historicInsights;
   }, [dashboard]);
 
-  const totalAmount = useMemo(() => {
-    return categoryInsights?.reduce(
-      (total, insight) => total + Number(insight?.amount),
-      0
-    );
-  }, [categoryInsights]);
+  // const maxAndMinAmount = useMemo(() => {
+  //   const maxAmount = Math.max(
+  //     ...(historicInsights || []).map(
+  //       (insight) => insight?.paymentsAmount || 0
+  //     ),
+  //     ...(historicInsights || []).map((insight) => insight?.receiptsAmount || 0)
+  //   );
+  //   const minAmount = Math.min(
+  //     ...(historicInsights || []).map(
+  //       (insight) => insight?.paymentsAmount || 0
+  //     ),
+  //     ...(historicInsights || []).map((insight) => insight?.receiptsAmount || 0)
+  //   );
 
-  const totalPayments = useMemo(() => {
-    return categoryInsights?.reduce(
-      (total, insight) => total + Number(insight?.count),
+  //   return { maxAmount, minAmount };
+  // }, [historicInsights]);
+
+  const totalPaymentsAmount = useMemo(() => {
+    return historicInsights?.reduce(
+      (total, insight) => total + Number(insight?.paymentsAmount),
       0
     );
-  }, [categoryInsights]);
+  }, [historicInsights]);
+
+  const totalReceiptsAmount = useMemo(() => {
+    return historicInsights?.reduce(
+      (total, insight) => total + Number(insight?.receiptsAmount),
+      0
+    );
+  }, [historicInsights]);
+
+  const proft = useMemo(() => {
+    if (!isNumber(totalReceiptsAmount) || !isNumber(totalPaymentsAmount)) {
+      return undefined;
+    }
+    return totalReceiptsAmount! - totalPaymentsAmount!;
+  }, [totalReceiptsAmount, totalPaymentsAmount]);
 
   const colsCategories = useMemo<IColmunDataTable<CategoryInsights>[]>(() => {
     return [
@@ -115,99 +142,118 @@ export default function HomePage() {
   }
 
   return (
-    <Card.Root>
-      <Card.Header>
-        <Card.Title>Dashboard</Card.Title>
-      </Card.Header>
-      <Card.Body asChild>
-        <div className="grid grid-cols-12 gap-4">
-          {Number(totalAmount) > 0 && (
-            <CardStats.Root className="col-span-12 md:col-span-4">
-              <CardStats.Header icon={<TbCurrencyReal />}>
-                {"Total expenses's amount"}
-              </CardStats.Header>
-              <CardStats.Body>
-                <span className="text-lg md:text-2xl font-bold">
-                  {getCurrencyFormat(totalAmount!)}
-                </span>
-              </CardStats.Body>
-            </CardStats.Root>
-          )}
+    <div className="grid grid-cols-12 gap-4">
+      {Number(totalPaymentsAmount) > 0 && (
+        <CardStats.Root className="col-span-12 md:col-span-4">
+          <CardStats.Header icon={<TbCurrencyReal />}>
+            {"Total expenses's amount"}
+          </CardStats.Header>
+          <CardStats.Body>
+            <span className="text-lg md:text-2xl font-bold">
+              {getCurrencyFormat(totalPaymentsAmount!)}
+            </span>
+          </CardStats.Body>
+        </CardStats.Root>
+      )}
 
-          {Number(totalPayments) > 0 && (
-            <CardStats.Root className="col-span-12 md:col-span-4">
-              <CardStats.Header icon={<MdPayment />}>
-                {"Total expenses's paymants"}
-              </CardStats.Header>
-              <CardStats.Body>
-                <span className="text-lg md:text-2xl font-bold">
-                  {totalPayments}
-                </span>
-              </CardStats.Body>
-            </CardStats.Root>
-          )}
-          {creditCardInsights && (
-            <CardStats.Root className="col-span-12 md:col-span-6">
-              <CardStats.Header icon={<IoPieChartOutline />}>
-                Credit Card
-              </CardStats.Header>
-              <CardStats.Body>
-                <PieChart
-                  data={creditCardInsights?.map((insight) => ({
-                    amount: insight?.amount,
-                    name: insight?.name,
-                    fill: insight?.color,
-                  }))}
-                />
-              </CardStats.Body>
-            </CardStats.Root>
-          )}
-          {frequencyInsights && (
-            <CardStats.Root className="col-span-12 md:col-span-6">
-              <CardStats.Header icon={<IoPieChartOutline />}>
-                Expense Frequency
-              </CardStats.Header>
-              <CardStats.Body>
-                <PieChart
-                  data={frequencyInsights?.map((insight) => ({
-                    amount: insight?.amount,
-                    name: capitalizeFisrtLetter(
-                      insight?.name || Frequency.DO_NOT_REPEAT
-                    ),
-                  }))}
-                />
-              </CardStats.Body>
-            </CardStats.Root>
-          )}
-          {historicInsights && (
-            <CardStats.Root className="col-span-12">
-              <CardStats.Header icon={<BsGraphUp />}>
-                Paymants historics Insights
-              </CardStats.Header>
-              <CardStats.Body>
-                <LineChart
-                  data={
-                    historicInsights?.map((insight) => ({
-                      amount: insight?.amount,
-                      count: insight?.count,
-                      name: insight?.name,
-                    })) || []
-                  }
-                  lineDaraKey="amount"
-                  xAxisDataKey="name"
-                />
-              </CardStats.Body>
-            </CardStats.Root>
-          )}
-          <div className="col-span-12">
-            <DataTable
-              columns={colsCategories}
-              data={categoryInsights}
-              isLoading={isLoadingDashboard || !categoryInsights}
+      {Number(totalReceiptsAmount) > 0 && (
+        <CardStats.Root className="col-span-12 md:col-span-4">
+          <CardStats.Header icon={<TbCurrencyReal />}>
+            {"Total receipts's amount"}
+          </CardStats.Header>
+          <CardStats.Body>
+            <span className="text-lg md:text-2xl font-bold">
+              {getCurrencyFormat(totalReceiptsAmount!)}
+            </span>
+          </CardStats.Body>
+        </CardStats.Root>
+      )}
+
+      {isNumber(proft) && (
+        <CardStats.Root className="col-span-12 md:col-span-4">
+          <CardStats.Header icon={<TbCurrencyReal />}>Balance</CardStats.Header>
+          <CardStats.Body>
+            <span
+              className={twMerge(
+                "inline-flex items-center text-lg md:text-2xl font-bold gap-1",
+                proft! > 0 && "text-success",
+                proft! < 0 && "text-danger"
+              )}
+            >
+              {getCurrencyFormat(proft!)}
+              {proft! > 0 && <FaChevronUp className="text-xs" />}
+              {proft! < 0 && <FaChevronDown className="text-xs" />}
+            </span>
+          </CardStats.Body>
+        </CardStats.Root>
+      )}
+
+      {creditCardInsights && (
+        <CardStats.Root className="col-span-12 md:col-span-6">
+          <CardStats.Header icon={<IoPieChartOutline />}>
+            Credit Card
+          </CardStats.Header>
+          <CardStats.Body>
+            <PieChart
+              data={creditCardInsights?.map((insight) => ({
+                amount: insight?.amount,
+                name: insight?.name,
+                fill: insight?.color,
+              }))}
             />
-          </div>
-        </div>
-      </Card.Body>
-    </Card.Root>
+          </CardStats.Body>
+        </CardStats.Root>
+      )}
+      {frequencyInsights && (
+        <CardStats.Root className="col-span-12 md:col-span-6">
+          <CardStats.Header icon={<IoPieChartOutline />}>
+            Expense Frequency
+          </CardStats.Header>
+          <CardStats.Body>
+            <PieChart
+              data={frequencyInsights?.map((insight) => ({
+                amount: insight?.amount,
+                name: capitalizeFisrtLetter(
+                  insight?.name || Frequency.DO_NOT_REPEAT
+                ),
+              }))}
+            />
+          </CardStats.Body>
+        </CardStats.Root>
+      )}
+      {historicInsights && (
+        <CardStats.Root className="col-span-12">
+          <CardStats.Header icon={<BsGraphUp />}>
+            Historics Insights
+          </CardStats.Header>
+          <CardStats.Body>
+            <LineChart
+              data={
+                historicInsights?.map((insight) => ({
+                  "Receipts Amount": insight?.receiptsAmount,
+                  "Payments Amount": insight?.paymentsAmount,
+                  Balance: Number(
+                    insight?.receiptsAmount - insight?.paymentsAmount
+                  ).toFixed(2),
+                  name: insight?.name,
+                })) || []
+              }
+              lineDataKeys={[
+                { name: "Receipts Amount", color: assets.colors.success },
+                { name: "Payments Amount", color: assets.colors.danger },
+              ]}
+              xAxisDataKey="name"
+            />
+          </CardStats.Body>
+        </CardStats.Root>
+      )}
+      <div className="col-span-12">
+        <DataTable
+          columns={colsCategories}
+          data={categoryInsights}
+          isLoading={isLoadingDashboard || !categoryInsights}
+        />
+      </div>
+    </div>
   );
 }

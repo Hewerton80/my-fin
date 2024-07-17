@@ -24,15 +24,21 @@ enum Frequency {
     YEARLY
 }
 
+enum TransitionType {
+    PAYMENT
+    RECEIPT
+}
+
 model User {
-    id            String       @id @default(cuid())
-    email         String       @unique
-    name          String
-    password      String
-    avatarBgColor String
-    createdAt     DateTime     @default(now())
-    expenses      Expense[]
-    creditCards   CreditCard[]
+    id                String              @id @default(cuid())
+    email             String              @unique
+    name              String
+    password          String
+    avatarBgColor     String
+    createdAt         DateTime            @default(now())
+    expenses          Expense[]
+    creditCards       CreditCard[]
+    TransitionHistory TransitionHistory[]
 }
 
 model Expense {
@@ -90,12 +96,16 @@ model Category {
 }
 
 model TransitionHistory {
-    id                 String    @id @default(cuid())
+    id                 String         @id @default(cuid())
+    name               String?
     amount             Float?
     totalInstallments  Int?
     currentInstallment Int?
-    expenseId          String
-    expense            Expense   @relation(fields: [expenseId], references: [id])
+    type               TransitionType @default(PAYMENT)
+    expenseId          String?
+    expense            Expense?       @relation(fields: [expenseId], references: [id])
+    userId             String?
+    user               User?          @relation(fields: [userId], references: [id])
     paidAt             DateTime?
-    createdAt          DateTime  @default(now())
+    createdAt          DateTime       @default(now())
 }

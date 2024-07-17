@@ -44,8 +44,8 @@ const Trigger = (
     <RadixTabs.Trigger
       ref={ref}
       className={twMerge(
-        "text-sm font-semibold px-3 py-1.5 rounded-[4px] bg-transparent text-muted-foreground",
-        "flex items-center cursor-pointer",
+        "text-xs sm:text-sm font-semibold rounded-[4px] bg-transparent text-muted-foreground",
+        "flex items-center cursor-pointer px-2 sm:px-3 py-1 sm:py-1.5",
         "data-[state=active]:text-dark-card data-[state=active]:bg-white",
         "dark:data-[state=active]:text-light dark:data-[state=active]:bg-dark-card",
         "data-[state=active]:ring-1 data-[state=active]:ring-dark/10",
@@ -60,16 +60,9 @@ const Trigger = (
   );
 };
 
-const Content = (
-  { children, className, ...restProps }: TabContentProps,
-  ref?: any
-) => {
+const Content = ({ children, ...restProps }: TabContentProps, ref?: any) => {
   return (
-    <RadixTabs.Content
-      ref={ref}
-      className={twMerge("", className)}
-      {...restProps}
-    >
+    <RadixTabs.Content ref={ref} {...restProps}>
       {children}
     </RadixTabs.Content>
   );

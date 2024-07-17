@@ -161,9 +161,9 @@ export async function main() {
     },
   ];
 
-  const userId = "clybmx8bx0000nt2pjrntg0ex";
+  const userId = "clxqkp44r0000bjq2spxzrfry";
   // const password = await hash("123456789", 10);
-  // await prisma.user.create({
+  // const user = await prisma.user.create({
   //   data: {
   //     email: "hewerton80@gmail.com",
   //     name: "Hewerton",
@@ -303,14 +303,14 @@ export async function main() {
   //   data: [
   //     {
   //       name: "Nubank",
-  //       userId,
+  //       userId: user.id,
   //       invoiceClosingDay: 29,
   //       dueDay: 5,
   //       color: "rgb(130, 10, 209)",
   //     },
   //     {
   //       name: "Riachuelo",
-  //       userId,
+  //       userId: user.id,
   //       invoiceClosingDay: 22,
   //       dueDay: 30,
   //       color: "rgb(33, 31, 32)",
