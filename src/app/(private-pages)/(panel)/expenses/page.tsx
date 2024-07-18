@@ -30,7 +30,7 @@ export default function ExpensesPage() {
     expenseFilterQueryParams,
     goToPage,
     refetchExpenses,
-    changeSearcheQrCodeInput,
+    changeSearcheInput,
     changeExpenseStatus,
   } = useGetExpenses();
 
@@ -199,7 +199,7 @@ export default function ExpensesPage() {
             <div className="ml-auto w-full sm:w-auto">
               <Input
                 value={searchExpenseValue}
-                onChange={(e) => changeSearcheQrCodeInput(e.target.value)}
+                onChange={(e) => changeSearcheInput(e.target.value)}
                 placeholder="Search..."
               />
             </div>

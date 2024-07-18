@@ -66,11 +66,13 @@ export function ModalExpenseForm({
   );
 
   const categoriesOptions = useMemo<SelectOption[]>(() => {
+    console.log({ currentExpense, groupCategories });
     if (currentExpense?.category?.id && !Array.isArray(groupCategories)) {
       return [
         {
           value: currentExpense?.category?.id,
           label: currentExpense?.category?.name!,
+          icon: currentExpense?.category?.iconName!,
         },
       ];
     }

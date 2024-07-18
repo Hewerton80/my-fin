@@ -107,7 +107,7 @@ export function useGetExpenses() {
     [updateExpensesQueryParams]
   );
 
-  const changeSearcheQrCodeInput = useCallback(
+  const changeSearcheInput = useCallback(
     (value: string) => {
       setIsSearching(true);
       setSearchExpenseValue(value);
@@ -125,6 +125,6 @@ export function useGetExpenses() {
     changeExpenseStatus,
     refetchExpenses,
     goToPage,
-    changeSearcheQrCodeInput,
+    changeSearcheInput,
   };
 }

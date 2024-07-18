@@ -1,7 +1,7 @@
 import { useAxios } from "@/hooks/useAxios";
 import { useQuery } from "@tanstack/react-query";
 import {
-  GetTransionsTransitionHistoryParams,
+  GetTransionsHistoryByCategoryParams,
   TransitionHistoryQueryKeys,
   TransitionHistoryWitchConputedFields,
 } from "../types";
@@ -16,7 +16,7 @@ export function useGetTransiontionsHistotyByCategory() {
   const router = useRouter();
 
   const transionHistoriesQueryParams =
-    useMemo<GetTransionsTransitionHistoryParams>(() => {
+    useMemo<GetTransionsHistoryByCategoryParams>(() => {
       return {
         categoryId: searchParams.get("categoryId") || "",
       };

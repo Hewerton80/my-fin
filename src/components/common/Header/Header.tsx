@@ -11,7 +11,6 @@ import slideAndFadeANimation from "@/components/sharedStyles/slideAndFade.module
 
 export function Header() {
   const { toggleOnlyIcons } = useSideBar();
-  const [showPopoverMenu, setShowPopoverMenu] = useState(false);
 
   const toogleSideBarButtonElement = useMemo(() => {
     return (
@@ -29,12 +28,11 @@ export function Header() {
       )}
     >
       <div className="flex items-center h-full px-4 sm:px-8">
-        <Popover.Root open={showPopoverMenu} onOpenChange={setShowPopoverMenu}>
+        <Popover.Root>
           <Popover.Trigger asChild>
             <Slot className="flex md:hidden">{toogleSideBarButtonElement}</Slot>
           </Popover.Trigger>
           <Popover.Content
-            onClick={() => setShowPopoverMenu(false)}
             sideOffset={8}
             align="end"
             className={twMerge(

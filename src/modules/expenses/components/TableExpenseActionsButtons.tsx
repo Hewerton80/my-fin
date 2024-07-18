@@ -11,6 +11,7 @@ import { Modal } from "@/components/ui/overlay/Modal";
 import { Controller } from "react-hook-form";
 import { Input } from "@/components/ui/forms/inputs/Input";
 import { Button } from "@/components/ui/buttons/Button";
+import Link from "next/link";
 
 type OnClickType = (expenseId: string) => void;
 
@@ -67,9 +68,11 @@ export const TableExpenseActionsButtons = memo(
                   pay
                 </Dropdown.Item>
               )}
-            <Dropdown.Item className="gap-2">
-              <MdHistory />
-              history
+            <Dropdown.Item asChild className="gap-2">
+              <Link href={`/transitions?expenseId=${expense?.id}`}>
+                <MdHistory />
+                history
+              </Link>
             </Dropdown.Item>
 
             <Dropdown.Item

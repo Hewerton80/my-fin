@@ -75,6 +75,7 @@ const getOneById = async (id: string) => {
     where: { id },
     include: {
       creditCard: { select: { id: true, name: true } },
+      category: { select: { id: true, name: true, iconName: true } },
       // subCategories: { select: { id: true, name: true, iconName: true } },
     },
   });
