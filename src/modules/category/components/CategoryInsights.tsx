@@ -51,6 +51,18 @@ export function CategoryInsights({
     );
   }, [transitionsHistory]);
 
+  const transitionsHistoryAgroupedByMonth = useMemo(() => {
+    return transitionsHistory?.reduce((acc, transition) => {
+      const month = format(new Date(transition?.paidAt!), "MMM");
+      if (!acc[month]) {
+        acc[month] = 0;
+      }
+      acc[month] += Number(transition?.amount) || 0;
+      acc[month] = Number(acc[month]?.toFixed(2)) || 0;
+      return acc;
+    }, {} as Record<string, number>);
+  }, [transitionsHistory]);
+
   if (isLoadingTransitionsHistory) {
     return <FeedBackLoading />;
   }
@@ -84,11 +96,25 @@ export function CategoryInsights({
       </div>
       <Card.Root>
         <Card.Header>
-          <Card.Title>Stats</Card.Title>
+          <Card.Title>Stats by day</Card.Title>
         </Card.Header>
         <Card.Body>
           <LineChart
             data={parsedDataChart}
+            lineDataKeys={[{ name: "amount", color: assets.colors.primary }]}
+            xAxisDataKey="date"
+          />
+        </Card.Body>
+      </Card.Root>
+      <Card.Root>
+        <Card.Header>
+          <Card.Title>Stats by Month</Card.Title>
+        </Card.Header>
+        <Card.Body>
+          <LineChart
+            data={Object.entries(transitionsHistoryAgroupedByMonth || {}).map(
+              ([date, amount]) => ({ date, amount })
+            )}
             lineDataKeys={[{ name: "amount", color: assets.colors.primary }]}
             xAxisDataKey="date"
           />

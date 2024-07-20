@@ -15,6 +15,7 @@ import {
 } from "@/shared/parseJsonToSearchParams";
 import { IPaginatedDocs } from "@/lib/prismaHelpers";
 import { useDebouncedCallback } from "use-debounce";
+import { isValid as isValidDate } from "date-fns/isValid";
 
 export function useGetTransiontionsHistoty() {
   const { apiBase } = useAxios();
@@ -25,6 +26,8 @@ export function useGetTransiontionsHistoty() {
 
   const transionHistoriesQueryParams =
     useMemo<IGetTransionsHistoryParams>(() => {
+      const startPaidAt = searchParams.get("startPaidAt");
+      const endPaidAt = searchParams.get("endPaidAt");
       return {
         currentPage: isNumberable(searchParams.get("currentPage"))
           ? Number(searchParams.get("currentPage"))
@@ -32,6 +35,14 @@ export function useGetTransiontionsHistoty() {
         expenseId: searchParams.get("expenseId") || "",
         keyword: searchParams.get("keyword") || "",
         type: searchParams.get("type") || "",
+        startPaidAt:
+          startPaidAt && isValidDate(new Date(startPaidAt))
+            ? (startPaidAt as string)
+            : "",
+        endPaidAt:
+          endPaidAt && isValidDate(new Date(endPaidAt))
+            ? (endPaidAt as string)
+            : "",
       };
     }, [searchParams]);
 
