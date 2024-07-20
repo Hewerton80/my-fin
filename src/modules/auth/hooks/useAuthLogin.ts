@@ -33,6 +33,7 @@ export function useAuthLogin() {
 
   const onLoginSuccess = useCallback(
     async (token: string) => {
+      console.log("onLoginSuccess");
       cookies.set(CONSTANTS.COOKIES_KEYS.TOKEN, token);
       router.replace("/home");
     },
