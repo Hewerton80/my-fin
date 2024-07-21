@@ -5,6 +5,7 @@ import {
   DataTable,
   IColmunDataTable,
 } from "@/components/ui/dataDisplay/DataTable";
+import { Calendar } from "@/components/ui/forms/Calendar";
 import { Input } from "@/components/ui/forms/inputs/Input";
 import { Tabs } from "@/components/ui/navigation/Tabs";
 import { useGetTransiontionsHistoty } from "@/modules/transitionHistory/hooks/useGetTransiontionsHistoty";
@@ -14,7 +15,7 @@ import { isNumber, isUndefined } from "@/shared/isType";
 import { capitalizeFisrtLetter } from "@/shared/string";
 import { TransitionType } from "@prisma/client";
 import { format } from "date-fns";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 export default function TranstitonsPage() {
@@ -92,6 +93,8 @@ export default function TranstitonsPage() {
     []
   );
 
+  const [date, setDate] = useState<Date | undefined>(new Date());
+
   return (
     <>
       <Card.Root>
@@ -104,6 +107,7 @@ export default function TranstitonsPage() {
           </Card.Actions>
         </Card.Header>
         <Card.Body>
+          {/* <Calendar mode="single" selected={date} onSelect={setDate} /> */}
           <div className="flex items-center gap-2 sm:gap-2 flex-wrap mb-4">
             <Tabs.Root
               value={transionHistoriesQueryParams?.type}

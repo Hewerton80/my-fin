@@ -51,13 +51,10 @@ export const TableExpenseActionsButtons = memo(
     return (
       <>
         <Dropdown.Root>
-          <Dropdown.Toogle asChild>
-            <IconButton
-              variantStyle="light-ghost"
-              icon={<BsThreeDotsVertical />}
-            />
-          </Dropdown.Toogle>
-          <Dropdown.Menu>
+          <Dropdown.Trigger asChild>
+            <IconButton variantStyle="ghost" icon={<BsThreeDotsVertical />} />
+          </Dropdown.Trigger>
+          <Dropdown.Content>
             {!expense?.isPaid &&
               expense?.status !== ExpenseStatus["ON DAY"] && (
                 <Dropdown.Item
@@ -89,7 +86,7 @@ export const TableExpenseActionsButtons = memo(
               <FaClone />
               Clone
             </Dropdown.Item>
-          </Dropdown.Menu>
+          </Dropdown.Content>
         </Dropdown.Root>
         <Modal.Root show={showModalPaidAt} onClose={handleCloseModal}>
           <Modal.Title>Pay Expense</Modal.Title>
@@ -112,7 +109,7 @@ export const TableExpenseActionsButtons = memo(
           </Modal.Body>
           <Modal.Footer className="gap-2">
             <Button
-              variantStyle="light"
+              variantStyle="secondary"
               onClick={handleCloseModal}
               disabled={isPaying}
             >

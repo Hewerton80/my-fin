@@ -1,11 +1,8 @@
 .root {
-  @apply px-3 py-1.5 w-full rounded-md bg-transparent  
-    text-body-text placeholder:text-body-text/40 text-sm shadow-sm
-    outline-none border border-border focus-visible:border-primary;
-}
-:global(.dark) .root {
-  @apply border-dark-border autofill:!bg-dark-card text-light
-  placeholder:text-light/40 focus-visible:border-primary;
+  @apply flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm 
+  file:border-0 file:bg-transparent file:text-sm file:font-medium ease-linear duration-200 
+  placeholder:text-muted-foreground outline-none focus-visible:ring-2 
+  focus-visible:ring-dark/40 disabled:cursor-not-allowed disabled:opacity-50;
 }
 .root.error {
   @apply border-danger/60 focus-visible:border-danger;

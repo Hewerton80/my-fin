@@ -195,7 +195,7 @@ export const PrimitiveSelect = forwardRef(
             ),
             NoOptionsMessage: () => (
               <div className="flex w-full justify-center ">
-                <span className="text-sm text-dark-border dark:text-border">
+                <span className="text-sm text-muted dark:text-border">
                   No options available
                 </span>
               </div>

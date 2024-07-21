@@ -1,4 +1,4 @@
-import { ComponentProps } from "react";
+import { ComponentProps, useMemo } from "react";
 import {
   Tooltip,
   LineChart as LineChartRecharts,
@@ -92,6 +92,18 @@ export function LineChart({
   xAxisDataKey,
   yAxisRange,
 }: LineChartProps) {
+  const lineDataKeysMemo = useMemo(() => {
+    return lineDataKeys.map(({ color, name }) => (
+      <Line
+        key={name}
+        type="monotone"
+        dataKey={name}
+        stroke={color}
+        activeDot={{ r: 8 }}
+        label={<CustomLabel />}
+      />
+    ));
+  }, [lineDataKeys]);
   return (
     <ChartContainer className="!min-h-[450px]">
       <LineChartRecharts
@@ -107,16 +119,7 @@ export function LineChart({
         />
         <YAxis range={yAxisRange} tick={<CustomizedYAxisTick />} />
         <Tooltip content={<CustomTooltip />} />
-        {lineDataKeys.map(({ color, name }) => (
-          <Line
-            key={name}
-            type="monotone"
-            dataKey={name}
-            stroke={color}
-            activeDot={{ r: 8 }}
-            label={<CustomLabel />}
-          />
-        ))}
+        {lineDataKeysMemo}
         <Legend name="name" content={<LegendChart />} />
       </LineChartRecharts>
     </ChartContainer>

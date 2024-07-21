@@ -23,7 +23,7 @@ function TableContainer({
   ...restProps
 }: TableContainerProps) {
   return (
-    <div className="rounded-md overflow-hidden border border-border dark:border-dark-border">
+    <div className="rounded-md overflow-hidden border border-border">
       <div
         className={twMerge(
           "flex w-full overflow-x-auto custom-scroll ",
@@ -39,14 +39,7 @@ function TableContainer({
 
 function Thead({ children, className, ...restProps }: TheadProps) {
   return (
-    <thead
-      className={twMerge(
-        // "text-black dark:text-white font-bold border-b border-b-border",
-        "text-xs text-muted-foreground",
-        className
-      )}
-      {...restProps}
-    >
+    <thead className={twMerge("text-xs", className)} {...restProps}>
       {children}
     </thead>
   );
@@ -56,7 +49,7 @@ function Th({ children, className, ...restProps }: ThProps) {
   return (
     <th
       className={twMerge(
-        "align-middle font-medium h-10 px-2 border-border dark:border-dark-border border-b",
+        "align-middle font-medium h-10 px-2 border-border text-muted-foreground border-b",
         className
       )}
       {...restProps}
@@ -66,28 +59,15 @@ function Th({ children, className, ...restProps }: ThProps) {
   );
 }
 
-function Tr({ children, className, ...restProps }: TrProps) {
-  return (
-    <tr
-      className={twMerge(
-        // "[tbody>&]:odd:bg-row-table [tbody>&]:odd:dark:bg-transparent ",
-        // "border-b border-b-border dark:border-b-body-text",
-        // "border-b border-border",
-        className
-      )}
-      {...restProps}
-    >
-      {children}
-    </tr>
-  );
+function Tr({ children, ...restProps }: TrProps) {
+  return <tr {...restProps}>{children}</tr>;
 }
 
 function Tbody({ children, className, ...restProps }: TbodyProps) {
   return (
     <tbody
       className={twMerge(
-        "[&_tr+tr_td]:border-t",
-        "font-normal text-sm",
+        "[&_tr+tr_td]:border-t font-normal text-sm",
         className
       )}
       {...restProps}
@@ -99,13 +79,7 @@ function Tbody({ children, className, ...restProps }: TbodyProps) {
 
 function Td({ children, className, ...restProps }: TdProps) {
   return (
-    <td
-      className={twMerge(
-        "p-2 border-border dark:border-dark-border",
-        className
-      )}
-      {...restProps}
-    >
+    <td className={twMerge("p-2 border-border", className)} {...restProps}>
       {children}
     </td>
   );

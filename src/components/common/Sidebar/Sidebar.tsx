@@ -7,7 +7,6 @@ import { twMerge } from "tailwind-merge";
 import { Slot } from "@radix-ui/react-slot";
 import { Resizable } from "re-resizable";
 import { useSideBar } from "@/hooks/useSideBar";
-import style from "@/components/sharedStyles/menu.module.css";
 
 export const SideBarItems = forwardRef((_, ref?: any) => {
   const currentPath = usePathname();
@@ -31,8 +30,15 @@ export const SideBarItems = forwardRef((_, ref?: any) => {
             <Link
               href={path}
               className={twMerge(
-                style.item,
-                isActive && style["is-active"],
+                "flex items-center w-full gap-4 relative px-2 py-1.5",
+                "whitespace-nowrap font-medium text-sm",
+                "duration-100 ease-linear rounded-md text-card-foreground",
+                "hover:bg-accent hover:text-accent-foreground",
+                isActive &&
+                  twMerge(
+                    "text-dark-foreground hover:text-dark-foreground bg-dark hover:bg-dark/90",
+                    "dark:bg-muted dark:text-white dark:hover:bg-muted dark:hover:text-white"
+                  ),
                 showOnlyIcons && "max-w-fit"
               )}
             >
@@ -61,15 +67,15 @@ export function Sidebar() {
     return (
       <aside
         className={twMerge(
-          "bg-card dark:bg-dark-card dark:md:bg-dark-card/70 shadow-sm",
+          "bg-card shadow-sm",
           "duration-100 ease-linear overflow-hidden",
-          "border-r border-border dark:border-dark-border"
+          "border-r border-border dark:border-muted"
         )}
       >
         <Resizable
           className={twMerge(
             "flex flex-col duration-100 ease-linear overflow-hidden",
-            "border-card dark:border-dark-card/70"
+            "border-card dark:border-card/70"
           )}
           enable={{ right: !showOnlyIcons }}
           size={{
@@ -83,7 +89,7 @@ export function Sidebar() {
           }}
           handleWrapperClass={twMerge(
             "[&>div]:duration-100 [&>div]:ease-linear",
-            "[&>div]:border-r-8 [&>div]:border-r-card [&>div]:dark:border-r-dark-card/70",
+            "[&>div]:border-r-8 [&>div]:border-r-card [&>div]:dark:border-r-card/70",
             "[&>div]:hover:border-r-primary",
             resizingSideBar && "[&>div]:border-r-primary"
           )}

@@ -39,9 +39,9 @@ const generateButtonStyles = (baseStyles: ButtonStyle) => {
 const buttonVariants = {
   style: {
     primary: generateButtonStyles({
-      bg: "bg-primary",
+      bg: "bg-primary hover:bg-primary/90",
       border: "border-primary",
-      text: "text-white",
+      text: "text-primary-foreground",
       focusRing: "focus:ring-primary/40",
       activeRing: "active:ring-primary/40",
     }),
@@ -73,12 +73,12 @@ const buttonVariants = {
       focusRing: "focus:ring-danger/40",
       activeRing: "active:ring-danger/40",
     }),
-    light: generateButtonStyles({
-      bg: "bg-light",
-      border: "border-light",
+    secondary: generateButtonStyles({
+      bg: "bg-secondary",
+      border: "border-secondary",
       text: "text-black",
-      focusRing: "focus:ring-light/40",
-      activeRing: "active:ring-light/40",
+      focusRing: "focus:ring-secondary/40",
+      activeRing: "active:ring-secondary/40",
     }),
     "primary-ghost": generateButtonStyles({
       bg: "bg-transparent",
@@ -86,46 +86,30 @@ const buttonVariants = {
       text: "text-primary",
       hoverBg: "hover:bg-primary/20",
     }),
-    "success-ghost": generateButtonStyles({
+    ghost: generateButtonStyles({
       bg: "bg-transparent",
       border: "border-transparent",
-      text: "text-success",
-      hoverBg: "hover:bg-success/10",
-    }),
-    "info-ghost": generateButtonStyles({
-      bg: "bg-transparent",
-      border: "border-transparent",
-      text: "text-info",
-      hoverBg: "hover:bg-info/10",
-    }),
-    "warning-ghost": generateButtonStyles({
-      bg: "bg-transparent",
-      border: "border-transparent",
-      text: "text-warning",
-      hoverBg: "hover:bg-warning/10",
-    }),
-    "danger-ghost": generateButtonStyles({
-      bg: "bg-transparent",
-      border: "border-transparent",
-      text: "text-danger",
-      hoverBg: "hover:bg-danger/10",
-    }),
-    "light-ghost": generateButtonStyles({
-      bg: "bg-transparent",
-      border: "border-transparent",
-      text: "text-body-text dark:text-light ",
-      hoverBg: "hover:bg-dark-card/10 dark:hover:bg-light/10",
-    }),
-    "dark-ghost": generateButtonStyles({
-      bg: "bg-transparent",
-      border: "border-transparent",
-      text: "text-light dark:text-body-text",
-      hoverBg: "hover:bg-light/10 dark:hover:bg-dark-card/10",
+      text: "text-accent-foreground",
+      hoverBg: "hover:bg-accent hover:text-accent-foreground",
     }),
   },
 };
 
 export type ButtonVariantStyle = keyof typeof buttonVariants.style;
+
+export const getButtonVariantStyle = (variant: ButtonVariantStyle) => {
+  return buttonVariants.style[variant];
+};
+
+export const getRootButtonStyle = () =>
+  twMerge(
+    "inline-flex items-center justify-center relative whitespace-nowrap",
+    "h-fit w-fit px-2.5 py-1.5 sm:px-2.5 sm:py-1.5",
+    "cursor-pointer ease-linear duration-200 border rounded-lg outline-none",
+    "text-xs sm:text-sm font-medium leading-none",
+    "disabled:pointer-events-none disabled:opacity-50",
+    "focus:ring-4 active:ring-4"
+  );
 
 export interface ButtonProps extends ComponentPropsWithRef<"button"> {
   variantStyle?: ButtonVariantStyle;
@@ -182,14 +166,9 @@ export const Button = forwardRef(
       <Comp
         ref={ref}
         className={twMerge(
-          "inline-flex items-center justify-center relative whitespace-nowrap",
-          "h-fit w-fit px-2.5 py-1.5 sm:px-2.5 sm:py-1.5",
-          "cursor-pointer ease-linear duration-200 border rounded-lg outline-none",
-          "text-xs sm:text-sm font-medium leading-none",
-          "disabled:pointer-events-none disabled:opacity-50",
-          "focus:ring-4 active:ring-4",
+          getRootButtonStyle(),
           fullWidth && "w-full",
-          buttonVariants.style[variantStyle],
+          getButtonVariantStyle(variantStyle),
           isLoading && twMerge("text-transparent", spinnerStyle.root),
           className
         )}

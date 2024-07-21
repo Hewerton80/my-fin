@@ -7,7 +7,7 @@ const variants = {
   success: "bg-success text-white dark:bg-success/20 dark:text-success",
   danger: "bg-danger text-white dark:bg-danger/20 dark:text-danger",
   warning: "bg-warning text-white dark:bg-warning/20 dark:text-warning",
-  dark: "text-light bg-text-acent dark:text-text-acent dark:bg-light",
+  dark: "text-light bg-text-accent dark:text-text-accent dark:bg-light",
 };
 interface BadgeProps extends ComponentPropsWithRef<"span"> {
   variant: keyof typeof variants;

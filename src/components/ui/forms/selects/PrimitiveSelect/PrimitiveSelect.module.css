@@ -3,7 +3,7 @@
   border border-border hover:border-border;
 }
 :global(.dark) .root :global(.select__control) {
-  @apply border-dark-border hover:border-dark-border;
+  @apply border-muted hover:border-muted;
 }
 /* .root :global(.select__control--is-disabled) {
   @apply border-gray-40;
@@ -76,7 +76,7 @@
   rounded-lg shadow-none;
 }
 :global(.dark) .root :global(.select__menu) {
-  @apply border-dark-border bg-dark-card;
+  @apply border-muted bg-dark-card;
 } */
 /* .root :global(.select__menu-list) {
   @apply py-0 space-y-1;
@@ -90,13 +90,13 @@
 
 /* .root :global(.select__option) {
   @apply cursor-pointer h-9 px-3 whitespace-nowrap
-  font-medium text-sm text-text-acent rounded-md hover:bg-acent;
+  font-medium text-sm text-text-accent rounded-md hover:bg-accent;
 }
 :global(.dark) .root :global(.select__option) {
   @apply text-light hover:bg-muted;
 } */
 /* .root :global(.select__option--is-focused) {
-  @apply bg-acent;
+  @apply bg-accent;
 }
 :global(.dark) .root :global(.select__option--is-focused) {
   @apply bg-muted;

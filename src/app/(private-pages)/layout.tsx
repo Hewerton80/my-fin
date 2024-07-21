@@ -10,7 +10,6 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
 
   try {
     const { user } = await AuthService.fetchUser();
-    console.log({ userService: user });
     if (!user) {
       return redirectTologinPage();
     }

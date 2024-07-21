@@ -9,6 +9,8 @@ export interface TransitionHistoryWitchConputedFields
 export interface IGetTransionsHistoryParams extends IPaginateArgs {
   keyword?: string;
   type?: TransitionType | string;
+  startPaidAt?: string;
+  endPaidAt?: string;
 }
 
 export interface GetTransionsHistoryByCategoryParams {

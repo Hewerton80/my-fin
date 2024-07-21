@@ -58,12 +58,10 @@ const fetchUser = async (): Promise<{
   user?: UserWithComputedFields;
   error?: any;
 }> => {
-  // console.log({ allCokies: Cookies.get() });
   const cookieStore = cookies();
 
   const token = cookieStore.get(CONSTANTS.COOKIES_KEYS.TOKEN);
 
-  console.log({ fetchUserToken: token?.value });
   if (!token?.value) {
     return { error: CONSTANTS.API_RESPONSE_MESSAGES.TOKEN_NOT_PROVIDED };
   }
@@ -75,7 +73,6 @@ const fetchUser = async (): Promise<{
       },
     });
     const user = (await response.json()) as UserWithComputedFields;
-    console.log({ fetchUser: user });
     return { user };
   } catch (error) {
     console.log({ fetchUserError: error });

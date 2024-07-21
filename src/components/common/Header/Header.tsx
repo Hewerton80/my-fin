@@ -15,18 +15,13 @@ export function Header() {
   const toogleSideBarButtonElement = useMemo(() => {
     return (
       <span className="items-center justify-center cursor-pointer">
-        <FaBarsStaggered className="text-primary dark:text-light text-3xl" />
+        <FaBarsStaggered className="text-card-foreground text-3xl" />
       </span>
     );
   }, []);
 
   return (
-    <header
-      className={twMerge(
-        "bg-card dark:bg-dark-card/70 h-20 shadow-sm",
-        "border-b border-border dark:border-dark-border"
-      )}
-    >
+    <header className="bg-card h-20 shadow-sm border-b border-border">
       <div className="flex items-center h-full px-4 sm:px-8">
         <Popover.Root>
           <Popover.Trigger asChild>
@@ -37,7 +32,7 @@ export function Header() {
             align="end"
             className={twMerge(
               "z-[99999] outline-none",
-              "bg-card dark:bg-dark-card dark:md:bg-dark-card/70 shadow-lg",
+              "bg-card shadow-lg",
               "origin-top-left",
               slideAndFadeANimation.root
             )}

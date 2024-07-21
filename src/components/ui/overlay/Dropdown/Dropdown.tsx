@@ -1,58 +1,117 @@
-"use client";
 import React, { ComponentPropsWithRef, forwardRef } from "react";
-import * as RadixDropdown from "@radix-ui/react-dropdown-menu";
+import * as PrimitiveDropdown from "@radix-ui/react-dropdown-menu";
 import { twMerge } from "tailwind-merge";
-import slideAndFadeANimation from "@/components/sharedStyles/slideAndFade.module.css";
-import menuStyle from "@/components/sharedStyles/menu.module.css";
 
 export interface DropdownProps
-  extends ComponentPropsWithRef<typeof RadixDropdown.Root> {}
+  extends ComponentPropsWithRef<typeof PrimitiveDropdown.Root> {}
 
-export interface DropdowToogleProps
-  extends ComponentPropsWithRef<typeof RadixDropdown.Trigger> {}
+export interface DropdowTriggerProps
+  extends ComponentPropsWithRef<typeof PrimitiveDropdown.Trigger> {}
 
-export interface DropdowMenuProps
-  extends ComponentPropsWithRef<typeof RadixDropdown.Content> {}
+export interface DropdowSubTriggerProps
+  extends ComponentPropsWithRef<typeof PrimitiveDropdown.SubTrigger> {}
+
+export interface DropdowContentProps
+  extends ComponentPropsWithRef<typeof PrimitiveDropdown.Content> {}
+
+export interface DropdowSubContentProps
+  extends ComponentPropsWithRef<typeof PrimitiveDropdown.SubContent> {}
 
 export interface DropdowItemProps
-  extends ComponentPropsWithRef<typeof RadixDropdown.Item> {}
-{
-}
+  extends ComponentPropsWithRef<typeof PrimitiveDropdown.Item> {}
+
+export interface DropdowLabelProps
+  extends ComponentPropsWithRef<typeof PrimitiveDropdown.Label> {}
+
+export interface DropdowSeparatorProps
+  extends ComponentPropsWithRef<typeof PrimitiveDropdown.Separator> {}
+
+const contentClasses = twMerge(
+  "flex flex-col z-50 min-w-[8rem] overflow-hidden rounded-md border border-border ",
+  "bg-popover p-1 text-popover-foreground data-[state=open]:animate-in",
+  "data-[state=closed]:animate-out data-[state=closed]:fade-out-0",
+  "data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 ",
+  "data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 ",
+  "data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 ",
+  "data-[side=top]:slide-in-from-bottom-2"
+);
 
 const Root = ({ children }: DropdownProps) => {
-  return <RadixDropdown.Root modal={false}>{children}</RadixDropdown.Root>;
-};
-
-const Toogle = ({ children, ...restProps }: DropdowToogleProps, ref?: any) => {
   return (
-    <RadixDropdown.Trigger ref={ref} {...restProps}>
-      {children}
-    </RadixDropdown.Trigger>
+    <PrimitiveDropdown.Root modal={false}>{children}</PrimitiveDropdown.Root>
   );
 };
 
-const Menu = (
-  { children, className, ...restProps }: DropdowMenuProps,
+const Trigger = (
+  { children, ...restProps }: DropdowTriggerProps,
   ref?: any
 ) => {
   return (
-    <RadixDropdown.Portal>
-      <RadixDropdown.Content
+    <PrimitiveDropdown.Trigger ref={ref} {...restProps}>
+      {children}
+    </PrimitiveDropdown.Trigger>
+  );
+};
+
+const SubTrigger = (
+  { children, className, ...restProps }: DropdowSubTriggerProps,
+  ref?: any
+) => {
+  return (
+    <PrimitiveDropdown.SubTrigger
+      className={twMerge(
+        "flex cursor-default select-none items-center rounded-md px-2 py-1.5 text-sm",
+        "outline-none focus:bg-accent data-[state=open]:bg-accent",
+        className
+      )}
+      ref={ref}
+      {...restProps}
+    >
+      {children}
+    </PrimitiveDropdown.SubTrigger>
+  );
+};
+
+const Content = (
+  {
+    children,
+    className,
+    sideOffset = 4,
+    align = "end",
+    ...restProps
+  }: DropdowContentProps,
+  ref?: any
+) => {
+  return (
+    <PrimitiveDropdown.Portal>
+      <PrimitiveDropdown.Content
         ref={ref}
-        className={twMerge(
-          menuStyle.root,
-          "origin-top-right min-w-[13rem]",
-          slideAndFadeANimation.root,
-          className
-        )}
-        sideOffset={6}
-        alignOffset={8}
-        align="end"
+        className={twMerge(contentClasses, "shadow-lg", className)}
+        sideOffset={sideOffset}
+        align={align}
         {...restProps}
       >
         {children}
-      </RadixDropdown.Content>
-    </RadixDropdown.Portal>
+      </PrimitiveDropdown.Content>
+    </PrimitiveDropdown.Portal>
+  );
+};
+
+const SubContent = (
+  { children, className, sideOffset = 4, ...restProps }: DropdowSubContentProps,
+  ref?: any
+) => {
+  return (
+    <PrimitiveDropdown.Portal>
+      <PrimitiveDropdown.SubContent
+        ref={ref}
+        sideOffset={sideOffset}
+        className={twMerge(contentClasses, "shadow-md", className)}
+        {...restProps}
+      >
+        {children}
+      </PrimitiveDropdown.SubContent>
+    </PrimitiveDropdown.Portal>
   );
 };
 
@@ -61,21 +120,59 @@ const Item = (
   ref?: any
 ) => {
   return (
-    <RadixDropdown.Item
+    <PrimitiveDropdown.Item
       ref={ref}
-      className={twMerge(menuStyle.item, className)}
+      className={twMerge(
+        "relative flex cursor-default select-none items-center rounded-md",
+        "px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent",
+        "focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+        className
+      )}
       {...restProps}
     >
       {children}
-    </RadixDropdown.Item>
+    </PrimitiveDropdown.Item>
+  );
+};
+
+const Label = (
+  { children, className, ...restProps }: DropdowLabelProps,
+  ref?: any
+) => {
+  return (
+    <PrimitiveDropdown.Label
+      ref={ref}
+      className={twMerge("px-2 py-1.5 text-sm font-semibold", className)}
+      {...restProps}
+    >
+      {children}
+    </PrimitiveDropdown.Label>
+  );
+};
+
+const Separator = (
+  { className, ...restProps }: DropdowSeparatorProps,
+  ref?: any
+) => {
+  return (
+    <PrimitiveDropdown.Separator
+      ref={ref}
+      className={twMerge("-mx-1 my-1 h-px bg-muted", className)}
+      {...restProps}
+    />
   );
 };
 
 const Dropdown = {
-  Root: Root,
-  Toogle: forwardRef(Toogle),
-  Menu: forwardRef(Menu),
+  Root,
+  Trigger: forwardRef(Trigger),
+  SubTrigger: forwardRef(SubTrigger),
+  Content: forwardRef(Content),
+  Sub: PrimitiveDropdown.Sub,
+  SubContent: forwardRef(SubContent),
   Item: forwardRef(Item),
+  Label: forwardRef(Label),
+  Separator: forwardRef(Separator),
 };
 
 export { Dropdown };

@@ -101,7 +101,7 @@ export function DataTable({
         )}
       </Table.Container>
       <div
-        className="flex sm:hidden flex-col divide-y divide-border dark:divide-dark-border"
+        className="flex sm:hidden flex-col divide-y divide-border dark:divide-muted"
         role="table"
       >
         {handledMobileData}

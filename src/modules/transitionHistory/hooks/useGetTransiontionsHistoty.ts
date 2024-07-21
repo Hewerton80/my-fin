@@ -1,7 +1,6 @@
 import { useAxios } from "@/hooks/useAxios";
 import { useQuery } from "@tanstack/react-query";
 import {
-  GetTransionsHistoryByCategoryParams,
   IGetTransionsHistoryParams,
   TransitionHistoryQueryKeys,
   TransitionHistoryWitchConputedFields,

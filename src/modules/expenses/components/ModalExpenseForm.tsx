@@ -405,7 +405,7 @@ export function ModalExpenseForm({
               <Button
                 onClick={handleCloseModal}
                 disabled={isSubmitting}
-                variantStyle="light"
+                variantStyle="secondary"
               >
                 Cancel
               </Button>

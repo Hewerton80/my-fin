@@ -24,8 +24,8 @@ export const Root = forwardRef(
         ref={ref}
         className={twMerge(
           "flex flex-col w-full rounded-lg overflow-hidden",
-          "bg-card dark:bg-dark-card",
-          "border border-border dark:border-dark-border",
+          "bg-card text-card-foreground",
+          "border border-border",
           "shadow-md md:shadow-xl",
           className
         )}
@@ -78,9 +78,7 @@ export const Title = forwardRef(
         className={twMerge("flex items-center", className)}
         {...rest}
       >
-        <h4 className="text-base sm:text-xl text-black dark:text-white font-medium">
-          {children}
-        </h4>
+        <h4 className="text-base sm:text-xl font-medium">{children}</h4>
       </Comp>
     );
   }

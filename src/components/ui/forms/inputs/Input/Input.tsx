@@ -36,7 +36,7 @@ export const Input = forwardRef(
           required={required}
           className={twMerge(
             style.root,
-            "h-9",
+            "h-10",
             error && style.error,
             inputClassName
           )}

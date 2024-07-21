@@ -4,9 +4,11 @@ import { Prisma } from "@prisma/client";
 import { TransitionHistoryWitchConputedFields } from "./types";
 import { TransitionType } from "@prisma/client";
 import { isValid as isValidDate } from "date-fns/isValid";
+
 const parseSearchParams = (searchParams: URLSearchParams) => {
   const startPaidAt = searchParams.get("startPaidAt");
   const endPaidAt = searchParams.get("endPaidAt");
+
   return {
     keyword: searchParams.get("keyword")?.trim() || "",
     type: searchParams.get("type")?.trim() || undefined,

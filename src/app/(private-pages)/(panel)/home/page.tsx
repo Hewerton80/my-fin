@@ -113,7 +113,7 @@ export default function HomePage() {
           <div className="flex justify-end">
             <Link href={`/categories?categoryId=${category?.id}`}>
               <IconButton
-                variantStyle="light-ghost"
+                variantStyle="ghost"
                 icon={<IoEyeOutline className="text-lg" />}
               />
             </Link>

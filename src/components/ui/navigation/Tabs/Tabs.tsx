@@ -26,7 +26,7 @@ const List = (
     <RadixTabs.List
       ref={ref}
       className={twMerge(
-        "flex p-1 outline-none rounded-md bg-acent dark:bg-muted",
+        "flex p-1 outline-none rounded-md bg-accent dark:bg-muted",
         className
       )}
       {...restProps}

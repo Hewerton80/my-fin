@@ -4,6 +4,7 @@ import { useMemo, ComponentProps } from "react";
 import { twMerge } from "tailwind-merge";
 import assets from "../../../../../assets.json";
 import colors from "tailwindcss/colors";
+
 export interface AvatarProps extends ComponentProps<typeof RadixAvatar.Root> {
   src?: string;
   alt?: string;
@@ -16,7 +17,7 @@ export function Avatar({
   src,
   alt,
   username = "",
-  bgColor = assets.colors.primary,
+  bgColor = colors.white,
   color = colors.white,
   className,
   ...restProps
