@@ -57,22 +57,21 @@ function Item({ label, id, value, ...restProps }: RadioItemProps) {
     <div className="flex items-center space-x-2">
       <RadioGroup.Item
         id={htmlFrom}
-        className="rounded-full relative border-2 border-primary size-4 bg-transparent"
+        className={twMerge(
+          "aspect-square h-4 w-4 rounded-full border border-primary text-primary",
+          "ring-offset-background focus:outline-none focus-visible:ring-2",
+          "focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed",
+          "disabled:opacity-50"
+        )}
         value={value}
         {...restProps}
       >
-        <RadioGroup.Indicator
-          className={twMerge(
-            "rounded-full size-2 bg-primary",
-            "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
-          )}
-        />
+        <RadioGroup.Indicator className="flex items-center justify-center">
+          <span className="h-2.5 w-2.5 rounded-full bg-primary" />
+        </RadioGroup.Indicator>
       </RadioGroup.Item>
       {label && (
-        <label
-          className="text-sm font-medium text-dark-card dark:text-item"
-          htmlFor={htmlFrom}
-        >
+        <label className="text-sm font-medium" htmlFor={htmlFrom}>
           {label}
         </label>
       )}

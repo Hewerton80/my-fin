@@ -9,7 +9,7 @@ interface SpinnerProps extends ComponentPropsWithRef<"span"> {
 export function Spinner({ className, size = 32, ...restProps }: SpinnerProps) {
   return (
     <span className={twMerge("animate-spin", className)} {...restProps}>
-      <ImSpinner2 size={size} className="text-primary dark:text-light" />
+      <ImSpinner2 size={size} className="text-primary dark:text-foreground" />
     </span>
   );
 }

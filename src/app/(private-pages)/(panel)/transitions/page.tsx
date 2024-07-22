@@ -6,6 +6,7 @@ import {
   IColmunDataTable,
 } from "@/components/ui/dataDisplay/DataTable";
 import { Calendar } from "@/components/ui/forms/Calendar";
+import { DatePicker } from "@/components/ui/forms/DatePicker/DatePicker";
 import { Input } from "@/components/ui/forms/inputs/Input";
 import { Tabs } from "@/components/ui/navigation/Tabs";
 import { useGetTransiontionsHistoty } from "@/modules/transitionHistory/hooks/useGetTransiontionsHistoty";
@@ -75,28 +76,15 @@ export default function TranstitonsPage() {
             ? format(new Date(transitionHistory?.paidAt), "dd/MM/yyyy")
             : "-",
       },
-      //   {
-      //     label: "Actions",
-      //     field: "actions",
-      //     onParse: (transitionHistory) => (
-      //       <TableExpenseActionsButtons
-      //         expense={transitionHistory}
-      //         onEdit={(expense) => setExpenseIdToEdit(expense.id)}
-      //         onClone={(expense) => {
-      //           setExpenseIdToEdit(expense.id);
-      //           setIsCloningExpense(true);
-      //         }}
-      //       />
-      //     ),
-      //   },
     ],
     []
   );
 
-  const [date, setDate] = useState<Date | undefined>(new Date());
+  const [date, setDate] = useState<Date>();
 
   return (
     <>
+      <DatePicker date={date} onChange={setDate} />
       <Card.Root>
         <Card.Header>
           <Card.Title>Historic Transtitons</Card.Title>

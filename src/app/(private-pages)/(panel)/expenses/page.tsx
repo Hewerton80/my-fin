@@ -139,6 +139,7 @@ export default function ExpensesPage() {
 
   return (
     <>
+      <div className="flex flex-col"></div>
       <Card.Root>
         <Card.Header>
           <Card.Title>Expenses</Card.Title>

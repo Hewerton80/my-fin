@@ -46,39 +46,47 @@ const buttonVariants = {
       activeRing: "active:ring-primary/40",
     }),
     success: generateButtonStyles({
-      bg: "bg-success",
+      bg: "bg-success hover:bg-success/90",
       border: "border-success",
-      text: "text-white",
+      text: "text-success-foreground",
       focusRing: "focus:ring-success/40",
       activeRing: "active:ring-success/40",
     }),
     info: generateButtonStyles({
-      bg: "bg-info",
+      bg: "bg-info hover:bg-info/90",
       border: "border-info",
-      text: "text-white",
+      text: "text-info-foreground",
       focusRing: "focus:ring-info/40",
       activeRing: "active:ring-info/40",
     }),
     warning: generateButtonStyles({
-      bg: "bg-warning",
+      bg: "bg-warning hover:bg-warning/90",
       border: "border-warning",
-      text: "text-white",
+      text: "text-warning-foreground",
       focusRing: "focus:ring-warning/40",
       activeRing: "active:ring-warning/40",
     }),
     danger: generateButtonStyles({
-      bg: "bg-danger",
+      bg: "bg-danger hover:bg-danger/90",
       border: "border-danger",
-      text: "text-white",
+      text: "text-danger-foreground",
       focusRing: "focus:ring-danger/40",
       activeRing: "active:ring-danger/40",
     }),
     secondary: generateButtonStyles({
-      bg: "bg-secondary",
+      bg: "bg-secondary hover:bg-secondary/90",
       border: "border-secondary",
-      text: "text-black",
+      text: "text-secondary-foreground",
       focusRing: "focus:ring-secondary/40",
       activeRing: "active:ring-secondary/40",
+    }),
+    dark: generateButtonStyles({
+      bg: "bg-dark",
+      border: "border-dark",
+      text: "text-dark-foreground",
+      focusRing: "focus:ring-dark/40",
+      activeRing: "active:ring-dark/40",
+      hoverBg: "hover:bg-dark/90",
     }),
     "primary-ghost": generateButtonStyles({
       bg: "bg-transparent",
@@ -86,10 +94,18 @@ const buttonVariants = {
       text: "text-primary",
       hoverBg: "hover:bg-primary/20",
     }),
-    ghost: generateButtonStyles({
+    "dark-ghost": generateButtonStyles({
       bg: "bg-transparent",
       border: "border-transparent",
       text: "text-accent-foreground",
+      hoverBg: "hover:bg-accent hover:text-accent-foreground",
+    }),
+    outline: generateButtonStyles({
+      bg: "bg-background",
+      border: "border-input",
+      text: "text-foreground",
+      // focusRing: "focus:ring-dark/40",
+      activeRing: "active:ring-accent/40",
       hoverBg: "hover:bg-accent hover:text-accent-foreground",
     }),
   },
@@ -97,19 +113,9 @@ const buttonVariants = {
 
 export type ButtonVariantStyle = keyof typeof buttonVariants.style;
 
-export const getButtonVariantStyle = (variant: ButtonVariantStyle) => {
+const getButtonVariantStyle = (variant: ButtonVariantStyle) => {
   return buttonVariants.style[variant];
 };
-
-export const getRootButtonStyle = () =>
-  twMerge(
-    "inline-flex items-center justify-center relative whitespace-nowrap",
-    "h-fit w-fit px-2.5 py-1.5 sm:px-2.5 sm:py-1.5",
-    "cursor-pointer ease-linear duration-200 border rounded-lg outline-none",
-    "text-xs sm:text-sm font-medium leading-none",
-    "disabled:pointer-events-none disabled:opacity-50",
-    "focus:ring-4 active:ring-4"
-  );
 
 export interface ButtonProps extends ComponentPropsWithRef<"button"> {
   variantStyle?: ButtonVariantStyle;
@@ -166,7 +172,12 @@ export const Button = forwardRef(
       <Comp
         ref={ref}
         className={twMerge(
-          getRootButtonStyle(),
+          "inline-flex items-center justify-center relative whitespace-nowrap",
+          "h-10 px-4 py-2 w-fit sm:px-2.5 sm:py-1.5",
+          "cursor-pointer ease-linear duration-200 border rounded-lg outline-none",
+          "text-xs sm:text-sm font-medium leading-none",
+          "disabled:pointer-events-none disabled:opacity-50",
+          "focus:ring-4 active:ring-4",
           fullWidth && "w-full",
           getButtonVariantStyle(variantStyle),
           isLoading && twMerge("text-transparent", spinnerStyle.root),

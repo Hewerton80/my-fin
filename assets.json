@@ -1,23 +1,5 @@
 {
   "colors": {
-    "gray": {
-      "100": "#f8f9fa",
-      "200": "#e9ecef",
-      "300": "#dee2e6",
-      "400": "#ced4da",
-      "500": "#adb5bd",
-      "600": "#6c757d",
-      "700": "#495057",
-      "800": "#343a40",
-      "900": "#212529"
-    },
-    "success": "#16a34a",
-    "info": "#2563eb",
-    "warning": "#f97316",
-    "light": "#f9fafb",
-    "dark-card": "#09090b",
-    "item": "#fafafa",
-    "danger": "hsl(var(--danger))",
     "border": "hsl(var(--border))",
     "input": "hsl(var(--input))",
     "ring": "hsl(var(--ring))",
@@ -27,17 +9,29 @@
       "DEFAULT": "hsl(var(--primary))",
       "foreground": "hsl(var(--primary-foreground))"
     },
+    "success": {
+      "DEFAULT": "hsl(var(--success))",
+      "foreground": "hsl(var(--success-foreground))"
+    },
     "secondary": {
       "DEFAULT": "hsl(var(--secondary))",
       "foreground": "hsl(var(--secondary-foreground))"
     },
+    "info": {
+      "DEFAULT": "hsl(var(--info))",
+      "foreground": "hsl(var(--info-foreground))"
+    },
+    "danger": {
+      "DEFAULT": "hsl(var(--danger))",
+      "foreground": "hsl(var(--danger-foreground))"
+    },
+    "warning": {
+      "DEFAULT": "hsl(var(--warning))",
+      "foreground": "hsl(var(--warning-foreground))"
+    },
     "dark": {
       "DEFAULT": "hsl(var(--dark))",
       "foreground": "hsl(var(--dark-foreground))"
-    },
-    "destructive": {
-      "DEFAULT": "hsl(var(--destructive) / <alpha-value>)",
-      "foreground": "hsl(var(--destructive-foreground) / <alpha-value>)"
     },
     "muted": {
       "DEFAULT": "hsl(var(--muted))",

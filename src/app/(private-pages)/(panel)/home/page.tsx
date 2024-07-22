@@ -113,7 +113,7 @@ export default function HomePage() {
           <div className="flex justify-end">
             <Link href={`/categories?categoryId=${category?.id}`}>
               <IconButton
-                variantStyle="ghost"
+                variantStyle="dark-ghost"
                 icon={<IoEyeOutline className="text-lg" />}
               />
             </Link>
@@ -239,8 +239,14 @@ export default function HomePage() {
                 })) || []
               }
               lineDataKeys={[
-                { name: "Receipts Amount", color: assets.colors.success },
-                { name: "Payments Amount", color: assets.colors.danger },
+                {
+                  name: "Receipts Amount",
+                  color: assets.colors.success.DEFAULT,
+                },
+                {
+                  name: "Payments Amount",
+                  color: assets.colors.danger.DEFAULT,
+                },
               ]}
               xAxisDataKey="name"
             />

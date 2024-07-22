@@ -60,9 +60,7 @@ export function DataTable({
             key={`column-${i}-${j}-responsive`}
           >
             {columns[j].label && (
-              <div className="text-black dark:text-light font-bold">
-                {columns[j].label}:
-              </div>
+              <div className="font-bold">{columns[j].label}:</div>
             )}
             <div className="text-right ml-auto">
               {column?.onParse?.(cellData) || cellData?.[column.field] || ""}

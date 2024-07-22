@@ -12,7 +12,7 @@ import { useAlertModal } from "@/hooks/useAlertModal";
 // };
 
 const variants = {
-  default: { color: "text-black dark:text-light" },
+  default: { color: "text-foreground" },
   success: { color: "text-success" },
   info: { color: "text-info" },
   warning: { color: "text-warning" },
@@ -68,7 +68,7 @@ const AlertModal = forwardRef(() => {
       confirmButtonText = "Ok",
       cancelButtonText = "Voltar",
       confirmButtonVariantStyle = "primary",
-      cancelButtonVariantStyle = "light",
+      cancelButtonVariantStyle = "dark",
       showCancelButton,
       onClose,
       onClickConfirmButton,

@@ -65,7 +65,7 @@ const Root = ({
             {!hideCloseIcon && (
               <Dialog.Close
                 asChild
-                className="absolute top-5 right-6 p-1 cursor-pointer text-black dark:text-light"
+                className="absolute top-5 right-6 p-1 cursor-pointer text-foreground"
                 onClick={onClose}
                 role="button"
                 aria-label="Close"

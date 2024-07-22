@@ -26,7 +26,7 @@ const List = (
     <RadixTabs.List
       ref={ref}
       className={twMerge(
-        "flex p-1 outline-none rounded-md bg-accent dark:bg-muted",
+        "inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground",
         className
       )}
       {...restProps}
@@ -37,22 +37,21 @@ const List = (
 };
 
 const Trigger = (
-  { children, className, disabled, ...restProps }: TabTriggerProps,
+  { children, className, ...restProps }: TabTriggerProps,
   ref?: any
 ) => {
   return (
     <RadixTabs.Trigger
       ref={ref}
       className={twMerge(
-        "text-xs sm:text-sm font-semibold rounded-[4px] bg-transparent text-muted-foreground",
-        "flex items-center cursor-pointer px-2 sm:px-3 py-1 sm:py-1.5",
-        "data-[state=active]:text-dark-card data-[state=active]:bg-white",
-        "dark:data-[state=active]:text-light dark:data-[state=active]:bg-dark-card",
-        "data-[state=active]:ring-1 data-[state=active]:ring-dark/10",
-        disabled && "opacity-50",
+        "inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1.5",
+        "text-sm font-medium ring-offset-background transition-all",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+        "focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+        "data-[state=active]:bg-background data-[state=active]:text-foreground",
+        "data-[state=active]:shadow-sm",
         className
       )}
-      disabled={disabled}
       {...restProps}
     >
       {children}
@@ -60,9 +59,20 @@ const Trigger = (
   );
 };
 
-const Content = ({ children, ...restProps }: TabContentProps, ref?: any) => {
+const Content = (
+  { children, className, ...restProps }: TabContentProps,
+  ref?: any
+) => {
   return (
-    <RadixTabs.Content ref={ref} {...restProps}>
+    <RadixTabs.Content
+      className={twMerge(
+        "mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2",
+        "focus-visible:ring-ring focus-visible:ring-offset-2",
+        className
+      )}
+      ref={ref}
+      {...restProps}
+    >
       {children}
     </RadixTabs.Content>
   );

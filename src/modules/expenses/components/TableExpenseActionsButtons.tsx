@@ -52,7 +52,10 @@ export const TableExpenseActionsButtons = memo(
       <>
         <Dropdown.Root>
           <Dropdown.Trigger asChild>
-            <IconButton variantStyle="ghost" icon={<BsThreeDotsVertical />} />
+            <IconButton
+              variantStyle="dark-ghost"
+              icon={<BsThreeDotsVertical />}
+            />
           </Dropdown.Trigger>
           <Dropdown.Content>
             {!expense?.isPaid &&
