@@ -21,10 +21,6 @@ import { OnchangeMultValue, OnchangeSigleValue, SelectOption } from "../type";
 import { FaChevronDown, FaSearch } from "react-icons/fa";
 import { CloseButton } from "@/components/ui/buttons/CloseButton";
 import { Badge } from "@/components/ui/dataDisplay/Badge";
-import menuStyle from "@/components/sharedStyles/menu.module.css";
-// export type SigleValueSelectOption = SingleValue<SelectOption>;
-
-// export type OnchangeSigleValue = (newValue: SigleValueSelectOption) => void;
 
 type MapedSelectProps = Pick<
   ComponentPropsWithRef<typeof ReactSelect>,
@@ -109,6 +105,7 @@ export const PrimitiveSelect = forwardRef(
           ref={ref}
           onMenuOpen={() => _setMenuIsOpen(true)}
           menuIsOpen={_menuIsOpen}
+          // menuIsOpen={true}
           onMenuClose={() => _setMenuIsOpen(false)}
           required={required}
           placeholder={placeholder}
@@ -127,7 +124,16 @@ export const PrimitiveSelect = forwardRef(
             ClearIndicator: () => null,
             Menu: ({ children, ...restProps }) => (
               <components.Menu
-                className={twMerge(menuStyle.root, "mt-1.5")}
+                className={
+                  twMerge()
+                  // menuStyle.root
+                  // "max-h-96 min-w-[8rem] rounded-md border bg-popover text-popover-foreground",
+                  // "shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out",
+                  // "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95",
+                  // "data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2",
+                  // "data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2,",
+                  // "data-[side=top]:slide-in-from-bottom-2"
+                }
                 {...restProps}
               >
                 {children}
@@ -147,10 +153,11 @@ export const PrimitiveSelect = forwardRef(
             Option: ({ children, isFocused, isSelected, ...restProps }) => (
               <components.Option
                 {...restProps}
-                className={twMerge(
-                  menuStyle.item,
-                  (isSelected || isFocused) && menuStyle["is-active"]
-                )}
+                className={
+                  twMerge()
+                  // menuStyle.item,
+                  // (isSelected || isFocused) && menuStyle["is-active"]
+                }
                 isFocused={isFocused}
                 isSelected={isSelected}
                 getStyles={() => ({ fontSize: 14, padding: "6px 8px", gap: 0 })}
@@ -178,12 +185,7 @@ export const PrimitiveSelect = forwardRef(
               />
             ),
             DropdownIndicator: () => (
-              <span
-                className={twMerge(
-                  "text-sm dark:text-light text-dark-card/50 hover:text-primary",
-                  "-translate-x-2"
-                )}
-              >
+              <span className="text-sm text-foreground hover:text-primary -translate-x-2">
                 {isSearchable ? (
                   <FaSearch />
                 ) : (

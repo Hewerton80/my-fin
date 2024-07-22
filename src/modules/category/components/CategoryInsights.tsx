@@ -101,7 +101,9 @@ export function CategoryInsights({
         <Card.Body>
           <LineChart
             data={parsedDataChart}
-            lineDataKeys={[{ name: "amount", color: assets.colors.primary }]}
+            lineDataKeys={[
+              { name: "amount", color: assets.colors.primary.DEFAULT },
+            ]}
             xAxisDataKey="date"
           />
         </Card.Body>
@@ -115,7 +117,9 @@ export function CategoryInsights({
             data={Object.entries(transitionsHistoryAgroupedByMonth || {}).map(
               ([date, amount]) => ({ date, amount })
             )}
-            lineDataKeys={[{ name: "amount", color: assets.colors.primary }]}
+            lineDataKeys={[
+              { name: "amount", color: assets.colors.primary.DEFAULT },
+            ]}
             xAxisDataKey="date"
           />
         </Card.Body>

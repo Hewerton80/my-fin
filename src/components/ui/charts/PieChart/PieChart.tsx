@@ -92,7 +92,7 @@ export const PieChart = ({ data, labelType = "lined" }: PieChartProps) => {
                     x={x}
                     y={y}
                     className={twMerge(
-                      "text-[0.5rem] md:text-xs font-bold fill-body-text dark:fill-light"
+                      "text-[0.5rem] md:text-xs font-bold fill-foreground"
                     )}
                   >
                     {getCurrencyFormat(payload?.payload?.amount)}

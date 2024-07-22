@@ -52,7 +52,7 @@ const Root = ({
           className={twMerge(
             "fixed z-[10001] top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]",
             "w-[calc(100vw-2rem)] max-h-[calc(100vh-2rem)] overflow-visible",
-            "dark:bg-dark-card focus:outline-none",
+            "focus:outline-none",
             sizes[size],
             className
           )}

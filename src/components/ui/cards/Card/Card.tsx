@@ -25,7 +25,7 @@ export const Root = forwardRef(
         className={twMerge(
           "flex flex-col w-full rounded-lg overflow-hidden",
           "bg-card text-card-foreground",
-          "border border-border",
+          "border",
           "shadow-md md:shadow-xl",
           className
         )}

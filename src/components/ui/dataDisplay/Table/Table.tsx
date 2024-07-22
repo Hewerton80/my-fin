@@ -23,7 +23,7 @@ function TableContainer({
   ...restProps
 }: TableContainerProps) {
   return (
-    <div className="rounded-md overflow-hidden border border-border">
+    <div className="rounded-md overflow-hidden border">
       <div
         className={twMerge(
           "flex w-full overflow-x-auto custom-scroll ",
@@ -49,7 +49,7 @@ function Th({ children, className, ...restProps }: ThProps) {
   return (
     <th
       className={twMerge(
-        "align-middle font-medium h-10 px-2 border-border text-muted-foreground border-b",
+        "align-middle font-medium h-10 px-2 text-muted-foreground border-b",
         className
       )}
       {...restProps}
@@ -79,7 +79,7 @@ function Tbody({ children, className, ...restProps }: TbodyProps) {
 
 function Td({ children, className, ...restProps }: TdProps) {
   return (
-    <td className={twMerge("p-2 border-border", className)} {...restProps}>
+    <td className={twMerge("p-2", className)} {...restProps}>
       {children}
     </td>
   );

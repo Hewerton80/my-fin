@@ -52,20 +52,10 @@ export function ProfilePopover() {
             <FaChevronRight className="ml-auto text-primary" />
           </Dropdown.SubTrigger>
           <Dropdown.SubContent>
-            <Dropdown.Item
-              // className={twMerge(
-              //   theme === "light" && "bg-light dark:bg-dark-card/60"
-              // )}
-              onClick={() => setTheme("light")}
-            >
+            <Dropdown.Item onClick={() => setTheme("light")}>
               <FaSun className="mr-2" /> Claro
             </Dropdown.Item>
-            <Dropdown.Item
-              // className={twMerge(
-              //   theme === "dark" && "bg-light dark:bg-dark-card/60"
-              // )}
-              onClick={() => setTheme("dark")}
-            >
+            <Dropdown.Item onClick={() => setTheme("dark")}>
               <FaMoon className="mr-2" /> Escuro
             </Dropdown.Item>
           </Dropdown.SubContent>

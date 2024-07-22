@@ -8,9 +8,7 @@ import {
   Legend,
 } from "recharts";
 import { Card } from "@/components/ui/cards/Card";
-import assets from "../../../../../assets.json";
 import { ChartContainer } from "../ChartContainer";
-import { getRandomRGBColor } from "@/shared/colors";
 import { LegendChart } from "../LegendChart/LegendChart";
 
 interface LineChartProps {
@@ -40,7 +38,7 @@ const CustomTooltip = ({ active, payload }: ComponentProps<typeof Tooltip>) => {
 function CustomLabel(props: any) {
   return (
     <text
-      className="fill-black dark:fill-light text-xs"
+      className="fill-foreground text-xs"
       x={props?.x}
       y={props?.y}
       dy={-4}

@@ -21,7 +21,7 @@ export function Header() {
   }, []);
 
   return (
-    <header className="bg-card h-20 shadow-sm border-b border-border">
+    <header className="bg-card h-20 shadow-sm border-b">
       <div className="flex items-center h-full px-4 sm:px-8">
         <Popover.Root>
           <Popover.Trigger asChild>

@@ -11,11 +11,7 @@ export default function LoginPage() {
   return (
     <div className="flex min-h-screen items-center justify-center px-6">
       <form onSubmit={login} className="flex flex-col max-w-md w-full">
-        <h2
-          className={twMerge(
-            "text-black dark:text-light text-xl sm:text-2xl text-center mb-2 sm:mb-6"
-          )}
-        >
+        <h2 className={twMerge("text-xl sm:text-2xl text-center mb-2 sm:mb-6")}>
           Sign in your account
         </h2>
         <div className="flex flex-col gap-4 mb-6">

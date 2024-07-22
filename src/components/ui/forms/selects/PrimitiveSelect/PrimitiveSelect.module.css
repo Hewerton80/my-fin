@@ -1,15 +1,9 @@
 .root :global(.select__control) {
   @apply w-full rounded-md min-h-9 shadow-sm bg-transparent
-  border border-border hover:border-border;
+  border border-border hover:border-border ring-primary/40;
 }
-:global(.dark) .root :global(.select__control) {
-  @apply border-muted hover:border-muted;
-}
-/* .root :global(.select__control--is-disabled) {
-  @apply border-gray-40;
-}  */
 .root.error :global(.select__control) {
-  @apply border-danger;
+  @apply border-danger ring-danger/40 ring-2;
 }
 
 .root:not(.error)
@@ -17,7 +11,7 @@
     :global(.select__control--is-focused),
     :global(.select__control--menu-is-open)
   ) {
-  @apply !border-primary;
+  @apply !border-primary ring-2;
 }
 .root :global(.select__value-container) {
   @apply px-3 py-1.5  gap-1;
@@ -29,10 +23,7 @@
   @apply m-0 p-0 items-center;
 }
 .root :global(.select__placeholder) {
-  @apply mx-0 text-sm text-body-text/40;
-}
-:global(.dark) .root :global(.select__placeholder) {
-  @apply text-light/40;
+  @apply mx-0 text-sm text-foreground/40;
 }
 .root
   :is(
@@ -40,73 +31,28 @@
     :global(.select__input-container),
     :global(.select__single-value)
   ) {
-  @apply text-sm text-body-text;
+  @apply text-sm text-foreground;
 }
-:global(.dark)
-  .root
-  :is(
-    :global(.select__input),
-    :global(.select__input-container),
-    :global(.select__single-value)
-  ) {
-  @apply text-light;
-}
-/* .root :global(.select__multi-value) {
-  @apply inline-flex items-center justify-center py-0.5 px-2.5 w-fit m-0
-  bg-primary text-xs font-semibold rounded-md gap-1;
-}
-:global(.dark) .root :global(.select__multi-value) {
-  @apply bg-primary/20;
-}
-.root :global(.select__multi-value__label) {
-  @apply p-0 text-white;
-}
-:global(.dark) .root :global(.select__multi-value__label) {
-  @apply text-primary;
-} */
-/* .root :global(.select__multi-value__remove) {
-  @apply p-0 rounded-full text-white hover:text-white hover:bg-primary bg-primary;
-} */
-.root :global(.select__group) {
-  @apply py-0;
-}
-/* .root :global(.select__menu) {
-  @apply mt-1.5 z-50 p-2
-  overflow-hidden border border-border bg-card 
-  rounded-lg shadow-none;
-}
-:global(.dark) .root :global(.select__menu) {
-  @apply border-muted bg-dark-card;
-} */
-/* .root :global(.select__menu-list) {
-  @apply py-0 space-y-1;
-} */
-/* .root :global(.select__menu-list)::-webkit-scrollbar {
-  @apply bg-transparent h-2.5 w-1;
-}
-.root :global(.select__menu-list)::-webkit-scrollbar-thumb {
-  @apply rounded bg-dark-card;
-} */
 
-/* .root :global(.select__option) {
-  @apply cursor-pointer h-9 px-3 whitespace-nowrap
-  font-medium text-sm text-text-accent rounded-md hover:bg-accent;
+.root :global(.select__menu) {
+  @apply min-w-[8rem] rounded-md border bg-popover text-popover-foreground px-1
+  shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out mt-1 mb-0
+  data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95
+  data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2
+  data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2
+  data-[side=top]:slide-in-from-bottom-2;
 }
-:global(.dark) .root :global(.select__option) {
-  @apply text-light hover:bg-muted;
-} */
-/* .root :global(.select__option--is-focused) {
-  @apply bg-accent;
+
+.root :global(.select__menu-list) {
+  @apply max-h-56;
 }
-:global(.dark) .root :global(.select__option--is-focused) {
-  @apply bg-muted;
-} */
-/* .root :global(.select__option--is-selected) {
-  @apply text-item bg-primary hover:bg-primary/90;
+
+.root :global(.select__option) {
+  @apply flex w-full cursor-default select-none items-center rounded-md py-1.5 px-2 text-sm 
+  outline-none  data-[disabled]:pointer-events-none 
+  data-[disabled]:opacity-50;
 }
-:global(.dark) .root :global(.select__option--is-selected) {
-  @apply text-light bg-muted hover:bg-muted/70;
-} */
-/* .root :global(.select__indicators) {
-  @apply hidden;
-} */
+
+.root :global(.select__option--is-focused) {
+  @apply bg-accent text-accent-foreground;
+}

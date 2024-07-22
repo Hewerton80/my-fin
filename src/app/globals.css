@@ -28,6 +28,8 @@
     --primary-foreground: 210 20% 98%;
     --secondary: 220 14.3% 95.9%;
     --secondary-foreground: 220.9 39.3% 11%;
+    --danger: 346.8 77.2% 49.8%;
+    --danger-foreground: 355.7 100% 97.3%;
     --dark: 240 5.9% 10%;
     --dark-foreground: 0 0% 98%;
     --muted: 240 4.8% 95.9%;
@@ -58,6 +60,8 @@
     --primary-foreground: 210 20% 98%;
     --secondary: 215 27.9% 16.9%;
     --secondary-foreground: 210 20% 98%;
+    --danger: 346.8 77.2% 49.8%;
+    --danger-foreground: 355.7 100% 97.3%;
     --dark: 0 0% 98%;
     --dark-foreground: 240 5.9% 10%;
     --muted: 240 3.7% 15.9%;
@@ -76,7 +80,17 @@
     --chart-5: 340 75% 55%;
   }
 
-  body {
-    @apply font-sans bg-white dark:bg-card;
+  @layer base {
+    * {
+      @apply border-border;
+    }
+    html {
+      @apply scroll-smooth;
+    }
+    body {
+      @apply font-sans bg-background text-foreground;
+      font-synthesis-weight: none;
+      text-rendering: optimizeLegibility;
+    }
   }
 }

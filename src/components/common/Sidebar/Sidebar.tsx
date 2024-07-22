@@ -69,7 +69,7 @@ export function Sidebar() {
         className={twMerge(
           "bg-card shadow-sm",
           "duration-100 ease-linear overflow-hidden",
-          "border-r border-border dark:border-muted"
+          "border-r dark:border-muted"
         )}
       >
         <Resizable
