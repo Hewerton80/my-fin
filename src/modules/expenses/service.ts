@@ -17,6 +17,8 @@ const getExpenseWhereInputByStatus = (status?: string) => {
     where.status = ExpenseStatus.CANCELED;
     where.isPaid = false;
   } else if (status === ExpenseStatus.OVERDUE) {
+    where.dueDate = { lt: now };
+    where.isPaid = false;
   } else if (status === ExpenseStatus.PENDING) {
     where.dueDate = { gt: now, lt: addDays(now, 7) };
     where.isPaid = false;
