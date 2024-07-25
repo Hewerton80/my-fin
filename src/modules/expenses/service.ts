@@ -1,8 +1,8 @@
 import prisma from "@/lib/prisma";
 import { ExpenseUtils } from "./utils";
-import { ExpenseStatus, ExpenseWithComputedFields } from "./types";
+import { ExpenseWithComputedFields } from "./types";
 import { parseOrderBy, prismaPagination } from "@/lib/prismaHelpers";
-import { Prisma } from "@prisma/client";
+import { ExpenseStatus, Prisma } from "@prisma/client";
 import { addDays } from "date-fns/addDays";
 
 const getExpenseWhereInputByStatus = (status?: string) => {
@@ -13,13 +13,14 @@ const getExpenseWhereInputByStatus = (status?: string) => {
   const now = new Date();
   if (status === ExpenseStatus.PAID) {
     where.isPaid = true;
-  } else if (status === ExpenseStatus.OVERDUE) {
-    where.dueDate = { lt: now };
+  } else if (status === ExpenseStatus.CANCELED) {
+    where.status = ExpenseStatus.CANCELED;
     where.isPaid = false;
+  } else if (status === ExpenseStatus.OVERDUE) {
   } else if (status === ExpenseStatus.PENDING) {
     where.dueDate = { gt: now, lt: addDays(now, 7) };
     where.isPaid = false;
-  } else if (status === ExpenseStatus["ON DAY"]) {
+  } else if (status === ExpenseStatus["ON_DAY"]) {
     where.dueDate = { gt: addDays(now, 7) };
     where.isPaid = false;
   }

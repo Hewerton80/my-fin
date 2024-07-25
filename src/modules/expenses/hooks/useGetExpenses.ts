@@ -9,12 +9,12 @@ import {
 } from "@/shared/parseJsonToSearchParams";
 import {
   ExpenseQueryKeys,
-  ExpenseStatus,
   ExpenseWithComputedFields,
   IGetExpensesQueryParams,
 } from "../types";
 import { isNumberable } from "@/shared/isType";
 import { useDebouncedCallback } from "use-debounce";
+import { ExpenseStatus } from "@prisma/client";
 
 export function useGetExpenses() {
   const { apiBase } = useAxios();

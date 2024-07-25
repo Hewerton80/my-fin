@@ -29,6 +29,14 @@ enum TransitionType {
     RECEIPT
 }
 
+enum ExpenseStatus {
+    OVERDUE
+    PENDING
+    ON_DAY
+    PAID
+    CANCELED
+}
+
 model User {
     id                String              @id @default(cuid())
     email             String              @unique
@@ -47,6 +55,7 @@ model Expense {
     description        String?
     amount             Float?
     isPaid             Boolean             @default(false)
+    status             ExpenseStatus?
     dueDate            DateTime?
     registrationDate   DateTime?
     creditCardId       String?

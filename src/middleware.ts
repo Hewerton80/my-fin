@@ -21,7 +21,11 @@ export async function middleware(request: NextRequest) {
   console.log({ pathname });
 
   const isPrivateEndpoints =
-    pathname.startsWith("/api") && !pathname.includes("/auth");
+    pathname.startsWith("/api") &&
+    !pathname.includes("/auth") &&
+    !pathname.includes("/cron");
+
+  console.log({ isPrivateEndpoints });
   if (isPrivateEndpoints) {
     const { error } = await AuthService.verifyJWT(request);
     if (error) {

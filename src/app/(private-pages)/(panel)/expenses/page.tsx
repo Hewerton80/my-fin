@@ -11,15 +11,14 @@ import { useGetExpenses } from "@/modules/expenses/hooks/useGetExpenses";
 import { getCurrencyFormat } from "@/shared/getCurrencyFormat";
 import { format } from "date-fns/format";
 import { ModalExpenseForm } from "../../../../modules/expenses/components/ModalExpenseForm";
-import {
-  ExpenseStatus,
-  ExpenseWithComputedFields,
-} from "@/modules/expenses/types";
+import { ExpenseWithComputedFields } from "@/modules/expenses/types";
 import { TableExpenseActionsButtons } from "@/modules/expenses/components/TableExpenseActionsButtons";
 import { capitalizeFisrtLetter } from "@/shared/string";
 import { ExpenseUtils } from "@/modules/expenses/utils";
 import { Input } from "@/components/ui/forms/inputs/Input";
 import { Tabs } from "@/components/ui/navigation/Tabs";
+import { ExpenseStatus } from "@prisma/client";
+import { twMerge } from "tailwind-merge";
 
 export default function ExpensesPage() {
   const {
@@ -50,19 +49,32 @@ export default function ExpensesPage() {
         label: "Nome",
         field: "name",
         onParse: (expense) => (
-          <>
+          <span
+            className={twMerge(
+              expense?.status === ExpenseStatus.CANCELED && "line-through"
+            )}
+          >
             {expense?.category?.iconName
               ? `${expense?.category?.iconName} `
               : ""}
             {expense?.name}
-          </>
+          </span>
         ),
       },
       {
         label: "Amount",
         field: "amount",
-        onParse: (expense) =>
-          isNumber(expense?.amount) ? getCurrencyFormat(expense?.amount!) : "-",
+        onParse: (expense) => (
+          <span
+            className={twMerge(
+              expense?.status === ExpenseStatus.CANCELED && "line-through"
+            )}
+          >
+            {isNumber(expense?.amount)
+              ? getCurrencyFormat(expense?.amount!)
+              : "-"}
+          </span>
+        ),
       },
       {
         label: "Installments",

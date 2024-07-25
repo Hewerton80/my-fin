@@ -68,7 +68,10 @@ export async function PATCH(
     },
   };
 
-  let expenseData: Prisma.ExpenseUpdateInput = { transitionHistory };
+  let expenseData: Prisma.ExpenseUpdateInput = {
+    transitionHistory,
+    status: "PAID",
+  };
 
   if (isLastInstallment) {
     expenseData = { ...expenseData, isPaid: true };

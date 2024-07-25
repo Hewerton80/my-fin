@@ -2,7 +2,7 @@ import prisma from "@/lib/prisma";
 import { handleZodValidationError } from "@/lib/zodHelpers";
 import { CONSTANTS } from "@/shared/constants";
 import { endOfDay } from "date-fns/endOfDay";
-import { Frequency, PaymantType, Prisma } from "@prisma/client";
+import { ExpenseStatus, Frequency, PaymantType, Prisma } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { isNumber } from "@/shared/isType";
@@ -81,6 +81,7 @@ export async function POST(request: NextRequest) {
     };
 
     if (isPaid) {
+      createExpenseData.status = ExpenseStatus.PAID;
       createExpenseData.paymentType = paymentType as PaymantType;
       createExpenseData.transitionHistory = {
         create: { amount, paidAt: createExpenseData.registrationDate, userId },

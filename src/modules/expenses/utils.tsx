@@ -1,17 +1,15 @@
-import { Expense } from "@prisma/client";
+import { Expense, ExpenseStatus } from "@prisma/client";
 import { isAfter } from "date-fns/isAfter";
 import { subDays } from "date-fns/subDays";
-import {
-  BadgeVariatnsType,
-  ExpenseStatus,
-  ExpenseWithComputedFields,
-} from "./types";
+import { BadgeVariatnsType, ExpenseWithComputedFields } from "./types";
 import { Badge } from "@/components/ui/dataDisplay/Badge";
+import { capitalizeFisrtLetter } from "@/shared/string";
 
 const getExpenseStatusByDueDate = (expense: ExpenseWithComputedFields) => {
   if (expense?.isPaid) return ExpenseStatus.PAID;
+  if (expense?.status === ExpenseStatus.CANCELED) return ExpenseStatus.CANCELED;
   const dueDate = expense?.dueDate;
-  if (!dueDate) return undefined;
+  if (!dueDate) return null;
 
   const now = new Date();
   if (dueDate && isAfter(now, dueDate)) {
@@ -20,7 +18,7 @@ const getExpenseStatusByDueDate = (expense: ExpenseWithComputedFields) => {
   if (dueDate && isAfter(now, subDays(dueDate, 7))) {
     return ExpenseStatus.PENDING;
   }
-  return ExpenseStatus["ON DAY"];
+  return ExpenseStatus["ON_DAY"];
 };
 
 const getWitchComputedFields = (
@@ -38,12 +36,13 @@ const getListWitchComputedFields = (expenses: Expense[]) => {
 };
 
 const getBadgeByStatus = (status: keyof typeof ExpenseStatus) => {
-  const statusLowerCase = status.toLowerCase();
+  const statusLowerCase = capitalizeFisrtLetter(status);
   const expenseBadge: BadgeVariatnsType = {
     PAID: <Badge variant="success">{statusLowerCase}</Badge>,
     OVERDUE: <Badge variant="danger">{statusLowerCase}</Badge>,
     PENDING: <Badge variant="warning">{statusLowerCase}</Badge>,
-    "ON DAY": <Badge variant="info">{statusLowerCase}</Badge>,
+    ON_DAY: <Badge variant="info">{statusLowerCase}</Badge>,
+    CANCELED: <Badge variant="dark">{statusLowerCase}</Badge>,
   };
   return expenseBadge[status];
 };

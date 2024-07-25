@@ -332,5 +332,9 @@ export async function main() {
   //   });
   //   console.log(`Group Category ${groupCategory.name}`);
   // }
+  // await prisma.expense.updateMany({
+  //   where: { isPaid: true },
+  //   data: { status: "PAID" },
+  // });
 }
 main();

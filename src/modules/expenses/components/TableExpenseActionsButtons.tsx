@@ -4,14 +4,15 @@ import { Dropdown } from "@/components/ui/overlay/Dropdown/Dropdown";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { FaPen, FaClone } from "react-icons/fa";
 import { MdPaid, MdHistory } from "react-icons/md";
-import { ExpenseStatus, ExpenseWithComputedFields } from "../types";
-import { memo, useCallback, useState } from "react";
+import { ExpenseWithComputedFields } from "../types";
+import { memo, useCallback, useMemo, useState } from "react";
 import { usePayExpense } from "../hooks/usePayExpense";
 import { Modal } from "@/components/ui/overlay/Modal";
 import { Controller } from "react-hook-form";
 import { Input } from "@/components/ui/forms/inputs/Input";
 import { Button } from "@/components/ui/buttons/Button";
 import Link from "next/link";
+import { ExpenseStatus } from "@prisma/client";
 
 type OnClickType = (expenseId: string) => void;
 
@@ -48,6 +49,15 @@ export const TableExpenseActionsButtons = memo(
       resetPayExpenseForm({ paidAt: "" });
     }, [resetPayExpenseForm]);
 
+    const showPayOption = useMemo(() => {
+      return (
+        !expense?.isPaid &&
+        ![ExpenseStatus["ON_DAY"], ExpenseStatus["CANCELED"]].includes(
+          expense?.status as any
+        )
+      );
+    }, [expense]);
+
     return (
       <>
         <Dropdown.Root>
@@ -58,16 +68,15 @@ export const TableExpenseActionsButtons = memo(
             />
           </Dropdown.Trigger>
           <Dropdown.Content>
-            {!expense?.isPaid &&
-              expense?.status !== ExpenseStatus["ON DAY"] && (
-                <Dropdown.Item
-                  onClick={() => setShowModalPaidAt(true)}
-                  className="gap-2"
-                >
-                  <MdPaid />
-                  pay
-                </Dropdown.Item>
-              )}
+            {showPayOption && (
+              <Dropdown.Item
+                onClick={() => setShowModalPaidAt(true)}
+                className="gap-2"
+              >
+                <MdPaid />
+                pay
+              </Dropdown.Item>
+            )}
             <Dropdown.Item asChild className="gap-2">
               <Link href={`/transitions?expenseId=${expense?.id}`}>
                 <MdHistory />
