@@ -12,7 +12,11 @@ const Root = (
   ref?: any
 ) => {
   return (
-    <RadixTabs.Root ref={ref} className={twMerge("", className)} {...restProps}>
+    <RadixTabs.Root
+      ref={ref}
+      className={twMerge("overflow-x-auto", className)}
+      {...restProps}
+    >
       {children}
     </RadixTabs.Root>
   );
@@ -26,7 +30,8 @@ const List = (
     <RadixTabs.List
       ref={ref}
       className={twMerge(
-        "inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground",
+        "inline-flex h-10 items-center justify-center",
+        "rounded-md bg-muted p-1 text-muted-foreground",
         className
       )}
       {...restProps}

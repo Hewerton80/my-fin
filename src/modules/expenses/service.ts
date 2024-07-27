@@ -55,6 +55,7 @@ const getListByUserId = async (
       userId,
       OR: [{ name: { contains: keyword } }],
       status,
+
       // ...getExpenseWhereInputByStatus(status),
     },
     orderBy: [{ isPaid: "asc" }, { dueDate: "asc" }],

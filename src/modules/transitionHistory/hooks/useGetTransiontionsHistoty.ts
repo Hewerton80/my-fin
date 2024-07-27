@@ -138,6 +138,17 @@ export function useGetTransiontionsHistoty() {
     [updateTransitionHistorysQueryParams]
   );
 
+  const changeDateRange = useCallback(
+    ({ from, to }: { from?: Date; to?: Date }) => {
+      updateTransitionHistorysQueryParams({
+        currentPage: 1,
+        startPaidAt: from ? from.toISOString() : "",
+        endPaidAt: to ? to.toISOString() : "",
+      });
+    },
+    [updateTransitionHistorysQueryParams]
+  );
+
   return {
     transitionsHistory,
     isLoadingTransitionsHistory,
@@ -147,6 +158,7 @@ export function useGetTransiontionsHistoty() {
     changeSearcheInput,
     refetchTransitionHistorys,
     changeTransitionHistoryType,
+    changeDateRange,
     goToPage,
   };
 }

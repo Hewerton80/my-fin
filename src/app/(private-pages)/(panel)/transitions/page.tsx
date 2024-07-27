@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/dataDisplay/DataTable";
 import { Calendar } from "@/components/ui/forms/Calendar";
 import { DatePicker } from "@/components/ui/forms/DatePicker/DatePicker";
+import { DateRangePicker } from "@/components/ui/forms/DateRangePicker";
 import { Input } from "@/components/ui/forms/inputs/Input";
 import { Tabs } from "@/components/ui/navigation/Tabs";
 import { useGetTransiontionsHistoty } from "@/modules/transitionHistory/hooks/useGetTransiontionsHistoty";
@@ -29,6 +30,7 @@ export default function TranstitonsPage() {
     changeTransitionHistoryType,
     changeSearcheInput,
     refetchTransitionHistorys,
+    changeDateRange,
     goToPage,
   } = useGetTransiontionsHistoty();
 
@@ -80,11 +82,8 @@ export default function TranstitonsPage() {
     []
   );
 
-  const [date, setDate] = useState<Date>();
-
   return (
     <>
-      <DatePicker date={date} onChange={setDate} />
       <Card.Root>
         <Card.Header>
           <Card.Title>Historic Transtitons</Card.Title>
@@ -116,6 +115,22 @@ export default function TranstitonsPage() {
                 ))}
               </Tabs.List>
             </Tabs.Root>
+            <DateRangePicker
+              rangeDate={{
+                from: transionHistoriesQueryParams?.startPaidAt
+                  ? new Date(transionHistoriesQueryParams?.startPaidAt)
+                  : undefined,
+                to: transionHistoriesQueryParams?.endPaidAt
+                  ? new Date(transionHistoriesQueryParams?.endPaidAt)
+                  : undefined,
+              }}
+              onChange={(rangeDate) => {
+                changeDateRange({
+                  from: rangeDate?.from,
+                  to: rangeDate?.to,
+                });
+              }}
+            />
             <div className="ml-auto w-full sm:w-auto">
               <Input
                 value={searchTransitionHistoryValue}
