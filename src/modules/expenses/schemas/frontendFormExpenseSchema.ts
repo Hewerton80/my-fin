@@ -22,11 +22,12 @@ const frontendFormExpenseSchema = z
       .nullable(),
     isPaid: z
       .boolean()
-      .nullable()
       .refine(
         (isPaid) => isBoolean(isPaid),
         VALIDATION_ERROR_MESSAGES.REQUIRED_FIELD
-      ),
+      )
+      .optional()
+      .nullable(),
     paymentType: z.string().nullable().optional(),
     frequency: z
       .string()
@@ -83,8 +84,10 @@ export const payFrontendExpenseSchema = z.object({
 });
 
 export const createFrontendExpenseSchema = frontendFormExpenseSchema;
+
 type InferBaseExpenseFormSchema = z.infer<typeof frontendFormExpenseSchema>;
 type InferCreateExpenseFormSchema = z.infer<typeof createFrontendExpenseSchema>;
+
 export type ExpenseFormValues = InferBaseExpenseFormSchema &
   InferCreateExpenseFormSchema;
 

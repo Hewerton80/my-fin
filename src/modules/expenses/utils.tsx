@@ -5,8 +5,10 @@ import { BadgeVariatnsType, ExpenseWithComputedFields } from "./types";
 import { Badge } from "@/components/ui/dataDisplay/Badge";
 import { capitalizeFisrtLetter } from "@/shared/string";
 
-const getExpenseStatusByDueDate = (expense: ExpenseWithComputedFields) => {
-  if (expense?.isPaid) return ExpenseStatus.PAID;
+const getExpenseStatusByDueDate = (
+  expense: Partial<ExpenseWithComputedFields>
+) => {
+  if (expense?.status === ExpenseStatus.PAID) return ExpenseStatus.PAID;
   if (expense?.status === ExpenseStatus.CANCELED) return ExpenseStatus.CANCELED;
   const dueDate = expense?.dueDate;
   if (!dueDate) return null;
@@ -32,7 +34,8 @@ const getWitchComputedFields = (
 };
 
 const getListWitchComputedFields = (expenses: Expense[]) => {
-  return expenses?.map((expense) => getWitchComputedFields(expense));
+  // return expenses?.map((expense) => getWitchComputedFields(expense));
+  return expenses;
 };
 
 const getBadgeByStatus = (status: keyof typeof ExpenseStatus) => {
@@ -50,5 +53,6 @@ const getBadgeByStatus = (status: keyof typeof ExpenseStatus) => {
 export const ExpenseUtils = {
   getListWitchComputedFields,
   getWitchComputedFields,
+  getExpenseStatusByDueDate,
   getBadgeByStatus,
 };

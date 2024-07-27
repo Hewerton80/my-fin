@@ -7,9 +7,14 @@ import { Prisma } from "@prisma/client";
 import { z } from "zod";
 import { updateApiExpenseSchema } from "@/modules/expenses/schemas/apiFormExpenseSchema";
 import { AuthService } from "@/modules/auth/service";
+import { ExpenseUtils } from "@/modules/expenses/utils";
 
-const { USER_HAS_NO_PERMISSION, USER_NOT_FOUND, SUB_CATEGORY_NOT_FOUND } =
-  CONSTANTS.API_RESPONSE_MESSAGES;
+const {
+  USER_HAS_NO_PERMISSION,
+  USER_NOT_FOUND,
+  SUB_CATEGORY_NOT_FOUND,
+  EXPENSE_NOT_FOUND,
+} = CONSTANTS.API_RESPONSE_MESSAGES;
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
@@ -50,24 +55,43 @@ export async function PATCH(
     return NextResponse.json(handleZodValidationError(error), { status: 400 });
   }
   try {
-    const { name, categoryId, description, amount } = expense;
+    const currentExpense = await ExpenseServices.getOneById(params?.id);
 
-    let createExpenseData: any = {
+    if (!currentExpense) {
+      return NextResponse.json({ message: EXPENSE_NOT_FOUND }, { status: 404 });
+    }
+
+    const { name, categoryId, description, amount, registrationDate } = expense;
+
+    let updateExpenseData: any = {
       userId,
       categoryId,
       name,
       description,
       amount,
+      registrationDate: registrationDate
+        ? new Date(`${registrationDate!} 12:00`)
+        : undefined,
     };
+    if (updateExpenseData?.registrationDate) {
+      updateExpenseData.dueDate =
+        await ExpenseServices.getDueDateByRegistrationDateAndCreditCardId(
+          updateExpenseData?.registrationDate,
+          currentExpense?.creditCardId!
+        );
+
+      updateExpenseData.status = ExpenseUtils.getExpenseStatusByDueDate({
+        dueDate: new Date(currentExpense?.dueDate!),
+        status: currentExpense?.status,
+      });
+    }
 
     await prisma.expense.update({
       where: { id: params?.id },
-      data: createExpenseData,
+      data: updateExpenseData,
     });
-    const expenseWitchComputedFields = await ExpenseServices.getOneById(
-      params?.id
-    );
-    return NextResponse.json(expenseWitchComputedFields, { status: 201 });
+
+    return NextResponse.json({ message: "ok" }, { status: 201 });
   } catch (error: any) {
     console.log(error);
     if (error instanceof Prisma.PrismaClientKnownRequestError) {

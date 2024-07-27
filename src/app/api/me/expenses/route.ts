@@ -9,6 +9,7 @@ import { isNumber } from "@/shared/isType";
 import { createApiExpenseSchema } from "@/modules/expenses/schemas/apiFormExpenseSchema";
 import { ExpenseServices } from "@/modules/expenses/service";
 import { AuthService } from "@/modules/auth/service";
+import { ExpenseUtils } from "@/modules/expenses/utils";
 
 const {
   USER_HAS_NO_PERMISSION,
@@ -102,39 +103,19 @@ export async function POST(request: NextRequest) {
     }
 
     if (createExpenseData?.creditCardId) {
-      const creditCard = await prisma.creditCard.findUnique({
-        where: { id: creditCardId },
-      });
-
-      if (!creditCard) {
-        return NextResponse.json(
-          { message: CREDIT_CARD_NOT_FOUND },
-          { status: 404 }
-        );
-      }
-
       createExpenseData.paymentType = PaymantType.CREDIT_CARD;
-      const _registrationDate = new Date(registrationDate!);
-      const currentDayOfMonth = _registrationDate.getDate();
-      const creditCardDueDay = creditCard?.dueDay!;
-      const creditCardInvoiceClosingDay = creditCard?.invoiceClosingDay!;
-      const handledDueDate = new Date(
-        _registrationDate.getFullYear(),
-        _registrationDate.getMonth(),
-        creditCardDueDay
-      );
-      if (creditCardInvoiceClosingDay <= creditCardDueDay) {
-        if (currentDayOfMonth > creditCardInvoiceClosingDay) {
-          handledDueDate.setMonth(handledDueDate.getMonth() + 1);
-        }
-      } else {
-        if (currentDayOfMonth > creditCardInvoiceClosingDay) {
-          handledDueDate.setMonth(handledDueDate.getMonth() + 2);
-        } else {
-          handledDueDate.setMonth(handledDueDate.getMonth() + 1);
-        }
+
+      createExpenseData.dueDate =
+        await ExpenseServices.getDueDateByRegistrationDateAndCreditCardId(
+          new Date(registrationDate!),
+          createExpenseData?.creditCardId
+        );
+
+      if (!isPaid) {
+        createExpenseData.status = ExpenseUtils.getExpenseStatusByDueDate({
+          dueDate: createExpenseData.dueDate,
+        });
       }
-      createExpenseData.dueDate = endOfDay(handledDueDate);
     }
     await prisma.expense.create({ data: createExpenseData });
     return NextResponse.json(expense, { status: 201 });

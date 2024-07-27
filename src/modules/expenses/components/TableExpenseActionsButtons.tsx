@@ -50,11 +50,8 @@ export const TableExpenseActionsButtons = memo(
     }, [resetPayExpenseForm]);
 
     const showPayOption = useMemo(() => {
-      return (
-        !expense?.isPaid &&
-        ![ExpenseStatus["ON_DAY"], ExpenseStatus["CANCELED"]].includes(
-          expense?.status as any
-        )
+      return [ExpenseStatus["OVERDUE"], ExpenseStatus["PENDING"]].includes(
+        expense?.status as any
       );
     }, [expense]);
 

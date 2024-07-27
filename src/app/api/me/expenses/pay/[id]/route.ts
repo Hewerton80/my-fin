@@ -9,8 +9,12 @@ import { z } from "zod";
 import { handleZodValidationError } from "@/lib/zodHelpers";
 import { AuthService } from "@/modules/auth/service";
 
-const { USER_HAS_NO_PERMISSION, EXPENSE_NOT_FOUND, EXPENSE_ALREADY_PAID } =
-  CONSTANTS.API_RESPONSE_MESSAGES;
+const {
+  USER_HAS_NO_PERMISSION,
+  EXPENSE_NOT_FOUND,
+  EXPENSE_IS_CANCELED,
+  EXPENSE_ALREADY_PAID,
+} = CONSTANTS.API_RESPONSE_MESSAGES;
 
 export async function PATCH(
   request: NextRequest,
@@ -36,14 +40,19 @@ export async function PATCH(
   const expense = await prisma.expense.findUnique({
     where: { id: params?.id, userId },
   });
+
   if (!expense) {
     return NextResponse.json({ message: EXPENSE_NOT_FOUND }, { status: 404 });
   }
-  if (expense?.isPaid) {
+
+  if (expense?.status === "PAID") {
     return NextResponse.json(
       { message: EXPENSE_ALREADY_PAID },
       { status: 400 }
     );
+  }
+  if (expense?.status === "CANCELED") {
+    return NextResponse.json({ message: EXPENSE_IS_CANCELED }, { status: 400 });
   }
 
   const frequency = expense?.frequency;
@@ -70,11 +79,10 @@ export async function PATCH(
 
   let expenseData: Prisma.ExpenseUpdateInput = {
     transitionHistory,
-    status: "PAID",
   };
 
   if (isLastInstallment) {
-    expenseData = { ...expenseData, isPaid: true };
+    expenseData = { ...expenseData, isPaid: true, status: "PAID" };
   } else if (hasInstallments && !isLastInstallment) {
     expenseData = {
       ...expenseData,
@@ -83,7 +91,7 @@ export async function PATCH(
   }
 
   if (frequency === Frequency.DO_NOT_REPEAT) {
-    expenseData = { ...expenseData, isPaid: true };
+    expenseData = { ...expenseData, isPaid: true, status: "PAID" };
   }
   if (dueDate && frequency && !isLastInstallment) {
     const newDueDate = new Date(dueDate);
@@ -99,6 +107,11 @@ export async function PATCH(
         break;
     }
     expenseData = { ...expenseData, dueDate: newDueDate };
+  }
+  if (expenseData?.dueDate && expenseData?.status !== "PAID") {
+    expenseData.status = ExpenseUtils.getExpenseStatusByDueDate({
+      dueDate: new Date(expenseData?.dueDate as Date),
+    });
   }
   try {
     const updatedExpense = await prisma.expense.update({
