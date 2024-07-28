@@ -15,17 +15,15 @@ import { getCurrencyFormat } from "@/shared/getCurrencyFormat";
 import { useMemo } from "react";
 import { TbCurrencyReal } from "react-icons/tb";
 import Link from "next/link";
-import { IoEyeOutline } from "react-icons/io5";
+import { IoEyeOutline, IoPieChartOutline } from "react-icons/io5";
 import { capitalizeFisrtLetter } from "@/shared/string";
-import { Frequency } from "@prisma/client";
 import { LineChart } from "@/components/ui/charts/LineChart";
 import { BsGraphUp } from "react-icons/bs";
-import { IoPieChartOutline } from "react-icons/io5";
 import { IconButton } from "@/components/ui/buttons/IconButton";
 import { isNumber } from "@/shared/isType";
 import { twMerge } from "tailwind-merge";
-import { FaChevronDown } from "react-icons/fa";
-import { FaChevronUp } from "react-icons/fa";
+import { FaLongArrowAltUp } from "react-icons/fa";
+
 import assets from "../../../../../assets.json";
 
 export default function HomePage() {
@@ -36,12 +34,12 @@ export default function HomePage() {
     return dashboard?.categoryInsights;
   }, [dashboard]);
 
-  const creditCardInsights = useMemo(() => {
-    return dashboard?.creditCardInsights;
+  const paidCreditCardExpensesInsights = useMemo(() => {
+    return dashboard?.paidCreditCardExpensesInsights;
   }, [dashboard]);
 
-  const frequencyInsights = useMemo(() => {
-    return dashboard?.frequencyInsights;
+  const oweCreditCardExpensesInsights = useMemo(() => {
+    return dashboard?.oweCreditCardExpensesInsights;
   }, [dashboard]);
 
   const historicInsights = useMemo(() => {
@@ -146,7 +144,7 @@ export default function HomePage() {
       {Number(totalPaymentsAmount) > 0 && (
         <CardStats.Root className="col-span-12 md:col-span-4">
           <CardStats.Header icon={<TbCurrencyReal />}>
-            {"Total expenses's amount"}
+            Total paid expenses amount
           </CardStats.Header>
           <CardStats.Body>
             <span className="text-lg md:text-2xl font-bold">
@@ -159,7 +157,7 @@ export default function HomePage() {
       {Number(totalReceiptsAmount) > 0 && (
         <CardStats.Root className="col-span-12 md:col-span-4">
           <CardStats.Header icon={<TbCurrencyReal />}>
-            {"Total receipts's amount"}
+            Total receipts amount
           </CardStats.Header>
           <CardStats.Body>
             <span className="text-lg md:text-2xl font-bold">
@@ -180,22 +178,24 @@ export default function HomePage() {
                 proft! < 0 && "text-danger"
               )}
             >
+              {proft! > 0 && <FaLongArrowAltUp className="text-xl" />}
+              {proft! < 0 && (
+                <FaLongArrowAltUp className="text-xl rotate-180" />
+              )}
               {getCurrencyFormat(proft!)}
-              {proft! > 0 && <FaChevronUp className="text-xs" />}
-              {proft! < 0 && <FaChevronDown className="text-xs" />}
             </span>
           </CardStats.Body>
         </CardStats.Root>
       )}
 
-      {creditCardInsights && (
+      {paidCreditCardExpensesInsights && (
         <CardStats.Root className="col-span-12 md:col-span-6">
           <CardStats.Header icon={<IoPieChartOutline />}>
-            Credit Card
+            Total Paid Credit Card expenses amount
           </CardStats.Header>
           <CardStats.Body>
             <PieChart
-              data={creditCardInsights?.map((insight) => ({
+              data={paidCreditCardExpensesInsights?.map((insight) => ({
                 amount: insight?.amount,
                 name: insight?.name,
                 fill: insight?.color,
@@ -204,23 +204,23 @@ export default function HomePage() {
           </CardStats.Body>
         </CardStats.Root>
       )}
-      {frequencyInsights && (
+      {oweCreditCardExpensesInsights && (
         <CardStats.Root className="col-span-12 md:col-span-6">
           <CardStats.Header icon={<IoPieChartOutline />}>
-            Expense Frequency
+            Total Owe Credit Card expenses amount
           </CardStats.Header>
           <CardStats.Body>
             <PieChart
-              data={frequencyInsights?.map((insight) => ({
+              data={oweCreditCardExpensesInsights?.map((insight) => ({
                 amount: insight?.amount,
-                name: capitalizeFisrtLetter(
-                  insight?.name || Frequency.DO_NOT_REPEAT
-                ),
+                name: insight?.name,
+                fill: insight?.color,
               }))}
             />
           </CardStats.Body>
         </CardStats.Root>
       )}
+
       {historicInsights && (
         <CardStats.Root className="col-span-12">
           <CardStats.Header icon={<BsGraphUp />}>

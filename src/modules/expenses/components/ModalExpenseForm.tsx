@@ -119,7 +119,7 @@ export function ModalExpenseForm({
         id: isCloning ? "" : currentExpense?.id || "",
         name: currentExpense?.name || "",
         amount: currentExpense?.amount || null,
-        isPaid: Boolean(currentExpense?.isPaid),
+        isPaid: isCloning ? null : Boolean(currentExpense?.isPaid),
         paymentType: currentExpense?.paymentType || null,
         frequency: currentExpense?.frequency || null,
         totalInstallments: currentExpense?.totalInstallments || null,

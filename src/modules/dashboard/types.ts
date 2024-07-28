@@ -17,7 +17,9 @@ export interface CreditCardInsights extends BaseInsights {
   color?: string;
 }
 
-export interface FrequencyInsights extends BaseInsights {}
+export interface ExpenseStatusInsights extends BaseInsights {
+  color?: string;
+}
 
 export interface PaymentTypeInsights extends BaseInsights {}
 
@@ -31,8 +33,8 @@ export interface HistoricReceiptsInsights extends BaseInsights {}
 
 export interface Dashboard {
   categoryInsights: CategoryInsights[];
-  creditCardInsights: CreditCardInsights[];
+  paidCreditCardExpensesInsights: CreditCardInsights[];
+  oweCreditCardExpensesInsights: CreditCardInsights[];
   paymentTypeInsights: PaymentTypeInsights[];
-  frequencyInsights: FrequencyInsights[];
   historicInsights: HistoricInsights[];
 }
