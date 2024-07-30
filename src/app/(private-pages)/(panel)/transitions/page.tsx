@@ -86,7 +86,7 @@ export default function TranstitonsPage() {
     <>
       <Card.Root>
         <Card.Header>
-          <Card.Title>Historic Transtitons</Card.Title>
+          <Card.Title>Historic Transitions</Card.Title>
           <Card.Actions>
             {/* <Button onClick={() => setShowExpenseFormModal(true)}>
               Add Expense
@@ -115,23 +115,24 @@ export default function TranstitonsPage() {
                 ))}
               </Tabs.List>
             </Tabs.Root>
-            <DateRangePicker
-              rangeDate={{
-                from: transionHistoriesQueryParams?.startPaidAt
-                  ? new Date(transionHistoriesQueryParams?.startPaidAt)
-                  : undefined,
-                to: transionHistoriesQueryParams?.endPaidAt
-                  ? new Date(transionHistoriesQueryParams?.endPaidAt)
-                  : undefined,
-              }}
-              onChange={(rangeDate) => {
-                changeDateRange({
-                  from: rangeDate?.from,
-                  to: rangeDate?.to,
-                });
-              }}
-            />
-            <div className="ml-auto w-full sm:w-auto">
+
+            <div className="ml-auto flex items-center gap-2 sm:gap-2 w-full sm:w-auto">
+              <DateRangePicker
+                rangeDate={{
+                  from: transionHistoriesQueryParams?.startPaidAt
+                    ? new Date(transionHistoriesQueryParams?.startPaidAt)
+                    : undefined,
+                  to: transionHistoriesQueryParams?.endPaidAt
+                    ? new Date(transionHistoriesQueryParams?.endPaidAt)
+                    : undefined,
+                }}
+                onChange={(rangeDate) => {
+                  changeDateRange({
+                    from: rangeDate?.from,
+                    to: rangeDate?.to,
+                  });
+                }}
+              />
               <Input
                 value={searchTransitionHistoryValue}
                 onChange={(e) => changeSearcheInput(e.target.value)}

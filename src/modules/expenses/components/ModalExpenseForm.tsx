@@ -22,6 +22,10 @@ import { useGetExpense } from "../hooks/useGetExpense";
 import { format } from "date-fns/format";
 import { Spinner } from "@/components/ui/feedback/Spinner";
 import { useCacheExpenses } from "../hooks/useCacheExpenses";
+import {
+  Picker,
+  PickerOption,
+} from "@/components/ui/forms/selects/Picker/Picker";
 
 interface ModalExpenseFormProps {
   expenseId?: string;
@@ -65,28 +69,31 @@ export function ModalExpenseForm({
     [expenseId, isCloning]
   );
 
-  const categoriesOptions = useMemo<SelectOption[]>(() => {
+  const categoriesOptions = useMemo<PickerOption[]>(() => {
     console.log({ currentExpense, groupCategories });
     if (currentExpense?.category?.id && !Array.isArray(groupCategories)) {
       return [
         {
-          value: currentExpense?.category?.id,
-          label: currentExpense?.category?.name!,
-          icon: currentExpense?.category?.iconName!,
+          value: currentExpense?.category?.id!,
+          label: `${currentExpense?.category?.iconName!} ${currentExpense
+            ?.category?.name!}`,
         },
       ];
     }
     if (!Array.isArray(groupCategories)) {
       return [];
     }
-    return groupCategories?.map((groupCategory) => ({
-      label: groupCategory.name,
-      options:
-        groupCategory?.categories?.map((category) => ({
-          label: category?.name,
-          value: category?.id,
-        })) || [],
-    })) as SelectOption[];
+    return (
+      groupCategories?.map((groupCategory) => ({
+        value: groupCategory.id!,
+        label: groupCategory.name!,
+        subOptions:
+          groupCategory?.categories?.map((category) => ({
+            label: category?.name!,
+            value: category?.id!,
+          })) || [],
+      })) || []
+    );
   }, [groupCategories, currentExpense]);
 
   const creditCardsOptions = useMemo<SelectOption[]>(() => {
@@ -187,15 +194,16 @@ export function ModalExpenseForm({
                     control={expenseFormControl}
                     name="categoryId"
                     render={({
-                      field: { onChange, ...restField },
+                      field: { value, onChange, ...restField },
                       fieldState,
                     }) => (
-                      <Select
+                      <Picker
                         {...restField}
-                        required
+                        value={value || ""}
                         isSearchable
+                        required
                         onFocus={handleFocusCategoriesSelect}
-                        onChange={(option) => onChange(option?.value)}
+                        onChange={onChange}
                         isLoading={isLoadingCategories}
                         label="Category"
                         options={categoriesOptions}

@@ -1,7 +1,7 @@
 import { SlWallet } from "react-icons/sl";
 import { CgHome } from "react-icons/cg";
 import { TbCategory2 } from "react-icons/tb";
-import { MdHistory } from "react-icons/md";
+import { HiMiniArrowsUpDown } from "react-icons/hi2";
 
 enum BASE_PATHS {
   BASE_AUTH_PATH = "auth",
@@ -31,15 +31,15 @@ export const navItems: INavItem[] = [
     icon: <SlWallet />,
   },
   {
+    title: "Transitions",
+    basePath: BASE_PATHS.BASE_TRANSITIONS_PATCH,
+    path: `/${BASE_PATHS.BASE_TRANSITIONS_PATCH}`,
+    icon: <HiMiniArrowsUpDown />,
+  },
+  {
     title: "Categories",
     basePath: BASE_PATHS.BASE_CATEGORIES_PATCH,
     path: `/${BASE_PATHS.BASE_CATEGORIES_PATCH}`,
     icon: <TbCategory2 />,
-  },
-  {
-    title: "Transitions",
-    basePath: BASE_PATHS.BASE_TRANSITIONS_PATCH,
-    path: `/${BASE_PATHS.BASE_TRANSITIONS_PATCH}`,
-    icon: <MdHistory />,
   },
 ];
