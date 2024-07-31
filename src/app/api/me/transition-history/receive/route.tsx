@@ -1,6 +1,6 @@
 import { handleZodValidationError } from "@/lib/zodHelpers";
 import { AuthService } from "@/modules/auth/service";
-import { frontendFormTransitionHistorySchema } from "@/modules/transitionHistory/schemas/frontendFormTransitionHistorySchema";
+import { apiFormTransitionHistoryReceiveSchema } from "@/modules/transitionHistory/schemas/apiFormTransitionHistoryReceiveSchema";
 import { CONSTANTS } from "@/shared/constants";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
@@ -21,11 +21,11 @@ export async function POST(request: NextRequest) {
   const userId = loggedUser?.id;
 
   const transitionRequest = (await request.json()) as z.infer<
-    typeof frontendFormTransitionHistorySchema
+    typeof apiFormTransitionHistoryReceiveSchema
   >;
 
   try {
-    frontendFormTransitionHistorySchema.parse(transitionRequest);
+    apiFormTransitionHistoryReceiveSchema.parse(transitionRequest);
   } catch (error: any) {
     return NextResponse.json(handleZodValidationError(error), { status: 400 });
   }

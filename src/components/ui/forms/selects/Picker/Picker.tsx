@@ -1,16 +1,14 @@
-import { forwardRef, ReactNode, useMemo, useState } from "react";
+import { forwardRef, useEffect, useMemo, useState } from "react";
 import * as SelectPrimitive from "@radix-ui/react-select";
-import { LuSearch } from "react-icons/lu";
 import { twMerge } from "tailwind-merge";
 import { FormLabel } from "../../FormLabel";
 import { FormHelperText } from "../../FormHelperText";
 import { Spinner } from "@/components/ui/feedback/Spinner";
-import { Input } from "../../inputs/Input";
 import { PickerPrimitive } from "./PickerPrimitive";
 
 export type PickerOption = {
   value: string;
-  label: ReactNode;
+  label: string;
   subOptions?: PickerOption[];
 };
 
@@ -20,12 +18,12 @@ interface SelectProps
   placeholder?: string;
   options?: PickerOption[];
   isLoading?: boolean;
-  isSearchable?: boolean;
   label?: string;
   error?: string;
   onChange?: (value: string) => void;
   onBlur?: () => void;
   onFocus?: () => void;
+  onOpen?: () => void;
 }
 
 export const Picker = forwardRef(
@@ -37,49 +35,32 @@ export const Picker = forwardRef(
       label,
       error,
       required,
-      isSearchable,
       value,
       onBlur,
       onFocus,
       onChange,
+      onOpen,
       ...restProps
     }: SelectProps,
     ref?: any
   ) => {
-    const [searchValue, setSearchValue] = useState("");
+    const [open, setOpen] = useState(false);
 
-    const filterdOptions = useMemo(() => {
-      if (!searchValue.trim()) return options;
-
-      let optionsTmp = [...options];
-
-      optionsTmp = optionsTmp.filter(({ ...option }) => {
-        if (option?.subOptions) {
-          return option.subOptions.some((subOption) =>
-            subOption?.label
-              ?.toString()
-              ?.toLowerCase()
-              ?.includes(searchValue.toLowerCase())
-          );
-        }
-        return option?.label
-          ?.toString()
-          ?.toLowerCase()
-          ?.includes(searchValue.toLowerCase());
-      });
-      console.log(optionsTmp);
-      return optionsTmp;
-    }, [options, searchValue]);
+    useEffect(() => {
+      if (open) {
+        onOpen?.();
+      }
+    }, [open, onOpen]);
 
     const handledOptionsElement = useMemo(() => {
-      return filterdOptions.map((option) => {
+      return options.map((option, i) => {
         if (option?.subOptions) {
           return (
-            <SelectPrimitive.Group key={option.value}>
+            <SelectPrimitive.Group key={option.value + i}>
               <PickerPrimitive.Label>{option.label}</PickerPrimitive.Label>
-              {option?.subOptions?.map((subOption) => (
+              {option?.subOptions?.map((subOption, j) => (
                 <PickerPrimitive.Item
-                  key={subOption.value}
+                  key={subOption.value + option.value + j}
                   value={subOption.value}
                 >
                   {subOption.label}
@@ -94,7 +75,7 @@ export const Picker = forwardRef(
           </PickerPrimitive.Item>
         );
       });
-    }, [filterdOptions]);
+    }, [options]);
 
     return (
       <div className={twMerge("flex flex-col w-full")}>
@@ -104,7 +85,8 @@ export const Picker = forwardRef(
           </FormLabel>
         )}
         <SelectPrimitive.Root
-          // open
+          open={open}
+          onOpenChange={setOpen}
           value={value}
           required={required}
           onValueChange={onChange}
@@ -138,17 +120,6 @@ export const Picker = forwardRef(
               position="popper"
             >
               <PickerPrimitive.ScrollUpButton />
-              {isSearchable && options?.length > 0 && (
-                <div className="flex items-center border-b pr-3">
-                  <Input
-                    value={searchValue}
-                    onChange={(e) => setSearchValue(e.target.value)}
-                    placeholder="Search..."
-                    leftIcon={<LuSearch />}
-                    inputClassName="border-none focus-visible:ring-0"
-                  />
-                </div>
-              )}
               <SelectPrimitive.Viewport
                 className={twMerge(
                   "p-1",

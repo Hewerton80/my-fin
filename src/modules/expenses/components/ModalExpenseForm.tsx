@@ -69,31 +69,28 @@ export function ModalExpenseForm({
     [expenseId, isCloning]
   );
 
-  const categoriesOptions = useMemo<PickerOption[]>(() => {
+  const categoriesOptions = useMemo<SelectOption[]>(() => {
     console.log({ currentExpense, groupCategories });
     if (currentExpense?.category?.id && !Array.isArray(groupCategories)) {
       return [
         {
-          value: currentExpense?.category?.id!,
-          label: `${currentExpense?.category?.iconName!} ${currentExpense
-            ?.category?.name!}`,
+          value: currentExpense?.category?.id,
+          label: currentExpense?.category?.name!,
+          icon: currentExpense?.category?.iconName!,
         },
       ];
     }
     if (!Array.isArray(groupCategories)) {
       return [];
     }
-    return (
-      groupCategories?.map((groupCategory) => ({
-        value: groupCategory.id!,
-        label: groupCategory.name!,
-        subOptions:
-          groupCategory?.categories?.map((category) => ({
-            label: category?.name!,
-            value: category?.id!,
-          })) || [],
-      })) || []
-    );
+    return groupCategories?.map((groupCategory) => ({
+      label: groupCategory.name,
+      options:
+        groupCategory?.categories?.map((category) => ({
+          label: category?.name,
+          value: category?.id,
+        })) || [],
+    })) as SelectOption[];
   }, [groupCategories, currentExpense]);
 
   const creditCardsOptions = useMemo<SelectOption[]>(() => {
@@ -197,13 +194,13 @@ export function ModalExpenseForm({
                       field: { value, onChange, ...restField },
                       fieldState,
                     }) => (
-                      <Picker
+                      <Select
                         {...restField}
                         value={value || ""}
-                        isSearchable
                         required
+                        isSearchable
                         onFocus={handleFocusCategoriesSelect}
-                        onChange={onChange}
+                        onChange={(option) => onChange(option?.value)}
                         isLoading={isLoadingCategories}
                         label="Category"
                         options={categoriesOptions}
