@@ -7,33 +7,38 @@ import { REGEX } from "@/shared/regex";
 const { REQUIRED_FIELD, MUST_BE_GREATER_THAN_ZERO, INVALID_DATE } =
   CONSTANTS.VALIDATION_ERROR_MESSAGES;
 
-const apiFormTransitionHistoryReceiveSchema = z.object({
-  name: z
-    .string({ required_error: REQUIRED_FIELD })
-    .min(1, REQUIRED_FIELD)
-    .trim()
-    .optional(),
-  amount: z
-    .number()
-    .min(1, REQUIRED_FIELD)
-    .refine((amount) => (isNumber(amount) ? amount > 0 : true), {
-      message: MUST_BE_GREATER_THAN_ZERO,
-    }),
-  paidAt: z
-    .string()
-    .min(1, REQUIRED_FIELD)
-    .refine(
-      (paidAt) =>
-        paidAt
-          ? paidAt.match(REGEX.isoDate) && isValidDate(new Date(paidAt))
-          : true,
-      INVALID_DATE
-    ),
-});
+export const frontendFormTransitionHistoryReceiveSchema = z
+  .object({
+    id: z.string().optional(),
+    expenseId: z.string().optional().nullable(),
+    name: z.string().min(1, REQUIRED_FIELD).trim().optional(),
+    amount: z
+      .number()
+      .min(1, REQUIRED_FIELD)
+      .refine((amount) => (isNumber(amount) ? amount > 0 : true), {
+        message: MUST_BE_GREATER_THAN_ZERO,
+      }),
+    // .nullable(),
+    paidAt: z
+      .string()
+      .min(1, REQUIRED_FIELD)
+      .refine(
+        (paidAt) =>
+          paidAt
+            ? paidAt.match(REGEX.isoDate) && isValidDate(new Date(paidAt))
+            : true,
+        INVALID_DATE
+      ),
+    isCloning: z.boolean().optional(),
+  })
+  .refine(({ expenseId, name }) => (expenseId ? true : name?.trim()), {
+    message: REQUIRED_FIELD,
+    path: ["name"],
+  });
 
-type InferBaseTransictionHistoryFormSchema = z.infer<
-  typeof apiFormTransitionHistoryReceiveSchema
+type InferBaseTransitionHistoryFormSchema = z.infer<
+  typeof frontendFormTransitionHistoryReceiveSchema
 >;
 
-export type InferCreateTransictionHistoryFormSchema =
-  InferBaseTransictionHistoryFormSchema;
+export type InferCreateTransitionHistoryFormSchema =
+  InferBaseTransitionHistoryFormSchema;

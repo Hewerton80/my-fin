@@ -119,6 +119,7 @@ export function useMutateExpense() {
     let handledExpenseFormValues: Partial<
       ExpenseFormValues & ExpenseWithComputedFields
     > = {};
+
     if (expenseFormValues.isCloning) {
       handledExpenseFormValues = expenseFormValues as Partial<
         ExpenseFormValues & ExpenseWithComputedFields
@@ -146,7 +147,7 @@ export function useMutateExpense() {
         return;
       }
       const handledExpenseFormValues = getHandledExpenseFormValues();
-      const isEdit = handledExpenseFormValues?.id;
+      const isEdit = !!handledExpenseFormValues?.id;
       const onSuccess = () => {
         callbacks?.onSuccess?.();
         toast.success(`Expense ${isEdit ? "edited" : "created"} successfully!`);

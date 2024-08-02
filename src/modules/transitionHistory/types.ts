@@ -18,6 +18,7 @@ export interface GetTransionsHistoryByCategoryParams {
 }
 
 export enum TransitionHistoryQueryKeys {
+  INFO = "INFO",
   LIST_BY_CATEGORY = "LIST_BY_CATEGORY",
   LIST = "LIST",
 }

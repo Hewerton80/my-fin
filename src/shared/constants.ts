@@ -35,6 +35,7 @@ export const CONSTANTS = {
     CREDIT_CARD_NOT_FOUND: "Credit card not found",
     CATEGORY_NOT_FOUND: "Category not found",
     SUB_CATEGORY_NOT_FOUND: "Sub category not found",
+    TRANSTION_HISTORY_NOT_FOUND: "Transition history not found",
     USER_ALREADY_EXISTS: "User with this email already exists",
     INTERNAL_SERVER_ERROR: "Internal server error",
     STUDENT_ALREADY_HAS_TRAINING_PLAN:

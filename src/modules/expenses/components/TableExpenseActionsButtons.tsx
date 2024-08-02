@@ -14,12 +14,10 @@ import { Button } from "@/components/ui/buttons/Button";
 import Link from "next/link";
 import { ExpenseStatus } from "@prisma/client";
 
-type OnClickType = (expenseId: string) => void;
-
 interface TableExpenseActionsButtonsProps {
   expense?: ExpenseWithComputedFields;
-  onClickToEdit?: OnClickType;
-  onClickToClone?: OnClickType;
+  onClickToEdit?: (expenseId: string) => void;
+  onClickToClone?: (expenseId: string) => void;
   onSuccess?: () => void;
 }
 

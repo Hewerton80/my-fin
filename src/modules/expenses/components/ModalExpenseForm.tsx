@@ -162,7 +162,7 @@ export function ModalExpenseForm({
 
   return (
     <>
-      <Modal.Root size="md" show={show} onClose={handleCloseModal}>
+      <Modal.Root size="xs" show={show} onClose={handleCloseModal}>
         <Modal.Title>{isEdit ? "Edit" : "Create"} Expense</Modal.Title>
 
         {isLoadingExpense ? (

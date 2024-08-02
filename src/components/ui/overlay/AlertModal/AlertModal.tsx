@@ -85,6 +85,7 @@ const AlertModal = forwardRef(() => {
       hideCloseIcon
       {...restProps}
     >
+      <Modal.Title></Modal.Title>
       <Modal.Body>
         <div className="flex flex-col items-center space-y-3">
           {title && (

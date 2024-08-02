@@ -1,23 +1,24 @@
 "use client";
 
+import { Button } from "@/components/ui/buttons/Button";
 import { Card } from "@/components/ui/cards/Card";
 import {
   DataTable,
   IColmunDataTable,
 } from "@/components/ui/dataDisplay/DataTable";
-import { Calendar } from "@/components/ui/forms/Calendar";
-import { DatePicker } from "@/components/ui/forms/DatePicker/DatePicker";
 import { DateRangePicker } from "@/components/ui/forms/DateRangePicker";
 import { Input } from "@/components/ui/forms/inputs/Input";
 import { Tabs } from "@/components/ui/navigation/Tabs";
+import { ModalTransitionHistory } from "@/modules/transitionHistory/components/ModalTransitionHistoryForm";
+import { TableTransitionActionsButtons } from "@/modules/transitionHistory/components/TableTransiotionActionsButtons";
 import { useGetTransiontionsHistoty } from "@/modules/transitionHistory/hooks/useGetTransiontionsHistoty";
 import { TransitionHistoryWitchConputedFields } from "@/modules/transitionHistory/types";
 import { getCurrencyFormat } from "@/shared/getCurrencyFormat";
 import { isNumber, isUndefined } from "@/shared/isType";
 import { capitalizeFisrtLetter } from "@/shared/string";
 import { TransitionType } from "@prisma/client";
-import { format } from "date-fns";
-import { useMemo, useState } from "react";
+import { format, set } from "date-fns";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 export default function TranstitonsPage() {
@@ -33,6 +34,15 @@ export default function TranstitonsPage() {
     changeDateRange,
     goToPage,
   } = useGetTransiontionsHistoty();
+
+  const [showTransitionFormModal, setShowTransitionFormModal] = useState(false);
+  const [transitionIdToEdit, setTransitionIdToEdit] = useState("");
+
+  useEffect(() => {
+    if (transitionIdToEdit) {
+      setShowTransitionFormModal(true);
+    }
+  }, [transitionIdToEdit]);
 
   const cols = useMemo<
     IColmunDataTable<TransitionHistoryWitchConputedFields>[]
@@ -78,9 +88,24 @@ export default function TranstitonsPage() {
             ? format(new Date(transitionHistory?.paidAt), "dd/MM/yyyy")
             : "-",
       },
+      {
+        label: "",
+        field: "actions",
+        onParse: (transitionHistory) => (
+          <TableTransitionActionsButtons
+            transitionHistory={transitionHistory}
+            onClickToEdit={() => setTransitionIdToEdit(transitionHistory?.id)}
+          />
+        ),
+      },
     ],
     []
   );
+
+  const handleCloseFormModal = useCallback(() => {
+    setShowTransitionFormModal(false);
+    setTransitionIdToEdit("");
+  }, []);
 
   return (
     <>
@@ -88,13 +113,12 @@ export default function TranstitonsPage() {
         <Card.Header>
           <Card.Title>Historic Transitions</Card.Title>
           <Card.Actions>
-            {/* <Button onClick={() => setShowExpenseFormModal(true)}>
-              Add Expense
-            </Button> */}
+            <Button onClick={() => setShowTransitionFormModal(true)}>
+              Add Transition
+            </Button>
           </Card.Actions>
         </Card.Header>
         <Card.Body>
-          {/* <Calendar mode="single" selected={date} onSelect={setDate} /> */}
           <div className="flex items-center gap-2 sm:gap-2 flex-wrap mb-4">
             <Tabs.Root
               value={transionHistoriesQueryParams?.type}
@@ -158,6 +182,12 @@ export default function TranstitonsPage() {
           />
         </Card.Body>
       </Card.Root>
+      <ModalTransitionHistory
+        show={showTransitionFormModal}
+        transictionHistoryId={transitionIdToEdit}
+        onClose={handleCloseFormModal}
+        onSuccess={refetchTransitionHistorys}
+      />
     </>
   );
 }
