@@ -45,6 +45,19 @@ enum TransitionHistoryStatus {
     CANCELED
 }
 
+enum TransitionHistoryFrequency {
+    DO_NOT_REPEAT
+    MONTHLY
+}
+
+enum TransitionHistoryPaymantType {
+    CREDIT_CARD
+    DEBIT_CARD
+    CASH
+    PIX
+    BANK_TRANSFER
+}
+
 model User {
     id                String              @id @default(cuid())
     email             String              @unique
@@ -81,16 +94,17 @@ model Expense {
 }
 
 model CreditCard {
-    id                String    @id @default(cuid())
+    id                String              @id @default(cuid())
     iconName          String?
     color             String?
     name              String
     dueDay            Int
     invoiceClosingDay Int
-    createdAt         DateTime  @default(now())
+    createdAt         DateTime            @default(now())
     userId            String
-    user              User      @relation(fields: [userId], references: [id])
+    user              User                @relation(fields: [userId], references: [id])
     expenses          Expense[]
+    TransitionHistory TransitionHistory[]
 }
 
 model GroupCategory {
@@ -102,29 +116,37 @@ model GroupCategory {
 }
 
 model Category {
-    id              String        @id @default(cuid())
-    name            String
-    description     String?
-    iconName        String?
-    groupCategory   GroupCategory @relation(fields: [groupCategoryId], references: [id])
-    groupCategoryId String
-    createdAt       DateTime      @default(now())
-    expenses        Expense[]
+    id                String              @id @default(cuid())
+    name              String
+    description       String?
+    iconName          String?
+    groupCategory     GroupCategory       @relation(fields: [groupCategoryId], references: [id])
+    groupCategoryId   String
+    createdAt         DateTime            @default(now())
+    expenses          Expense[]
+    TransitionHistory TransitionHistory[]
 }
 
 model TransitionHistory {
-    id                 String                   @id @default(cuid())
+    id                 String                        @id @default(cuid())
     name               String?
     amount             Float?
     totalInstallments  Int?
     currentInstallment Int?
-    status             TransitionHistoryStatus? @default(PAID)
-
-    type      TransitionType @default(PAYMENT)
-    expenseId String?
-    expense   Expense?       @relation(fields: [expenseId], references: [id])
-    userId    String?
-    user      User?          @relation(fields: [userId], references: [id])
-    paidAt    DateTime?
-    createdAt DateTime       @default(now())
+    status             TransitionHistoryStatus?      @default(PAID)
+    frequency          TransitionHistoryFrequency?
+    category           Category?                     @relation(fields: [categoryId], references: [id])
+    categoryId         String?
+    paymentType        TransitionHistoryPaymantType?
+    creditCardId       String?
+    creditCard         CreditCard?                   @relation(fields: [creditCardId], references: [id])
+    type               TransitionType                @default(PAYMENT)
+    expenseId          String?
+    expense            Expense?                      @relation(fields: [expenseId], references: [id])
+    userId             String?
+    user               User?                         @relation(fields: [userId], references: [id])
+    registrationDate   DateTime?
+    dueDate            DateTime?
+    paidAt             DateTime?
+    createdAt          DateTime                      @default(now())
 }

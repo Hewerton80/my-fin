@@ -9,6 +9,7 @@ import {
 import { DateRangePicker } from "@/components/ui/forms/DateRangePicker";
 import { Input } from "@/components/ui/forms/inputs/Input";
 import { Tabs } from "@/components/ui/navigation/Tabs";
+import { ExpenseUtils } from "@/modules/expenses/utils";
 import { ModalTransitionHistory } from "@/modules/transitionHistory/components/ModalTransitionHistoryForm";
 import { TableTransitionActionsButtons } from "@/modules/transitionHistory/components/TableTransiotionActionsButtons";
 import { useGetTransiontionsHistoty } from "@/modules/transitionHistory/hooks/useGetTransiontionsHistoty";
@@ -86,6 +87,22 @@ export default function TranstitonsPage() {
         onParse: (transitionHistory) =>
           transitionHistory?.paidAt
             ? format(new Date(transitionHistory?.paidAt), "dd/MM/yyyy")
+            : "-",
+      },
+      {
+        label: "Due Date",
+        field: "dueDate",
+        onParse: (transitionHistory) =>
+          transitionHistory?.dueDate
+            ? format(new Date(transitionHistory?.dueDate), "dd/MM/yyyy")
+            : "-",
+      },
+      {
+        label: "Status",
+        field: "status",
+        onParse: (transitionHistory) =>
+          transitionHistory?.status
+            ? ExpenseUtils.getBadgeByStatus(transitionHistory?.status)
             : "-",
       },
       {

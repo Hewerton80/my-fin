@@ -24,7 +24,7 @@ export function TableSkeleton({ numRows, columns }: TableSkeletonProps) {
     }));
   }, [columns]);
 
-  const data = useMemo(() => getRange(numRows), [numRows]);
+  const data = useMemo(() => getRange(0, numRows), [numRows]);
 
   return <DataTable columns={handledColumns} data={data} />;
 }

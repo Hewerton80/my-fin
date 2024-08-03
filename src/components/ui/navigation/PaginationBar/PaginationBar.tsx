@@ -42,7 +42,7 @@ export function PaginationBar({
       maximumNumberOfButtonsToNavigate;
     initialIndexPage = initialIndexPage > 0 ? initialIndexPage - 1 : 0;
 
-    return getRange(totalPages).slice(
+    return getRange(0, totalPages).slice(
       initialIndexPage,
       initialIndexPage + maximumNumberOfButtonsToNavigate
     );

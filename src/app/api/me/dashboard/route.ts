@@ -36,6 +36,7 @@ export async function GET(request: NextRequest) {
       JOIN TransitionHistory on Expense.id = TransitionHistory.expenseId
       JOIN  Category on Expense.categoryId  = Category.id
       WHERE TransitionHistory.paidAt BETWEEN ${startOfYearDate} and ${endOfYearDate} AND 
+      TransitionHistory.status = 'PAID' AND
       TransitionHistory.userId = ${userId} AND TransitionHistory.type = 'PAYMENT'
       GROUP BY Category.name;
   `) || [];
@@ -47,8 +48,9 @@ export async function GET(request: NextRequest) {
       JOIN TransitionHistory on Expense.id = TransitionHistory.expenseId
       JOIN  CreditCard on Expense.creditCardId  = CreditCard.id
       WHERE TransitionHistory.paidAt BETWEEN ${startOfYearDate} and ${endOfYearDate} AND 
+      TransitionHistory.status = 'PAID' AND
       TransitionHistory.userId = ${userId} AND TransitionHistory.type = 'PAYMENT' AND
-      status = 'PAID'
+      TransitionHistory.status = 'PAID'
       GROUP BY CreditCard.name;
   `) || [];
 
@@ -75,6 +77,7 @@ export async function GET(request: NextRequest) {
     SELECT DATE_FORMAT(TransitionHistory.paidAt, '%b') AS name, ROUND(SUM(TransitionHistory.amount), 2) as amount, CAST(COUNT(TransitionHistory.id) AS CHAR(32)) as count
     FROM TransitionHistory
     WHERE TransitionHistory.paidAt BETWEEN ${startOfYearDate} and ${endOfYearDate} AND 
+    TransitionHistory.status = 'PAID' AND
     TransitionHistory.userId = ${userId} AND TransitionHistory.type = 'PAYMENT'
     GROUP BY DATE_FORMAT(TransitionHistory.paidAt, '%b')
     ORDER BY DATE_FORMAT(TransitionHistory.paidAt, '%m')
@@ -85,6 +88,7 @@ export async function GET(request: NextRequest) {
    SELECT DATE_FORMAT(TransitionHistory.paidAt, '%b') AS name, ROUND(SUM(TransitionHistory.amount), 2) as amount, CAST(COUNT(TransitionHistory.id) AS CHAR(32)) as count
     FROM TransitionHistory
     WHERE TransitionHistory.paidAt BETWEEN ${startOfYearDate} and ${endOfYearDate} AND 
+    TransitionHistory.status = 'PAID' AND
     TransitionHistory.userId = ${userId} AND TransitionHistory.type = 'RECEIPT'
     GROUP BY DATE_FORMAT(TransitionHistory.paidAt, '%b')
     ORDER BY DATE_FORMAT(TransitionHistory.paidAt, '%m')
@@ -98,6 +102,7 @@ export async function GET(request: NextRequest) {
 	    ROUND(SUM(CASE WHEN type = 'PAYMENT' THEN amount ELSE 0 END), 2) AS paymentsAmount
     FROM TransitionHistory
     WHERE TransitionHistory.paidAt BETWEEN ${startOfYearDate} and ${endOfYearDate} AND 
+    TransitionHistory.status = 'PAID' AND
     TransitionHistory.userId = ${userId}    
     GROUP BY DATE_FORMAT(TransitionHistory.paidAt, '%b')
     ORDER BY DATE_FORMAT(TransitionHistory.paidAt, '%m')
