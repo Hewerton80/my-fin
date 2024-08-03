@@ -1,2 +1,0 @@
--- AlterTable
-ALTER TABLE `Expense` ADD COLUMN `status` ENUM('OVERDUE', 'PENDING', 'ON_DAY', 'PAID', 'CANCELED') NULL;

@@ -37,6 +37,14 @@ enum ExpenseStatus {
     CANCELED
 }
 
+enum TransitionHistoryStatus {
+    OVERDUE
+    PENDING
+    ON_DAY
+    PAID
+    CANCELED
+}
+
 model User {
     id                String              @id @default(cuid())
     email             String              @unique
@@ -105,16 +113,18 @@ model Category {
 }
 
 model TransitionHistory {
-    id                 String         @id @default(cuid())
+    id                 String                   @id @default(cuid())
     name               String?
     amount             Float?
     totalInstallments  Int?
     currentInstallment Int?
-    type               TransitionType @default(PAYMENT)
-    expenseId          String?
-    expense            Expense?       @relation(fields: [expenseId], references: [id])
-    userId             String?
-    user               User?          @relation(fields: [userId], references: [id])
-    paidAt             DateTime?
-    createdAt          DateTime       @default(now())
+    status             TransitionHistoryStatus? @default(PAID)
+
+    type      TransitionType @default(PAYMENT)
+    expenseId String?
+    expense   Expense?       @relation(fields: [expenseId], references: [id])
+    userId    String?
+    user      User?          @relation(fields: [userId], references: [id])
+    paidAt    DateTime?
+    createdAt DateTime       @default(now())
 }

@@ -120,7 +120,7 @@ export function ModalTransitionHistory({
                     return (
                       <Input
                         {...field}
-                        label="Purchase registration date"
+                        label="Paid date"
                         required
                         type="date"
                         error={fieldState.error?.message}
