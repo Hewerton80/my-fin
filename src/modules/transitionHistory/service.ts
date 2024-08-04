@@ -1,10 +1,10 @@
-import { parseOrderBy, prismaPagination } from "@/lib/prismaHelpers";
-import prisma from "@/lib/prisma";
+import { parseOrderBy, prismaPagination } from "../../lib/prismaHelpers";
+import prisma from "../../lib/prisma";
 import { Prisma, TransitionHistoryStatus } from "@prisma/client";
 import { TransitionHistoryWitchConputedFields } from "./types";
 import { TransitionType } from "@prisma/client";
 import { isValid as isValidDate } from "date-fns/isValid";
-import { CONSTANTS } from "@/shared/constants";
+import { CONSTANTS } from "../../shared/constants";
 import { endOfDay, isAfter, subDays } from "date-fns";
 
 const parseSearchParams = (searchParams: URLSearchParams) => {

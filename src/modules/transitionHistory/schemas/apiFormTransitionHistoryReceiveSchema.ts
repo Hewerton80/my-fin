@@ -55,6 +55,14 @@ export const apiFormTransitionHistorySchema = z.object({
     .refine((amount) => isNumber(amount) && amount > 0, {
       message: MUST_BE_GREATER_THAN_ZERO,
     }),
+  registrationDate: z
+    .string({ required_error: REQUIRED_FIELD })
+    .min(1, REQUIRED_FIELD)
+    .refine(
+      (registrationDate) => isValidDate(new Date(registrationDate)),
+      INVALID_DATE
+    )
+    .transform((registrationDate) => new Date(registrationDate)),
   frequency: z.string({ required_error: REQUIRED_FIELD }).nullable().optional(),
   totalInstallments: z
     .number({ invalid_type_error: MUST_BE_NUMBER })
@@ -80,14 +88,6 @@ export const apiFormTransitionHistorySchema = z.object({
     .string({ required_error: REQUIRED_FIELD })
     .nullable()
     .optional(),
-  registrationDate: z
-    .string({ required_error: REQUIRED_FIELD })
-    .min(1, REQUIRED_FIELD)
-    .refine(
-      (registrationDate) => isValidDate(new Date(registrationDate)),
-      INVALID_DATE
-    )
-    .transform((registrationDate) => new Date(registrationDate)),
 });
 
 export const createApiTransitionHistorySchema = apiFormTransitionHistorySchema

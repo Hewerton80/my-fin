@@ -22,7 +22,6 @@ const {
   USER_NOT_FOUND,
   CREDIT_CARD_NOT_FOUND,
   CATEGORY_NOT_FOUND,
-  SUB_CATEGORY_NOT_FOUND,
 } = CONSTANTS.API_RESPONSE_MESSAGES;
 
 export async function GET(request: NextRequest) {

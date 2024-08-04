@@ -17,7 +17,7 @@ import { TransitionHistoryWitchConputedFields } from "@/modules/transitionHistor
 import { getCurrencyFormat } from "@/shared/getCurrencyFormat";
 import { isNumber, isUndefined } from "@/shared/isType";
 import { capitalizeFisrtLetter } from "@/shared/string";
-import { TransitionType } from "@prisma/client";
+import { TransitionHistoryStatus, TransitionType } from "@prisma/client";
 import { format, set } from "date-fns";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { twMerge } from "tailwind-merge";
@@ -50,10 +50,21 @@ export default function TranstitonsPage() {
   >(
     () => [
       {
-        label: "Name",
+        label: "Nome",
         field: "name",
-        onParse: (transitionHistory) =>
-          transitionHistory?.name || transitionHistory?.expense?.name || "-",
+        onParse: (transitionHistory) => (
+          <span
+            className={twMerge(
+              transitionHistory?.status === TransitionHistoryStatus.CANCELED &&
+                "line-through"
+            )}
+          >
+            {transitionHistory?.category?.iconName
+              ? `${transitionHistory?.category?.iconName} `
+              : ""}
+            {transitionHistory?.name}
+          </span>
+        ),
       },
       {
         label: "Amount",

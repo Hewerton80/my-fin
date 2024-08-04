@@ -1,6 +1,6 @@
 import { useAlertModal } from "@/hooks/useAlertModal";
 import { useAxios } from "@/hooks/useAxios";
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { InferCreateTransitionHistoryFormSchema } from "../schemas/frontendFormTransitionHistorySchema";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -17,10 +17,17 @@ export function useMutateTransitionHistory() {
     useMemo<InferCreateTransitionHistoryFormSchema>(
       () => ({
         id: "",
-        expenseId: null,
         name: "",
         amount: 0,
-        paidAt: "",
+        registrationDate: "",
+        type: null,
+        categoryId: "",
+        description: "",
+        isPaid: null,
+        paymentType: null,
+        frequency: null,
+        totalInstallments: null,
+        creditCardId: "",
         isCloning: false,
       }),
       []
@@ -47,7 +54,7 @@ export function useMutateTransitionHistory() {
   } = useMutation({
     mutationFn: (
       transitionHistoryData: InferCreateTransitionHistoryFormSchema
-    ) => apiBase.post("/me/transition-history/receive", transitionHistoryData),
+    ) => apiBase.post("/me/transition-history", transitionHistoryData),
   });
 
   const isSubmittingTransitionHistory = useMemo(
@@ -55,6 +62,49 @@ export function useMutateTransitionHistory() {
       transitionHistoryFormState.isValidating || isCreatingTransitionHistory,
     [transitionHistoryFormState.isValidating, isCreatingTransitionHistory]
   );
+
+  const setValueOptions = useMemo(
+    () => ({ shouldDirty: true, shouldTouch: true }),
+    []
+  );
+
+  const clearCreditCardField = useCallback(() => {
+    setTransitionHistoryValue("creditCardId", "", setValueOptions);
+    clearTransitionHistoryErrors(["creditCardId"]);
+  }, [
+    setTransitionHistoryValue,
+    clearTransitionHistoryErrors,
+    setValueOptions,
+  ]);
+
+  useEffect(() => {
+    const subscription = watchTransitionHistory((_, { name }) => {
+      if (name === "type") {
+        setTransitionHistoryValue("isPaid", null, setValueOptions);
+        clearTransitionHistoryErrors(["isPaid"]);
+      }
+      if (name === "isPaid") {
+        setTransitionHistoryValue("paymentType", null, setValueOptions);
+        setTransitionHistoryValue("frequency", null, setValueOptions);
+        clearTransitionHistoryErrors(["frequency", "paymentType"]);
+        clearCreditCardField();
+      }
+      if (name === "paymentType") {
+        clearCreditCardField();
+      }
+      if (name === "frequency") {
+        setTransitionHistoryValue("totalInstallments", null, setValueOptions);
+        clearTransitionHistoryErrors(["totalInstallments"]);
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, [
+    setValueOptions,
+    clearTransitionHistoryErrors,
+    watchTransitionHistory,
+    clearCreditCardField,
+    setTransitionHistoryValue,
+  ]);
 
   const getHandledTransitionHistoryData = useCallback(() => {
     const transitionHistoryData = { ...getTransitionHistoryValues() };
