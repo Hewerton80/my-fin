@@ -85,7 +85,7 @@ export default function ExpensesPage() {
             : "-",
       },
       {
-        label: "Categories",
+        label: "Category",
         field: "category",
         onParse: (expense) => expense?.category?.name || "-",
       },

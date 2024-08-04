@@ -1,9 +1,13 @@
 "use client";
 import React, { useMemo, useCallback } from "react";
-// import { getBodyElement } from "../../../../utils/getBodyElement";
-import { ButtonGroup } from "../../dataDisplay/ButtonGroup";
 import { getRange } from "@/shared/getRange";
 import { Button } from "../../buttons/Button";
+import { IconButton } from "../../buttons/IconButton";
+import {
+  LuChevronLeft as ChevronLeft,
+  LuChevronRight as ChevronRight,
+  LuMoreHorizontal as MoreHorizontal,
+} from "react-icons/lu";
 
 export interface PaginationBarProps {
   currentPage: number;
@@ -64,39 +68,34 @@ export function PaginationBar({
     <div className="flex flex-col-reverse sm:flex-row items-center justify-between w-full gap-2">
       <span className="text-xs sm:text-sm">{paginationLabel}</span>
       {totalPages > 0 && (
-        <ButtonGroup>
-          <Button
-            variantStyle="primary-ghost"
+        <div className="flex gap-1 text-sm">
+          <IconButton
+            variantStyle="dark-ghost"
             // size="sm"
             onClick={() => handleChangePage(currentPage - 1)}
             disabled={currentPage === 1 || disabled}
-          >
-            {"<"}
-          </Button>
+            icon={<ChevronLeft />}
+          />
+
           {arrayPagesItens.map((page, i) => (
-            <Button
+            <IconButton
               key={i + "page"}
-              variantStyle={
-                currentPage === page + 1 ? "primary" : "primary-ghost"
-              }
-              // size="sm"
+              variantStyle={currentPage === page + 1 ? "outline" : "dark-ghost"}
               disabled={disabled}
               onClick={() =>
                 i + 1 !== currentPage && handleChangePage(page + 1)
               }
-            >
-              {page + 1}
-            </Button>
+              icon={<span className="text-sm">{page + 1}</span>}
+            />
           ))}
-          <Button
-            variantStyle="primary-ghost"
+          <IconButton
+            variantStyle="dark-ghost"
             // size="sm"
             onClick={() => handleChangePage(currentPage + 1)}
             disabled={currentPage === totalPages || disabled}
-          >
-            {">"}
-          </Button>
-        </ButtonGroup>
+            icon={<ChevronRight />}
+          />
+        </div>
       )}
     </div>
   );

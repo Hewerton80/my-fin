@@ -94,7 +94,7 @@ export default function TranstitonsPage() {
             : "-",
       },
       {
-        label: "Categories",
+        label: "Category",
         field: "category",
         onParse: (transitionHistory) =>
           transitionHistory?.category?.name || "-",
