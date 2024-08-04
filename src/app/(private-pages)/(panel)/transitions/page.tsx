@@ -34,6 +34,7 @@ export default function TranstitonsPage() {
     refetchTransitionHistorys,
     changeDateRange,
     goToPage,
+    changeTransitionHistoryStatus,
   } = useGetTransiontionsHistoty();
 
   const [showTransitionFormModal, setShowTransitionFormModal] = useState(false);
@@ -90,6 +91,26 @@ export default function TranstitonsPage() {
         onParse: ({ currentInstallment, totalInstallments }) =>
           isNumber(currentInstallment) && isNumber(totalInstallments)
             ? `${currentInstallment}/${totalInstallments}`
+            : "-",
+      },
+      {
+        label: "Categories",
+        field: "category",
+        onParse: (transitionHistory) =>
+          transitionHistory?.category?.name || "-",
+      },
+      {
+        label: "Credit Card",
+        field: "creditCard",
+        onParse: (transitionHistory) =>
+          transitionHistory?.creditCard?.name || "-",
+      },
+      {
+        label: "Frequency",
+        field: "frequency",
+        onParse: (transitionHistory) =>
+          transitionHistory?.frequency
+            ? capitalizeFisrtLetter(transitionHistory?.frequency)
             : "-",
       },
       {
@@ -152,7 +173,7 @@ export default function TranstitonsPage() {
               value={transionHistoriesQueryParams?.type}
               onValueChange={(value) => changeTransitionHistoryType(value)}
             >
-              <Tabs.List>
+              {/* <Tabs.List>
                 <Tabs.Trigger disabled={isLoadingTransitionsHistory} value="">
                   All
                 </Tabs.Trigger>
@@ -165,7 +186,26 @@ export default function TranstitonsPage() {
                     {capitalizeFisrtLetter(status)}
                   </Tabs.Trigger>
                 ))}
-              </Tabs.List>
+              </Tabs.List> */}
+              <Tabs.Root
+                value={transionHistoriesQueryParams?.status}
+                onValueChange={(value) => changeTransitionHistoryStatus(value)}
+              >
+                <Tabs.List>
+                  <Tabs.Trigger disabled={isLoadingTransitionsHistory} value="">
+                    All
+                  </Tabs.Trigger>
+                  {Object.values(TransitionHistoryStatus).map((status) => (
+                    <Tabs.Trigger
+                      disabled={isLoadingTransitionsHistory}
+                      key={status}
+                      value={status}
+                    >
+                      {capitalizeFisrtLetter(status)}
+                    </Tabs.Trigger>
+                  ))}
+                </Tabs.List>
+              </Tabs.Root>
             </Tabs.Root>
 
             <div className="ml-auto flex items-center gap-2 sm:gap-2 w-full sm:w-auto">

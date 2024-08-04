@@ -15,6 +15,7 @@ import {
 import { IPaginatedDocs } from "@/lib/prismaHelpers";
 import { useDebouncedCallback } from "use-debounce";
 import { isValid as isValidDate } from "date-fns/isValid";
+import { TransitionHistoryStatus } from "@prisma/client";
 
 export function useGetTransiontionsHistoty() {
   const { apiBase } = useAxios();
@@ -42,6 +43,10 @@ export function useGetTransiontionsHistoty() {
           endPaidAt && isValidDate(new Date(endPaidAt))
             ? (endPaidAt as string)
             : "",
+        status:
+          TransitionHistoryStatus?.[
+            searchParams.get("status") as TransitionHistoryStatus
+          ] || "",
       };
     }, [searchParams]);
 
@@ -86,7 +91,7 @@ export function useGetTransiontionsHistoty() {
     refetch();
   }, [transionHistoriesQueryParams, refetch]);
 
-  const updateTransitionHistorysQueryParams = useCallback(
+  const updateTransitionsHistoryQueryParams = useCallback(
     (newTransitionHistorysQueryParams: IGetTransionsHistoryParams) => {
       const mergedQueryParams = parseJsonToSearchParams({
         ...transionHistoriesQueryParams,
@@ -98,28 +103,35 @@ export function useGetTransiontionsHistoty() {
   );
 
   const refetchTransitionHistorys = useCallback(() => {
-    // updateTransitionHistorysQueryParams(newTransitionHistorysQueryParams || {});
+    // updateTransitionsHistoryQueryParams(newTransitionHistorysQueryParams || {});
     refetch();
   }, [refetch]);
 
   const goToPage = useCallback(
     (page: number) => {
-      updateTransitionHistorysQueryParams({ currentPage: page });
+      updateTransitionsHistoryQueryParams({ currentPage: page });
     },
-    [updateTransitionHistorysQueryParams]
+    [updateTransitionsHistoryQueryParams]
   );
 
   const changeSearcheInputDebounced = useDebouncedCallback(
     useCallback(
       (value: string) => {
-        updateTransitionHistorysQueryParams({
+        updateTransitionsHistoryQueryParams({
           currentPage: 1,
           keyword: value?.trim(),
         });
       },
-      [updateTransitionHistorysQueryParams]
+      [updateTransitionsHistoryQueryParams]
     ),
     1000
+  );
+
+  const changeTransitionHistoryStatus = useCallback(
+    (status: string) => {
+      updateTransitionsHistoryQueryParams({ currentPage: 1, status });
+    },
+    [updateTransitionsHistoryQueryParams]
   );
 
   const changeSearcheInput = useCallback(
@@ -133,20 +145,20 @@ export function useGetTransiontionsHistoty() {
 
   const changeTransitionHistoryType = useCallback(
     (type: string) => {
-      updateTransitionHistorysQueryParams({ currentPage: 1, type });
+      updateTransitionsHistoryQueryParams({ currentPage: 1, type });
     },
-    [updateTransitionHistorysQueryParams]
+    [updateTransitionsHistoryQueryParams]
   );
 
   const changeDateRange = useCallback(
     ({ from, to }: { from?: Date; to?: Date }) => {
-      updateTransitionHistorysQueryParams({
+      updateTransitionsHistoryQueryParams({
         currentPage: 1,
         startPaidAt: from ? from.toISOString() : "",
         endPaidAt: to ? to.toISOString() : "",
       });
     },
-    [updateTransitionHistorysQueryParams]
+    [updateTransitionsHistoryQueryParams]
   );
 
   return {
@@ -159,6 +171,7 @@ export function useGetTransiontionsHistoty() {
     refetchTransitionHistorys,
     changeTransitionHistoryType,
     changeDateRange,
+    changeTransitionHistoryStatus,
     goToPage,
   };
 }

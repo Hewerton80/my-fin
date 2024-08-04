@@ -31,14 +31,13 @@ export async function GET(request: NextRequest) {
 
   const insights =
     (await prisma.$queryRaw<CategoryInsights[]>`
-      SELECT Category.id, Category.name, Category.iconName, ROUND(SUM(TransitionHistory.amount), 2) as amount, CAST(COUNT(TransitionHistory.id) AS CHAR(32)) as count
-      FROM Expense
-      JOIN TransitionHistory on Expense.id = TransitionHistory.expenseId
-      JOIN  Category on Expense.categoryId  = Category.id
+  SELECT Category.id, Category.name, Category.iconName, ROUND(SUM(TransitionHistory.amount), 2) as amount, CAST(COUNT(TransitionHistory.id) AS CHAR(32)) as count
+      FROM TransitionHistory
+      JOIN  Category on TransitionHistory.categoryId  = Category.id
       WHERE TransitionHistory.paidAt BETWEEN ${startOfYearDate} and ${endOfYearDate} AND 
-      TransitionHistory.status = 'PAID' AND
-      TransitionHistory.userId = ${userId} AND TransitionHistory.type = 'PAYMENT'
-      GROUP BY Category.name;
+      TransitionHistory.status = 'PAID' AND TransitionHistory.userId = ${userId}
+      AND TransitionHistory.type = 'PAYMENT'
+      GROUP BY Category.id;
   `) || [];
 
   const paidCreditCardExpensesInsights =
@@ -48,10 +47,8 @@ export async function GET(request: NextRequest) {
       JOIN TransitionHistory on Expense.id = TransitionHistory.expenseId
       JOIN  CreditCard on Expense.creditCardId  = CreditCard.id
       WHERE TransitionHistory.paidAt BETWEEN ${startOfYearDate} and ${endOfYearDate} AND 
-      TransitionHistory.status = 'PAID' AND
-      TransitionHistory.userId = ${userId} AND TransitionHistory.type = 'PAYMENT' AND
-      TransitionHistory.status = 'PAID'
-      GROUP BY CreditCard.name;
+      TransitionHistory.status = 'PAID'  AND TransitionHistory.type = 'PAYMENT'
+      GROUP BY CreditCard.id;
   `) || [];
 
   const oweCreditCardExpensesInsights =
@@ -69,7 +66,7 @@ export async function GET(request: NextRequest) {
     WHERE Expense.dueDate <= ${endOfYearDate} AND 
     Expense.status <> 'PAID' AND Expense.status <> 'CANCELED' AND
     Expense.userId = ${userId}
-    GROUP BY CreditCard.name;
+    GROUP BY CreditCard.id;
   `) || [];
 
   const historicPaymentsInsights =

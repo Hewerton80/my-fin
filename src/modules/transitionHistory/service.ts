@@ -15,6 +15,8 @@ const parseSearchParams = (searchParams: URLSearchParams) => {
     keyword: searchParams.get("keyword")?.trim() || "",
     type: (searchParams.get("type")?.trim() as TransitionType) || undefined,
     expenseId: searchParams.get("expenseId")?.trim() || undefined,
+    status:
+      (searchParams.get("status") as TransitionHistoryStatus) || undefined,
     startPaidAt:
       startPaidAt && isValidDate(new Date(startPaidAt))
         ? (startPaidAt as string)
@@ -37,6 +39,7 @@ const getListByUserId = async (
     currentPage,
     perPage,
     keyword,
+    status,
     type,
     expenseId,
     startPaidAt,
@@ -54,6 +57,7 @@ const getListByUserId = async (
       userId,
       expenseId,
       type,
+      status,
       paidAt: { gte: startPaidAt, lte: endPaidAt },
       OR: [
         { name: { contains: keyword } },

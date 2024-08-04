@@ -4,27 +4,7 @@ import { ExpenseWithComputedFields } from "./types";
 import { parseOrderBy, prismaPagination } from "@/lib/prismaHelpers";
 import { ExpenseStatus, Prisma } from "@prisma/client";
 import { CONSTANTS } from "@/shared/constants";
-import { endOfDay, addDays } from "date-fns";
-
-// const getExpenseWhereInputByStatus = (status?: string) => {
-//   const where: Prisma.ExpenseWhereInput = {};
-
-//   if (!status || !ExpenseStatus?.[status as ExpenseStatus]) return where;
-
-//   const now = new Date();
-//   if (status === ExpenseStatus.PAID) {
-//     where.status = ExpenseStatus.PAID;
-//   } else if (status === ExpenseStatus.CANCELED) {
-//     where.status = ExpenseStatus.CANCELED;
-//   } else if (status === ExpenseStatus.OVERDUE) {
-//     where.dueDate = { lt: now };
-//   } else if (status === ExpenseStatus.PENDING) {
-//     where.dueDate = { gt: now, lt: addDays(now, 7) };
-//   } else if (status === ExpenseStatus["ON_DAY"]) {
-//     where.dueDate = { gt: addDays(now, 7) };
-//   }
-//   return where;
-// };
+import { endOfDay } from "date-fns";
 
 const parseSearchParams = (searchParams: URLSearchParams) => {
   return {

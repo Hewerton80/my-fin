@@ -71,6 +71,7 @@ export async function PATCH(
       amount: expense?.amount || null,
       totalInstallments: expense?.totalInstallments || null,
       currentInstallment: expense?.currentInstallment || null,
+      userId,
       paidAt: expenseUpdateData?.paidAt
         ? new Date(`${expenseUpdateData?.paidAt!} 12:00`)
         : undefined,

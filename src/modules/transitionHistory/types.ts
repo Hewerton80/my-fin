@@ -1,4 +1,4 @@
-import { TransitionHistory } from "@prisma/client";
+import { TransitionHistory, TransitionHistoryStatus } from "@prisma/client";
 import { ExpenseWithComputedFields } from "../expenses/types";
 import { IPaginateArgs } from "@/lib/prismaHelpers";
 import { TransitionType } from "@prisma/client";
@@ -15,6 +15,7 @@ export interface TransitionHistoryWitchConputedFields
 export interface IGetTransionsHistoryParams extends IPaginateArgs {
   keyword?: string;
   type?: TransitionType | string;
+  status?: TransitionHistoryStatus | string;
   startPaidAt?: string;
   endPaidAt?: string;
 }
