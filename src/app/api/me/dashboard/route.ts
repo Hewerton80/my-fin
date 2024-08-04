@@ -48,7 +48,7 @@ export async function GET(request: NextRequest) {
       JOIN  CreditCard on Expense.creditCardId  = CreditCard.id
       WHERE TransitionHistory.paidAt BETWEEN ${startOfYearDate} and ${endOfYearDate} AND 
       TransitionHistory.userId = ${userId} AND TransitionHistory.type = 'PAYMENT' AND
-      status = 'PAID'
+      Expense.status = 'PAID'
       GROUP BY CreditCard.name;
   `) || [];
 
