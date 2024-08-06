@@ -54,14 +54,23 @@ const getListByUserId = async (
     model: prisma.transitionHistory,
     paginationArgs: { currentPage, perPage },
     where: {
-      userId,
-      expenseId,
-      type,
-      status,
-      paidAt: { gte: startPaidAt, lte: endPaidAt },
-      OR: [
-        { name: { contains: keyword } },
-        { expense: { name: { contains: keyword } } },
+      AND: [
+        { userId },
+        { expenseId },
+        { type },
+        { status },
+        {
+          OR: [
+            { paidAt: { gte: startPaidAt, lte: endPaidAt } },
+            { registrationDate: { gte: startPaidAt, lte: endPaidAt } },
+          ],
+        },
+        {
+          OR: [
+            { name: { contains: keyword } },
+            { expense: { name: { contains: keyword } } },
+          ],
+        },
       ],
     },
     orderBy: [{ paidAt: "desc" }],

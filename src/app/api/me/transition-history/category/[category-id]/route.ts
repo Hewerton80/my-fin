@@ -25,18 +25,14 @@ export async function GET(
   // console.log({ startOfYearDate, endOfYearDate });
   const transitionsHistory = await prisma.transitionHistory.findMany({
     where: {
-      expense: {
-        userId,
-        categoryId: { equals: params["category-id"] },
-      },
+      userId,
+      categoryId: { equals: params["category-id"] },
       paidAt: { gte: startOfYearDate, lte: endOfYearDate },
     },
     orderBy: { paidAt: "asc" },
     select: {
       id: true,
-      expense: {
-        select: { name: true },
-      },
+      name: true,
       amount: true,
       paidAt: true,
       currentInstallment: true,

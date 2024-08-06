@@ -46,7 +46,7 @@ export function PaginationBar({
       maximumNumberOfButtonsToNavigate;
     initialIndexPage = initialIndexPage > 0 ? initialIndexPage - 1 : 0;
 
-    return getRange(0, totalPages).slice(
+    return getRange(0, totalPages - 1).slice(
       initialIndexPage,
       initialIndexPage + maximumNumberOfButtonsToNavigate
     );
