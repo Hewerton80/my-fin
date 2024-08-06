@@ -14,7 +14,7 @@ export const frontendFormTransitionHistoryReceiveSchema = z
     // expenseId: z.string().optional().nullable(),
     name: z.string().min(1, REQUIRED_FIELD).trim().optional(),
     categoryId: z.string().min(1, REQUIRED_FIELD),
-    type: z.string().nullable().optional(),
+    type: z.string().min(1, REQUIRED_FIELD),
     amount: z
       .number()
       .min(1, REQUIRED_FIELD)
@@ -73,8 +73,18 @@ export const frontendFormTransitionHistoryReceiveSchema = z
     path: ["creditCardId"],
   });
 
+export const payFrontendTransitionSchema = z.object({
+  paidAt: z.string().refine((paidAt) => isValidDate(new Date(paidAt)), {
+    message: INVALID_DATE,
+  }),
+});
+
 type InferBaseTransitionHistoryFormSchema = z.infer<
   typeof frontendFormTransitionHistoryReceiveSchema
+>;
+
+export type InferPayTransitionHistoryFormSchema = z.infer<
+  typeof payFrontendTransitionSchema
 >;
 
 export type InferCreateTransitionHistoryFormSchema =

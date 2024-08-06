@@ -125,20 +125,22 @@ export async function POST(request: NextRequest) {
     ) {
       createTranstionHistoryDataArray[0].totalInstallments = totalInstallments;
       createTranstionHistoryDataArray[0].currentInstallment = 1;
-      getRange(2, totalInstallments).forEach((currentInstallment, index) => {
-        const newDueDate = addMonths(
-          new Date(createTranstionHistoryDataArray[0]?.dueDate),
-          index + 1
-        );
-        const newStatus =
-          TransitionHistoryService.getStatusByDueDate(newDueDate);
-        createTranstionHistoryDataArray.push({
-          ...createTranstionHistoryDataArray[0],
-          dueDate: newDueDate,
-          status: newStatus,
-          currentInstallment,
-        });
-      });
+      getRange(2, totalInstallments as number).forEach(
+        (currentInstallment, index) => {
+          const newDueDate = addMonths(
+            new Date(createTranstionHistoryDataArray[0]?.dueDate),
+            index + 1
+          );
+          const newStatus =
+            TransitionHistoryService.getStatusByDueDate(newDueDate);
+          createTranstionHistoryDataArray.push({
+            ...createTranstionHistoryDataArray[0],
+            dueDate: newDueDate,
+            status: newStatus,
+            currentInstallment,
+          });
+        }
+      );
     }
 
     await prisma.transitionHistory.createMany({

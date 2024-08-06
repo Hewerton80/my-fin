@@ -175,7 +175,7 @@ export function ModalTransitionHistory({
           <>
             <Modal.Body asChild>
               <form
-                className="grid grid-cols-1 gap-4"
+                className="grid grid-cols-1 gap-4 overflow-y-auto"
                 onSubmit={(e) => e.preventDefault()}
               >
                 <Controller

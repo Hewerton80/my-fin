@@ -18,7 +18,7 @@ import { getCurrencyFormat } from "@/shared/getCurrencyFormat";
 import { isNumber, isUndefined } from "@/shared/isType";
 import { capitalizeFisrtLetter } from "@/shared/string";
 import { TransitionHistoryStatus, TransitionType } from "@prisma/client";
-import { format, set } from "date-fns";
+import { format } from "date-fns";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
@@ -86,7 +86,7 @@ export default function TranstitonsPage() {
           ),
       },
       {
-        label: "Installments",
+        label: "Installment",
         field: "totalInstallments",
         onParse: ({ currentInstallment, totalInstallments }) =>
           isNumber(currentInstallment) && isNumber(totalInstallments)
@@ -122,6 +122,17 @@ export default function TranstitonsPage() {
             : "-",
       },
       {
+        label: "Registrated at",
+        field: "registrationDate",
+        onParse: (transitionHistory) =>
+          transitionHistory?.registrationDate
+            ? format(
+                new Date(transitionHistory?.registrationDate),
+                "dd/MM/yyyy"
+              )
+            : "-",
+      },
+      {
         label: "Due Date",
         field: "dueDate",
         onParse: (transitionHistory) =>
@@ -144,11 +155,12 @@ export default function TranstitonsPage() {
           <TableTransitionActionsButtons
             transitionHistory={transitionHistory}
             onClickToEdit={() => setTransitionIdToEdit(transitionHistory?.id)}
+            onSuccess={refetchTransitionHistorys}
           />
         ),
       },
     ],
-    []
+    [refetchTransitionHistorys]
   );
 
   const handleCloseFormModal = useCallback(() => {
