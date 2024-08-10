@@ -3,7 +3,7 @@ import { TransitionHistoryWitchConputedFields } from "../types";
 import { Dropdown } from "@/components/ui/overlay/Dropdown/Dropdown";
 import { IconButton } from "@/components/ui/buttons/IconButton";
 import { BsThreeDotsVertical } from "react-icons/bs";
-import { FaPen } from "react-icons/fa";
+import { FaClone, FaPen } from "react-icons/fa";
 import { usePayTransitionHistory } from "../hooks/usePayTransitionHistory";
 import { Modal } from "@/components/ui/overlay/Modal";
 import { Controller } from "react-hook-form";
@@ -78,6 +78,10 @@ export const TableTransitionActionsButtons = memo(
             <Dropdown.Item className="gap-2" onClick={onClickToEdit}>
               <FaPen />
               Edit
+            </Dropdown.Item>
+            <Dropdown.Item className="gap-2" onClick={() => onClickToClone?.()}>
+              <FaClone />
+              Clone
             </Dropdown.Item>
           </Dropdown.Content>
         </Dropdown.Root>

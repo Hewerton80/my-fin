@@ -24,6 +24,7 @@ import { capitalizeFisrtLetter } from "@/shared/string";
 import { getRange } from "@/shared/getRange";
 import { getCurrencyFormat } from "@/shared/getCurrencyFormat";
 import { useGetCreditCards } from "@/modules/creditCard/hooks/useGetCreditCards";
+import { useCacheTransitions } from "../hooks/useCacheTransitionHistory";
 
 interface ModalTransitionHistoryFormProps {
   transictionHistoryId?: string;
@@ -40,6 +41,8 @@ export function ModalTransitionHistory({
   onClose,
   onSuccess,
 }: ModalTransitionHistoryFormProps) {
+  const { resetTransitionInfoCahce } = useCacheTransitions();
+
   const {
     isSubmittingTransitionHistory,
     transitionHistoryFormDefaultValues,
@@ -69,6 +72,7 @@ export function ModalTransitionHistory({
   }, [fetchTransiotionHistory, transictionHistoryId, show]);
 
   useEffect(() => {
+    console.log("currentTransitionHistory", currentTransitionHistory);
     if (currentTransitionHistory) {
       resetTransitionHistoryForm({
         id: isCloning ? "" : currentTransitionHistory?.id || "",
@@ -93,12 +97,11 @@ export function ModalTransitionHistory({
   }, [currentTransitionHistory, isCloning, resetTransitionHistoryForm]);
 
   const isEdit = useMemo(
-    () => Boolean(transictionHistoryId),
-    [transictionHistoryId]
+    () => Boolean(transictionHistoryId) && !isCloning,
+    [transictionHistoryId, isCloning]
   );
 
   const categoriesOptions = useMemo<SelectOption[]>(() => {
-    console.log({ currentTransitionHistory, groupCategories });
     if (
       currentTransitionHistory?.category?.id &&
       !Array.isArray(groupCategories)
@@ -160,7 +163,13 @@ export function ModalTransitionHistory({
   const handleCloseModal = useCallback(() => {
     resetTransitionHistoryForm(transitionHistoryFormDefaultValues);
     onClose?.();
-  }, [resetTransitionHistoryForm, onClose, transitionHistoryFormDefaultValues]);
+    resetTransitionInfoCahce();
+  }, [
+    resetTransitionHistoryForm,
+    onClose,
+    resetTransitionInfoCahce,
+    transitionHistoryFormDefaultValues,
+  ]);
 
   return (
     <>
@@ -450,7 +459,7 @@ export function ModalTransitionHistory({
                 type="button"
                 variantStyle="primary"
                 isLoading={isSubmittingTransitionHistory}
-                disabled={!transitionHistoryFormState.isDirty}
+                disabled={!transitionHistoryFormState.isDirty && !isCloning}
               >
                 {isEdit ? "Update" : "Save"}
               </Button>

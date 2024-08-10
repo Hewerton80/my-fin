@@ -20,7 +20,7 @@ export function useMutateTransitionHistory() {
         name: "",
         amount: 0,
         registrationDate: "",
-        type: null,
+        type: "",
         categoryId: "",
         description: "",
         isPaid: null,
@@ -48,6 +48,10 @@ export function useMutateTransitionHistory() {
     resolver: zodResolver(frontendFormTransitionHistoryReceiveSchema),
   });
 
+  // useEffect(() => {
+  //   console.log({ error: transitionHistoryFormState.errors });
+  // }, [transitionHistoryFormState.errors]);
+
   const {
     mutate: createTransitionHistory,
     isPending: isCreatingTransitionHistory,
@@ -57,10 +61,27 @@ export function useMutateTransitionHistory() {
     ) => apiBase.post("/me/transition-history", transitionHistoryData),
   });
 
+  const {
+    mutate: updateTransitionHistory,
+    isPending: isUpdatingTransitionHistory,
+  } = useMutation({
+    mutationFn: ({
+      id,
+      ...transitionHistoryData
+    }: InferCreateTransitionHistoryFormSchema) =>
+      apiBase.patch(`/me/transition-history/${id}`, transitionHistoryData),
+  });
+
   const isSubmittingTransitionHistory = useMemo(
     () =>
-      transitionHistoryFormState.isValidating || isCreatingTransitionHistory,
-    [transitionHistoryFormState.isValidating, isCreatingTransitionHistory]
+      transitionHistoryFormState.isValidating ||
+      isCreatingTransitionHistory ||
+      isUpdatingTransitionHistory,
+    [
+      transitionHistoryFormState.isValidating,
+      isCreatingTransitionHistory,
+      isUpdatingTransitionHistory,
+    ]
   );
 
   const setValueOptions = useMemo(
@@ -108,16 +129,24 @@ export function useMutateTransitionHistory() {
 
   const getHandledTransitionHistoryData = useCallback(() => {
     const transitionHistoryData = { ...getTransitionHistoryValues() };
-    const handledTransitionHistoryFormValues = getOnlyDirtyFields(
-      transitionHistoryData,
-      transitionHistoryFormState.dirtyFields
-    ) as InferCreateTransitionHistoryFormSchema;
+
+    let handledTransitionHistoryFormValues =
+      {} as InferCreateTransitionHistoryFormSchema;
+
+    if (transitionHistoryData.isCloning) {
+      handledTransitionHistoryFormValues = transitionHistoryData;
+    } else {
+      handledTransitionHistoryFormValues = getOnlyDirtyFields(
+        transitionHistoryData,
+        transitionHistoryFormState.dirtyFields
+      ) as InferCreateTransitionHistoryFormSchema;
+    }
 
     if (transitionHistoryData?.id) {
       handledTransitionHistoryFormValues.id = transitionHistoryData.id;
     }
-    delete handledTransitionHistoryFormValues?.isCloning;
 
+    delete handledTransitionHistoryFormValues?.isCloning;
     return handledTransitionHistoryFormValues;
   }, [getTransitionHistoryValues, transitionHistoryFormState.dirtyFields]);
 
@@ -143,13 +172,21 @@ export function useMutateTransitionHistory() {
           variant: "danger",
         });
       };
-      createTransitionHistory(handledTransitionHistoryFormValues, {
-        onSuccess,
-        onError,
-      });
+      if (isEdit) {
+        updateTransitionHistory(handledTransitionHistoryFormValues, {
+          onSuccess,
+          onError,
+        });
+      } else {
+        createTransitionHistory(handledTransitionHistoryFormValues, {
+          onSuccess,
+          onError,
+        });
+      }
     },
     [
       createTransitionHistory,
+      updateTransitionHistory,
       triggerTransitionHistoryErrors,
       getHandledTransitionHistoryData,
       showAlert,

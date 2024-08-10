@@ -5,7 +5,7 @@ import { TransitionHistoryWitchConputedFields } from "./types";
 import { TransitionType } from "@prisma/client";
 import { isValid as isValidDate } from "date-fns/isValid";
 import { CONSTANTS } from "../../shared/constants";
-import { endOfDay, isAfter, subDays } from "date-fns";
+import { endOfDay, isAfter, startOfYear, subDays } from "date-fns";
 
 const parseSearchParams = (searchParams: URLSearchParams) => {
   const startPaidAt = searchParams.get("startPaidAt");
@@ -13,14 +13,18 @@ const parseSearchParams = (searchParams: URLSearchParams) => {
 
   return {
     keyword: searchParams.get("keyword")?.trim() || "",
-    type: (searchParams.get("type")?.trim() as TransitionType) || undefined,
+    type:
+      TransitionType?.[searchParams.get("type")?.trim() as TransitionType] ||
+      undefined,
     expenseId: searchParams.get("expenseId")?.trim() || undefined,
     status:
-      (searchParams.get("status") as TransitionHistoryStatus) || undefined,
+      TransitionHistoryStatus?.[
+        searchParams.get("status")?.trim() as TransitionHistoryStatus
+      ] || undefined,
     startPaidAt:
       startPaidAt && isValidDate(new Date(startPaidAt))
         ? (startPaidAt as string)
-        : undefined,
+        : startOfYear(new Date()),
     endPaidAt:
       endPaidAt && isValidDate(new Date(endPaidAt))
         ? (endPaidAt as string)

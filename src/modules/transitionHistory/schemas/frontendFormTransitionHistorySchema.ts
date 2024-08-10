@@ -11,10 +11,9 @@ const { REQUIRED_FIELD, MUST_BE_GREATER_THAN_ZERO, INVALID_DATE } =
 export const frontendFormTransitionHistoryReceiveSchema = z
   .object({
     id: z.string().optional(),
-    // expenseId: z.string().optional().nullable(),
     name: z.string().min(1, REQUIRED_FIELD).trim().optional(),
     categoryId: z.string().min(1, REQUIRED_FIELD),
-    type: z.string().min(1, REQUIRED_FIELD),
+    type: z.string().min(1, REQUIRED_FIELD).optional(),
     amount: z
       .number()
       .min(1, REQUIRED_FIELD)
@@ -48,10 +47,10 @@ export const frontendFormTransitionHistoryReceiveSchema = z
 
     isCloning: z.boolean().optional(),
   })
-  // .refine(({ expenseId, name }) => (expenseId ? true : name?.trim()), {
-  //   message: REQUIRED_FIELD,
-  //   path: ["name"],
-  // })
+  .refine(({ id, type }) => (id ? true : Boolean(type)), {
+    message: REQUIRED_FIELD,
+    path: ["type"],
+  })
   .refine(
     ({ isPaid, type }) =>
       type === TransitionType.PAYMENT ? isBoolean(isPaid) : true,
@@ -60,7 +59,7 @@ export const frontendFormTransitionHistoryReceiveSchema = z
       path: ["isPaid"],
     }
   )
-  .refine(({ isPaid, frequency }) => (isPaid ? true : frequency), {
+  .refine(({ isPaid, id, frequency }) => (isPaid || id ? true : frequency), {
     message: REQUIRED_FIELD,
     path: ["frequency"],
   })

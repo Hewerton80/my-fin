@@ -46,8 +46,8 @@ export const CONSTANTS = {
     INVALID_PASSWORD: "Invalid password",
     LOGIN_ERROR: "Error while trying to login",
   },
-  COOKIES_KEYS: {
-    TOKEN: "TOKEN",
-    THEME: "THEME",
+  COOKIES_KEYS: { TOKEN: "TOKEN", THEME: "THEME" },
+  FIELDS_VALUES: {
+    ALL: "All",
   },
 };

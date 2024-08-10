@@ -6,12 +6,12 @@ export async function PATCH(request: NextRequest) {
   console.log("---START PATCH JOBS---");
   const now = new Date();
 
-  await prisma.expense.updateMany({
+  await prisma.transitionHistory.updateMany({
     where: { status: null },
     data: { status: "ON_DAY" },
   });
 
-  await prisma.expense.updateMany({
+  await prisma.transitionHistory.updateMany({
     where: {
       status: "ON_DAY",
       dueDate: { gt: now, lt: addDays(now, 7) },
@@ -19,7 +19,7 @@ export async function PATCH(request: NextRequest) {
     data: { status: "PENDING" },
   });
 
-  await prisma.expense.updateMany({
+  await prisma.transitionHistory.updateMany({
     where: {
       status: "PENDING",
       dueDate: { lt: now },

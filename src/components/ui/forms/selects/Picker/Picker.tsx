@@ -19,7 +19,9 @@ interface SelectProps
   options?: PickerOption[];
   isLoading?: boolean;
   label?: string;
+  showLabelInner?: boolean;
   error?: string;
+  full?: boolean;
   onChange?: (value: string) => void;
   onBlur?: () => void;
   onFocus?: () => void;
@@ -31,8 +33,10 @@ export const Picker = forwardRef(
     {
       placeholder = "Select...",
       options = [],
+      full,
       isLoading,
       label,
+      showLabelInner,
       error,
       required,
       value,
@@ -78,8 +82,8 @@ export const Picker = forwardRef(
     }, [options]);
 
     return (
-      <div className={twMerge("flex flex-col w-full")}>
-        {label && (
+      <div className={twMerge("flex flex-col", full ? "w-full" : "w-fit")}>
+        {label && !showLabelInner && (
           <FormLabel required={required} htmlFor={restProps?.id}>
             {label}
           </FormLabel>
@@ -93,12 +97,23 @@ export const Picker = forwardRef(
           {...restProps}
         >
           <PickerPrimitive.Trigger
-            className={twMerge(!value && "text-muted-foreground")}
+            className={twMerge(
+              !value && "text-muted-foreground",
+              full ? "w-full" : "w-fit"
+            )}
             onBlur={onBlur}
             onFocus={onFocus}
             ref={ref}
           >
-            <SelectPrimitive.Value placeholder={placeholder} />
+            {showLabelInner && label && (
+              <span className={value && "mr-3"}>
+                {label}
+                {label && ":"}
+              </span>
+            )}
+            <SelectPrimitive.Value
+              placeholder={!showLabelInner ? placeholder : undefined}
+            />
           </PickerPrimitive.Trigger>
           <SelectPrimitive.Portal>
             <SelectPrimitive.Content

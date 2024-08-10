@@ -43,10 +43,7 @@ export function useGetTransiontionsHistoty() {
           endPaidAt && isValidDate(new Date(endPaidAt))
             ? (endPaidAt as string)
             : "",
-        status:
-          TransitionHistoryStatus?.[
-            searchParams.get("status") as TransitionHistoryStatus
-          ] || "",
+        status: searchParams.get("status") || "",
       };
     }, [searchParams]);
 
@@ -61,14 +58,8 @@ export function useGetTransiontionsHistoty() {
     refetch,
     error: transitionsHistoryError,
   } = useQuery({
-    queryFn: () => {
-      console.log({
-        transionHistoriesQueryParams,
-        "removeEmptyKeys(transionHistoriesQueryParams)": removeEmptyKeys(
-          transionHistoriesQueryParams
-        ),
-      });
-      return apiBase
+    queryFn: () =>
+      apiBase
         .get<IPaginatedDocs<TransitionHistoryWitchConputedFields>>(
           "/me/transition-history",
           {
@@ -76,8 +67,7 @@ export function useGetTransiontionsHistoty() {
           }
         )
         .then((res) => res.data || { docs: [] })
-        .finally(() => setIsSearching(false));
-    },
+        .finally(() => setIsSearching(false)),
     queryKey: [TransitionHistoryQueryKeys.LIST],
     enabled: false,
   });
