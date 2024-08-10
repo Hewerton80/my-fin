@@ -17,7 +17,6 @@ export function useGetTransiontionHistoty(id?: string) {
   } = useQuery({
     queryFn: () =>
       apiBase
-
         .get<TransitionHistoryWitchConputedFields>(
           `/me/transition-history/${id}`
         )

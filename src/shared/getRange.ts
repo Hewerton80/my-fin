@@ -1,1 +1,6 @@
-export const getRange = (num: number) => Array.from(Array(num).keys());
+export const getRange = (startIndex: number, endIndex: number) => {
+  return Array.from(
+    { length: endIndex - startIndex + 1 },
+    (_, i) => startIndex + i
+  );
+};

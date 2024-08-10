@@ -1,8 +1,6 @@
 "use client";
-import { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/buttons/Button";
 import { Card } from "@/components/ui/cards/Card";
-import { useGetGroupCategories } from "@/modules/category/hooks/useGetGroupCategories";
 import { useGetTransiontionsHistotyByCategory } from "@/modules/transitionHistory/hooks/useGetTransiontionsHistotyByCategory";
 import { CategoryInsights } from "@/modules/category/components/CategoryInsights";
 import { FeedBackLoading } from "@/components/ui/feedback/FeedBackLoading";
@@ -18,16 +16,6 @@ export default function CategoriesPage() {
     transionHistoriesQueryParams,
     fetchTransitionsHistory,
   } = useGetTransiontionsHistotyByCategory();
-
-  // useEffect(() => {
-  //   refetchCategories();
-  // }, [refetchCategories]);
-
-  // useEffect(() => {
-  //   if (selectedCategory) {
-  //     fetchTransitionsHistory();
-  //   }
-  // }, [selectedCategory, fetchTransitionsHistory]);
 
   if (isLoadingCategories) {
     return (

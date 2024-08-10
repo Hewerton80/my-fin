@@ -1,6 +1,6 @@
 import { useAlertModal } from "@/hooks/useAlertModal";
 import { useAxios } from "@/hooks/useAxios";
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { InferCreateTransitionHistoryFormSchema } from "../schemas/frontendFormTransitionHistorySchema";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -17,10 +17,17 @@ export function useMutateTransitionHistory() {
     useMemo<InferCreateTransitionHistoryFormSchema>(
       () => ({
         id: "",
-        expenseId: null,
         name: "",
         amount: 0,
-        paidAt: "",
+        registrationDate: "",
+        type: "",
+        categoryId: "",
+        description: "",
+        isPaid: null,
+        paymentType: null,
+        frequency: null,
+        totalInstallments: null,
+        creditCardId: "",
         isCloning: false,
       }),
       []
@@ -41,33 +48,105 @@ export function useMutateTransitionHistory() {
     resolver: zodResolver(frontendFormTransitionHistoryReceiveSchema),
   });
 
+  // useEffect(() => {
+  //   console.log({ error: transitionHistoryFormState.errors });
+  // }, [transitionHistoryFormState.errors]);
+
   const {
     mutate: createTransitionHistory,
     isPending: isCreatingTransitionHistory,
   } = useMutation({
     mutationFn: (
       transitionHistoryData: InferCreateTransitionHistoryFormSchema
-    ) => apiBase.post("/me/transition-history/receive", transitionHistoryData),
+    ) => apiBase.post("/me/transition-history", transitionHistoryData),
+  });
+
+  const {
+    mutate: updateTransitionHistory,
+    isPending: isUpdatingTransitionHistory,
+  } = useMutation({
+    mutationFn: ({
+      id,
+      ...transitionHistoryData
+    }: InferCreateTransitionHistoryFormSchema) =>
+      apiBase.patch(`/me/transition-history/${id}`, transitionHistoryData),
   });
 
   const isSubmittingTransitionHistory = useMemo(
     () =>
-      transitionHistoryFormState.isValidating || isCreatingTransitionHistory,
-    [transitionHistoryFormState.isValidating, isCreatingTransitionHistory]
+      transitionHistoryFormState.isValidating ||
+      isCreatingTransitionHistory ||
+      isUpdatingTransitionHistory,
+    [
+      transitionHistoryFormState.isValidating,
+      isCreatingTransitionHistory,
+      isUpdatingTransitionHistory,
+    ]
   );
+
+  const setValueOptions = useMemo(
+    () => ({ shouldDirty: true, shouldTouch: true }),
+    []
+  );
+
+  const clearCreditCardField = useCallback(() => {
+    setTransitionHistoryValue("creditCardId", "", setValueOptions);
+    clearTransitionHistoryErrors(["creditCardId"]);
+  }, [
+    setTransitionHistoryValue,
+    clearTransitionHistoryErrors,
+    setValueOptions,
+  ]);
+
+  useEffect(() => {
+    const subscription = watchTransitionHistory((_, { name }) => {
+      if (name === "type") {
+        setTransitionHistoryValue("isPaid", null, setValueOptions);
+        clearTransitionHistoryErrors(["isPaid"]);
+      }
+      if (name === "isPaid") {
+        setTransitionHistoryValue("paymentType", null, setValueOptions);
+        setTransitionHistoryValue("frequency", null, setValueOptions);
+        clearTransitionHistoryErrors(["frequency", "paymentType"]);
+        clearCreditCardField();
+      }
+      if (name === "paymentType") {
+        clearCreditCardField();
+      }
+      if (name === "frequency") {
+        setTransitionHistoryValue("totalInstallments", null, setValueOptions);
+        clearTransitionHistoryErrors(["totalInstallments"]);
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, [
+    setValueOptions,
+    clearTransitionHistoryErrors,
+    watchTransitionHistory,
+    clearCreditCardField,
+    setTransitionHistoryValue,
+  ]);
 
   const getHandledTransitionHistoryData = useCallback(() => {
     const transitionHistoryData = { ...getTransitionHistoryValues() };
-    const handledTransitionHistoryFormValues = getOnlyDirtyFields(
-      transitionHistoryData,
-      transitionHistoryFormState.dirtyFields
-    ) as InferCreateTransitionHistoryFormSchema;
+
+    let handledTransitionHistoryFormValues =
+      {} as InferCreateTransitionHistoryFormSchema;
+
+    if (transitionHistoryData.isCloning) {
+      handledTransitionHistoryFormValues = transitionHistoryData;
+    } else {
+      handledTransitionHistoryFormValues = getOnlyDirtyFields(
+        transitionHistoryData,
+        transitionHistoryFormState.dirtyFields
+      ) as InferCreateTransitionHistoryFormSchema;
+    }
 
     if (transitionHistoryData?.id) {
       handledTransitionHistoryFormValues.id = transitionHistoryData.id;
     }
-    delete handledTransitionHistoryFormValues?.isCloning;
 
+    delete handledTransitionHistoryFormValues?.isCloning;
     return handledTransitionHistoryFormValues;
   }, [getTransitionHistoryValues, transitionHistoryFormState.dirtyFields]);
 
@@ -93,13 +172,21 @@ export function useMutateTransitionHistory() {
           variant: "danger",
         });
       };
-      createTransitionHistory(handledTransitionHistoryFormValues, {
-        onSuccess,
-        onError,
-      });
+      if (isEdit) {
+        updateTransitionHistory(handledTransitionHistoryFormValues, {
+          onSuccess,
+          onError,
+        });
+      } else {
+        createTransitionHistory(handledTransitionHistoryFormValues, {
+          onSuccess,
+          onError,
+        });
+      }
     },
     [
       createTransitionHistory,
+      updateTransitionHistory,
       triggerTransitionHistoryErrors,
       getHandledTransitionHistoryData,
       showAlert,

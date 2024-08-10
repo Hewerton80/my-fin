@@ -85,7 +85,7 @@ export default function ExpensesPage() {
             : "-",
       },
       {
-        label: "Categories",
+        label: "Category",
         field: "category",
         onParse: (expense) => expense?.category?.name || "-",
       },
@@ -163,33 +163,6 @@ export default function ExpensesPage() {
         </Card.Header>
         <Card.Body>
           <div className="flex items-center gap-2 sm:gap-2 flex-wrap mb-4">
-            {/* <HorizontalScrollView>
-            <Picker
-              label="Status"
-              value={usersQueryParams.isActive}
-              onChange={(value) => changeUserFilter({ isActive: value })}
-              hideInput
-              options={[
-                { label: "Ativo", value: "true" },
-                { label: "Inativo", value: "false" },
-              ]}
-            />
-            <Picker
-              label="Função"
-              value={usersQueryParams.role}
-              onChange={(value) => changeUserFilter({ role: value })}
-              hideInput
-              options={usersRolesOptions}
-            />
-            <Picker
-              label="Ordenar por"
-              value={usersQueryParams.orderBy}
-              onChange={(value) => changeUserFilter({ orderBy: value })}
-              hideInput
-              hideCloseButton
-              options={orderByUserOptions}
-            />
-          </HorizontalScrollView> */}
             <Tabs.Root
               value={expenseFilterQueryParams?.status}
               onValueChange={(value) => changeExpenseStatus(value)}

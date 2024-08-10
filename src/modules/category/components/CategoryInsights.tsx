@@ -35,7 +35,7 @@ export function CategoryInsights({
             : "";
         return {
           date: format(new Date(transitionHistory?.paidAt!), "dd MMM"),
-          description: `${transitionHistory?.expense?.name}${installmentsString}`,
+          description: `${transitionHistory?.name}${installmentsString}`,
           amount: transitionHistory?.amount,
         };
       }) || []

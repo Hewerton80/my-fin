@@ -28,13 +28,8 @@ export const TableExpenseActionsButtons = memo(
     onClickToEdit,
     onClickToClone,
   }: TableExpenseActionsButtonsProps) {
-    const {
-      payExpense,
-      payExpenseControl,
-      payExpenseFormState,
-      resetPayExpenseForm,
-      isPaying,
-    } = usePayExpense();
+    const { payExpense, payExpenseControl, resetPayExpenseForm, isPaying } =
+      usePayExpense();
 
     const [showModalPaidAt, setShowModalPaidAt] = useState(false);
 
@@ -105,6 +100,7 @@ export const TableExpenseActionsButtons = memo(
                 return (
                   <Input
                     {...field}
+                    autoFocus
                     label="Paid Date"
                     required
                     type="date"

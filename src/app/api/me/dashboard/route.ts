@@ -32,9 +32,8 @@ export async function GET(request: NextRequest) {
   const insights =
     (await prisma.$queryRaw<CategoryInsights[]>`
       SELECT Category.id, Category.name, Category.iconName, ROUND(SUM(TransitionHistory.amount), 2) as amount, CAST(COUNT(TransitionHistory.id) AS CHAR(32)) as count
-      FROM Expense
-      JOIN TransitionHistory on Expense.id = TransitionHistory.expenseId
-      JOIN  Category on Expense.categoryId  = Category.id
+      FROM TransitionHistory
+      JOIN  Category on TransitionHistory.categoryId  = Category.id
       WHERE TransitionHistory.paidAt BETWEEN ${startOfYearDate} and ${endOfYearDate} AND 
       TransitionHistory.userId = ${userId} AND TransitionHistory.type = 'PAYMENT'
       GROUP BY Category.name;
@@ -43,31 +42,23 @@ export async function GET(request: NextRequest) {
   const paidCreditCardExpensesInsights =
     (await prisma.$queryRaw<CreditCardInsights[]>`
       SELECT CreditCard.name, CreditCard.color as color, ROUND(SUM(TransitionHistory.amount), 2) as amount
-      FROM Expense 
-      JOIN TransitionHistory on Expense.id = TransitionHistory.expenseId
-      JOIN  CreditCard on Expense.creditCardId  = CreditCard.id
+      FROM TransitionHistory 
+      JOIN  CreditCard on TransitionHistory.creditCardId  = CreditCard.id
       WHERE TransitionHistory.paidAt BETWEEN ${startOfYearDate} and ${endOfYearDate} AND 
       TransitionHistory.userId = ${userId} AND TransitionHistory.type = 'PAYMENT' AND
-      Expense.status = 'PAID'
+      TransitionHistory.status = 'PAID'
       GROUP BY CreditCard.name;
   `) || [];
 
   const oweCreditCardExpensesInsights =
     (await prisma.$queryRaw<CreditCardInsights[]>`
-    SELECT CreditCard.name, CreditCard.color as color, 
-    ROUND(SUM(
-          CASE 
-              WHEN Expense.totalInstallments  IS NULL OR Expense.currentInstallment IS NULL THEN Expense.amount
-              ELSE (Expense.totalInstallments + 1 - Expense.currentInstallment) * Expense.amount
-          END
-    ), 2) as amount,
-    CAST(COUNT(Expense.id) AS CHAR(32)) as count
-    FROM Expense 
-    JOIN  CreditCard on Expense.creditCardId  = CreditCard.id
-    WHERE Expense.dueDate <= ${endOfYearDate} AND 
-    Expense.status <> 'PAID' AND Expense.status <> 'CANCELED' AND
-    Expense.userId = ${userId}
-    GROUP BY CreditCard.name;
+    SELECT CreditCard.name, CreditCard.color as color, ROUND(SUM(TransitionHistory.amount), 2) as amount, CAST(COUNT(TransitionHistory.id) AS CHAR(32)) as count
+    FROM TransitionHistory 
+    JOIN  CreditCard on TransitionHistory.creditCardId  = CreditCard.id
+    WHERE TransitionHistory.dueDate <= ${endOfYearDate} AND 
+    TransitionHistory.status <> 'PAID' AND TransitionHistory.status <> 'CANCELED' AND
+    TransitionHistory.userId = ${userId}
+    GROUP BY CreditCard.id;
   `) || [];
 
   const historicPaymentsInsights =

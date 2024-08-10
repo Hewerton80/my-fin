@@ -337,7 +337,7 @@ export function ModalExpenseForm({
                                 onChange={(option) =>
                                   onChange(Number(option?.value))
                                 }
-                                options={getRange(12).map((i) => ({
+                                options={getRange(0, 12).map((i) => ({
                                   label: `${i + 1}x`,
                                   value: String(i + 1),
                                 }))}

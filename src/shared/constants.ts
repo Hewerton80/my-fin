@@ -31,7 +31,9 @@ export const CONSTANTS = {
     ALREADY_HAS_TRAINING_IN_PROGRESS: "Already has a training in progress",
     EXPENSE_NOT_FOUND: "expense not found",
     EXPENSE_ALREADY_PAID: "This expense has already been paid",
+    TRANSITION_ALREADY_PAID: "This transition has already been paid",
     EXPENSE_IS_CANCELED: "This expense has been canceled",
+    TRANSITION_IS_CANCELED: "This transition has been canceled",
     CREDIT_CARD_NOT_FOUND: "Credit card not found",
     CATEGORY_NOT_FOUND: "Category not found",
     SUB_CATEGORY_NOT_FOUND: "Sub category not found",
@@ -44,8 +46,8 @@ export const CONSTANTS = {
     INVALID_PASSWORD: "Invalid password",
     LOGIN_ERROR: "Error while trying to login",
   },
-  COOKIES_KEYS: {
-    TOKEN: "TOKEN",
-    THEME: "THEME",
+  COOKIES_KEYS: { TOKEN: "TOKEN", THEME: "THEME" },
+  FIELDS_VALUES: {
+    ALL: "All",
   },
 };

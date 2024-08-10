@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
   const userId = loggedUser?.id;
   const categories = await prisma.category.findMany({
     where: {
-      expenses: { some: { userId } },
+      TransitionHistory: { some: { userId } },
     },
   });
   return NextResponse.json(categories, { status: 200 });
