@@ -24,12 +24,12 @@ export const navItems: INavItem[] = [
     path: `/${BASE_PATHS.BASE_HOME_PATH}`,
     icon: <CgHome />,
   },
-  {
-    title: "Expenses",
-    basePath: BASE_PATHS.BASE_EXPENSES_PATH,
-    path: `/${BASE_PATHS.BASE_EXPENSES_PATH}`,
-    icon: <SlWallet />,
-  },
+  // {
+  //   title: "Expenses",
+  //   basePath: BASE_PATHS.BASE_EXPENSES_PATH,
+  //   path: `/${BASE_PATHS.BASE_EXPENSES_PATH}`,
+  //   icon: <SlWallet />,
+  // },
   {
     title: "Transitions",
     basePath: BASE_PATHS.BASE_TRANSITIONS_PATCH,
