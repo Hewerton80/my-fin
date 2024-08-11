@@ -11,7 +11,11 @@ export const ChartContainer = ({
     <ResponsiveContainer
       width="100%"
       height="100%"
-      className={twMerge("!min-w-[150px] !min-h-[150px]", String(className))}
+      className={twMerge(
+        "!min-w-[150px] !min-h-[150px]",
+        "[&_.recharts-surface]:overflow-visible",
+        String(className)
+      )}
       {...restProps}
     >
       {children}

@@ -5,24 +5,20 @@ import {
   TransitionHistoryQueryKeys,
   TransitionHistoryWitchConputedFields,
 } from "../types";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { isNumberable } from "@/shared/isType";
-import {
-  parseJsonToSearchParams,
-  removeEmptyKeys,
-} from "@/shared/parseJsonToSearchParams";
+import { removeEmptyKeys } from "@/shared/parseJsonToSearchParams";
 import { IPaginatedDocs } from "@/lib/prismaHelpers";
 import { useDebouncedCallback } from "use-debounce";
 import { isValid as isValidDate } from "date-fns/isValid";
-import { TransitionHistoryStatus } from "@prisma/client";
+import useQueryParams from "@/hooks/useQueryParams";
 
 export function useGetTransiontionsHistoty() {
   const { apiBase } = useAxios();
+  const { setQueryParams } = useQueryParams<IGetTransionsHistoryParams>();
 
   const searchParams = useSearchParams();
-  const pathname = usePathname();
-  const router = useRouter();
 
   const transionHistoriesQueryParams =
     useMemo<IGetTransionsHistoryParams>(() => {
@@ -32,7 +28,6 @@ export function useGetTransiontionsHistoty() {
         currentPage: isNumberable(searchParams.get("currentPage"))
           ? Number(searchParams.get("currentPage"))
           : 1,
-        expenseId: searchParams.get("expenseId") || "",
         keyword: searchParams.get("keyword") || "",
         type: searchParams.get("type") || "",
         startPaidAt:
@@ -44,6 +39,7 @@ export function useGetTransiontionsHistoty() {
             ? (endPaidAt as string)
             : "",
         status: searchParams.get("status") || "",
+        creditCardId: searchParams.get("creditCardId") || "",
       };
     }, [searchParams]);
 
@@ -81,47 +77,32 @@ export function useGetTransiontionsHistoty() {
     refetch();
   }, [transionHistoriesQueryParams, refetch]);
 
-  const updateTransitionsHistoryQueryParams = useCallback(
-    (newTransitionHistorysQueryParams: IGetTransionsHistoryParams) => {
-      const mergedQueryParams = parseJsonToSearchParams({
-        ...transionHistoriesQueryParams,
-        ...newTransitionHistorysQueryParams,
-      });
-      router.replace(`${pathname}${mergedQueryParams}`);
-    },
-    [router, transionHistoriesQueryParams, pathname]
-  );
-
   const refetchTransitionHistorys = useCallback(() => {
-    // updateTransitionsHistoryQueryParams(newTransitionHistorysQueryParams || {});
     refetch();
   }, [refetch]);
 
   const goToPage = useCallback(
     (page: number) => {
-      updateTransitionsHistoryQueryParams({ currentPage: page });
+      setQueryParams({ currentPage: page });
     },
-    [updateTransitionsHistoryQueryParams]
+    [setQueryParams]
   );
 
   const changeSearcheInputDebounced = useDebouncedCallback(
     useCallback(
       (value: string) => {
-        updateTransitionsHistoryQueryParams({
-          currentPage: 1,
-          keyword: value?.trim(),
-        });
+        setQueryParams({ currentPage: 1, keyword: value?.trim() });
       },
-      [updateTransitionsHistoryQueryParams]
+      [setQueryParams]
     ),
     1000
   );
 
   const changeTransitionHistoryStatus = useCallback(
     (status: string) => {
-      updateTransitionsHistoryQueryParams({ currentPage: 1, status });
+      setQueryParams({ currentPage: 1, status });
     },
-    [updateTransitionsHistoryQueryParams]
+    [setQueryParams]
   );
 
   const changeSearcheInput = useCallback(
@@ -135,20 +116,20 @@ export function useGetTransiontionsHistoty() {
 
   const changeTransitionHistoryType = useCallback(
     (type: string) => {
-      updateTransitionsHistoryQueryParams({ currentPage: 1, type });
+      setQueryParams({ currentPage: 1, type });
     },
-    [updateTransitionsHistoryQueryParams]
+    [setQueryParams]
   );
 
   const changeDateRange = useCallback(
     ({ from, to }: { from?: Date; to?: Date }) => {
-      updateTransitionsHistoryQueryParams({
+      setQueryParams({
         currentPage: 1,
         startPaidAt: from ? from.toISOString() : "",
         endPaidAt: to ? to.toISOString() : "",
       });
     },
-    [updateTransitionsHistoryQueryParams]
+    [setQueryParams]
   );
 
   return {

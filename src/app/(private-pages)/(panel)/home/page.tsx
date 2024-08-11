@@ -2,7 +2,6 @@
 
 import { Card } from "@/components/ui/cards/Card";
 import { CardStats } from "@/components/ui/cards/CardStats";
-import { PieChart } from "@/components/ui/charts/PieChart/PieChart";
 import {
   DataTable,
   IColmunDataTable,
@@ -15,8 +14,7 @@ import { getCurrencyFormat } from "@/shared/getCurrencyFormat";
 import { useMemo } from "react";
 import { TbCurrencyReal } from "react-icons/tb";
 import Link from "next/link";
-import { IoEyeOutline, IoPieChartOutline } from "react-icons/io5";
-import { capitalizeFisrtLetter } from "@/shared/string";
+import { IoEyeOutline } from "react-icons/io5";
 import { LineChart } from "@/components/ui/charts/LineChart";
 import { BsGraphUp } from "react-icons/bs";
 import { IconButton } from "@/components/ui/buttons/IconButton";
@@ -25,6 +23,7 @@ import { twMerge } from "tailwind-merge";
 import { FaLongArrowAltUp } from "react-icons/fa";
 
 import assets from "../../../../../assets.json";
+import { CreditCardInsightsCards } from "@/modules/creditCard/components/CreditCardInsightsCards";
 
 export default function HomePage() {
   const { dashboard, isLoadingDashboard, dashboardError, refetchDashboard } =
@@ -34,12 +33,12 @@ export default function HomePage() {
     return dashboard?.categoryInsights;
   }, [dashboard]);
 
-  const paidCreditCardExpensesInsights = useMemo(() => {
-    return dashboard?.paidCreditCardExpensesInsights;
+  const paidCreditCardInsights = useMemo(() => {
+    return dashboard?.paidCreditCardInsights;
   }, [dashboard]);
 
-  const oweCreditCardExpensesInsights = useMemo(() => {
-    return dashboard?.oweCreditCardExpensesInsights;
+  const oweCreditCardInsights = useMemo(() => {
+    return dashboard?.oweCreditCardInsights;
   }, [dashboard]);
 
   const historicInsights = useMemo(() => {
@@ -188,38 +187,14 @@ export default function HomePage() {
         </CardStats.Root>
       )}
 
-      {paidCreditCardExpensesInsights && (
-        <CardStats.Root className="col-span-12 md:col-span-6">
-          <CardStats.Header icon={<IoPieChartOutline />}>
-            Total Paid Credit Card expenses amount
-          </CardStats.Header>
-          <CardStats.Body>
-            <PieChart
-              data={paidCreditCardExpensesInsights?.map((insight) => ({
-                amount: insight?.amount,
-                name: insight?.name,
-                fill: insight?.color,
-              }))}
-            />
-          </CardStats.Body>
-        </CardStats.Root>
-      )}
-      {oweCreditCardExpensesInsights && (
-        <CardStats.Root className="col-span-12 md:col-span-6">
-          <CardStats.Header icon={<IoPieChartOutline />}>
-            Total Owe Credit Card expenses amount
-          </CardStats.Header>
-          <CardStats.Body>
-            <PieChart
-              data={oweCreditCardExpensesInsights?.map((insight) => ({
-                amount: insight?.amount,
-                name: insight?.name,
-                fill: insight?.color,
-              }))}
-            />
-          </CardStats.Body>
-        </CardStats.Root>
-      )}
+      <CreditCardInsightsCards.Paid
+        className="col-span-12 md:col-span-6"
+        paidCreditCardInsights={paidCreditCardInsights}
+      />
+      <CreditCardInsightsCards.Owe
+        className="col-span-12 md:col-span-6"
+        oweCreditCardInsights={oweCreditCardInsights}
+      />
 
       {historicInsights && (
         <CardStats.Root className="col-span-12">

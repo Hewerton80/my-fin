@@ -16,7 +16,7 @@ const parseSearchParams = (searchParams: URLSearchParams) => {
     type:
       TransitionType?.[searchParams.get("type")?.trim() as TransitionType] ||
       undefined,
-    expenseId: searchParams.get("expenseId")?.trim() || undefined,
+    creditCardId: searchParams.get("creditCardId")?.trim() || undefined,
     status:
       TransitionHistoryStatus?.[
         searchParams.get("status")?.trim() as TransitionHistoryStatus
@@ -37,7 +37,13 @@ const parseSearchParams = (searchParams: URLSearchParams) => {
 
 const getListByUserId = async (
   userId: string,
-  searchParams: URLSearchParams
+  {
+    searchParams,
+    where = {},
+  }: {
+    searchParams: URLSearchParams;
+    where?: Prisma.TransitionHistoryWhereInput;
+  }
 ) => {
   const {
     currentPage,
@@ -45,7 +51,7 @@ const getListByUserId = async (
     keyword,
     status,
     type,
-    expenseId,
+    creditCardId,
     startPaidAt,
     endPaidAt,
   } = parseSearchParams(searchParams);
@@ -60,26 +66,21 @@ const getListByUserId = async (
     where: {
       AND: [
         { userId },
-        { expenseId },
+        { name: { contains: keyword } },
         { type },
         { status },
+        { creditCardId },
         {
           OR: [
             { paidAt: { gte: startPaidAt, lte: endPaidAt } },
             { registrationDate: { gte: startPaidAt, lte: endPaidAt } },
           ],
         },
-        {
-          OR: [
-            { name: { contains: keyword } },
-            { expense: { name: { contains: keyword } } },
-          ],
-        },
       ],
+      ...where,
     },
-    orderBy: [{ paidAt: "desc" }],
+    orderBy: [{ dueDate: "desc" }],
     include: {
-      expense: { select: { id: true, name: true } },
       category: { select: { id: true, name: true, iconName: true } },
       creditCard: { select: { id: true, name: true } },
     },

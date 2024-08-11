@@ -13,6 +13,19 @@ export async function GET(request: NextRequest) {
     );
   }
   const userId = loggedUser?.id;
+  const year = new Date().getFullYear();
+
   const creditCards = await CreditCardService.getListByUserId(userId);
-  return NextResponse.json(creditCards, { status: 200 });
+
+  const { oweCreditCardInsights, paidCreditCardInsights } =
+    await CreditCardService.getInsightsByUserId(userId, { year });
+
+  return NextResponse.json(
+    {
+      creditCards,
+      oweCreditCardInsights,
+      paidCreditCardInsights,
+    },
+    { status: 200 }
+  );
 }

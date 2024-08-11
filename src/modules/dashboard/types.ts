@@ -33,8 +33,8 @@ export interface HistoricReceiptsInsights extends BaseInsights {}
 
 export interface Dashboard {
   categoryInsights: CategoryInsights[];
-  paidCreditCardExpensesInsights: CreditCardInsights[];
-  oweCreditCardExpensesInsights: CreditCardInsights[];
+  paidCreditCardInsights: CreditCardInsights[];
+  oweCreditCardInsights: CreditCardInsights[];
   paymentTypeInsights: PaymentTypeInsights[];
   historicInsights: HistoricInsights[];
 }

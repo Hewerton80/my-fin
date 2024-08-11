@@ -36,10 +36,9 @@ export async function GET(request: NextRequest) {
 
   const { searchParams } = new URL(request.url);
   const paginedransitionsHistory =
-    await TransitionHistoryService.getListByUserId(
-      String(userId),
-      searchParams
-    );
+    await TransitionHistoryService.getListByUserId(String(userId), {
+      searchParams,
+    });
   return NextResponse.json(paginedransitionsHistory, { status: 200 });
 }
 

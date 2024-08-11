@@ -1,7 +1,7 @@
-import { SlWallet } from "react-icons/sl";
 import { CgHome } from "react-icons/cg";
 import { TbCategory2 } from "react-icons/tb";
 import { HiMiniArrowsUpDown } from "react-icons/hi2";
+import { MdCreditCard } from "react-icons/md";
 
 enum BASE_PATHS {
   BASE_AUTH_PATH = "auth",
@@ -9,6 +9,7 @@ enum BASE_PATHS {
   BASE_EXPENSES_PATH = "expenses",
   BASE_CATEGORIES_PATCH = "categories",
   BASE_TRANSITIONS_PATCH = "transitions",
+  BASE_CREDIT_CARDS_PATCH = "credit-cards",
 }
 export interface INavItem {
   title: string;
@@ -35,6 +36,12 @@ export const navItems: INavItem[] = [
     basePath: BASE_PATHS.BASE_TRANSITIONS_PATCH,
     path: `/${BASE_PATHS.BASE_TRANSITIONS_PATCH}`,
     icon: <HiMiniArrowsUpDown />,
+  },
+  {
+    title: "Credit Cards",
+    basePath: BASE_PATHS.BASE_CREDIT_CARDS_PATCH,
+    path: `/${BASE_PATHS.BASE_CREDIT_CARDS_PATCH}`,
+    icon: <MdCreditCard />,
   },
   {
     title: "Categories",
