@@ -99,14 +99,10 @@ export const createApiTransitionHistorySchema = apiFormTransitionHistorySchema
       path: ["isPaid"],
     }
   )
-  .refine(
-    ({ paymentType, isPaid, type }) =>
-      isPaid || type === TransitionType.RECEIPT ? paymentType : true,
-    {
-      message: REQUIRED_FIELD,
-      path: ["paymentType"],
-    }
-  )
+  .refine(({ paymentType, isPaid }) => (isPaid ? paymentType : true), {
+    message: REQUIRED_FIELD,
+    path: ["paymentType"],
+  })
   .refine(
     ({ paymentType }) =>
       paymentType
@@ -116,10 +112,14 @@ export const createApiTransitionHistorySchema = apiFormTransitionHistorySchema
         : true,
     { message: "Invalid payment type", path: ["paymentType"] }
   )
-  .refine(({ isPaid, frequency }) => (isPaid ? true : frequency), {
-    message: REQUIRED_FIELD,
-    path: ["frequency"],
-  })
+  .refine(
+    ({ isPaid, frequency, type }) =>
+      isPaid || type === TransitionType.RECEIPT ? true : frequency,
+    {
+      message: REQUIRED_FIELD,
+      path: ["frequency"],
+    }
+  )
   .refine(
     ({ frequency }) =>
       frequency
@@ -134,10 +134,14 @@ export const createApiTransitionHistorySchema = apiFormTransitionHistorySchema
       type ? TransitionType?.[type as keyof typeof TransitionType] : true,
     { message: "Invalid 'type' type", path: ["type"] }
   )
-  .refine(({ creditCardId, isPaid }) => (isPaid ? true : creditCardId), {
-    message: REQUIRED_FIELD,
-    path: ["creditCardId"],
-  });
+  .refine(
+    ({ creditCardId, isPaid, type }) =>
+      isPaid || type === TransitionType.RECEIPT ? true : creditCardId,
+    {
+      message: REQUIRED_FIELD,
+      path: ["creditCardId"],
+    }
+  );
 
 export const payTransitionHistorySchema = z.object({
   paidAt: z

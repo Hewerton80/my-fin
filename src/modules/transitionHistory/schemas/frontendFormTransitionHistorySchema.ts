@@ -59,18 +59,26 @@ export const frontendFormTransitionHistoryReceiveSchema = z
       path: ["isPaid"],
     }
   )
-  .refine(({ isPaid, id, frequency }) => (isPaid || id ? true : frequency), {
-    message: REQUIRED_FIELD,
-    path: ["frequency"],
-  })
+  .refine(
+    ({ isPaid, id, frequency, type }) =>
+      isPaid || id || type === TransitionType.RECEIPT ? true : frequency,
+    {
+      message: REQUIRED_FIELD,
+      path: ["frequency"],
+    }
+  )
   .refine(({ paymentType, isPaid }) => (isPaid ? paymentType : true), {
     message: REQUIRED_FIELD,
     path: ["paymentType"],
   })
-  .refine(({ isPaid, creditCardId }) => (!isPaid ? creditCardId : true), {
-    message: REQUIRED_FIELD,
-    path: ["creditCardId"],
-  });
+  .refine(
+    ({ isPaid, creditCardId, type }) =>
+      isPaid || type === TransitionType.RECEIPT ? true : creditCardId,
+    {
+      message: REQUIRED_FIELD,
+      path: ["creditCardId"],
+    }
+  );
 
 export const payFrontendTransitionSchema = z.object({
   paidAt: z.string().refine((paidAt) => isValidDate(new Date(paidAt)), {
