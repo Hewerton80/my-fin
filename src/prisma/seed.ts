@@ -11,21 +11,21 @@ import { TransitionHistoryFrequency } from "@prisma/client";
 export async function main() {
   // start seeding
   const allExpensese = await prisma.expense.findMany();
-  for (const expense of allExpensese) {
-    await prisma.transitionHistory.updateMany({
-      where: { expenseId: expense.id },
-      data: {
-        name: expense?.name || undefined,
-        frequency:
-          expense?.frequency === "MONTHLY" ? "MONTHLY" : "DO_NOT_REPEAT",
-        paymentType: expense?.paymentType || undefined,
-        categoryId: expense?.categoryId,
-        creditCardId: expense?.creditCardId || undefined,
-        registrationDate: expense?.registrationDate || undefined,
-      },
-    });
-    console.log("Updated transitionHistory for expense: ", expense?.name);
-  }
+  // for (const expense of allExpensese) {
+  //   await prisma.transitionHistory.updateMany({
+  //     where: { expenseId: expense.id },
+  //     data: {
+  //       name: expense?.name || undefined,
+  //       frequency:
+  //         expense?.frequency === "MONTHLY" ? "MONTHLY" : "DO_NOT_REPEAT",
+  //       paymentType: expense?.paymentType || undefined,
+  //       categoryId: expense?.categoryId,
+  //       creditCardId: expense?.creditCardId || undefined,
+  //       registrationDate: expense?.registrationDate || undefined,
+  //     },
+  //   });
+  //   console.log("Updated transitionHistory for expense: ", expense?.name);
+  // }
   for (const expense of allExpensese) {
     // if (
     //   !expense?.isPaid &&
@@ -105,24 +105,30 @@ export async function main() {
     //     console.log("Created transitionHistory for expense: ", expense?.name);
     //   }
     // }
-    if (!expense?.isPaid && expense?.frequency !== "MONTHLY") {
-      await prisma.transitionHistory.create({
-        data: {
-          name: expense?.name || undefined,
-          frequency:
-            (expense?.frequency as TransitionHistoryFrequency) || undefined,
-          paymentType: expense?.paymentType || undefined,
-          categoryId: expense?.categoryId,
-          creditCardId: expense?.creditCardId || undefined,
-          registrationDate: expense?.registrationDate || undefined,
-          amount: expense?.amount,
-          userId: expense?.userId,
-          type: "PAYMENT",
-          dueDate: expense?.dueDate,
-          status: expense?.status,
-        },
-      });
-    }
+    // if (
+    //   !expense?.isPaid &&
+    //   expense?.frequency === "MONTHLY" &&
+    //   typeof expense?.currentInstallment !== "number" &&
+    //   (expense?.name === "Netflix" || expense?.name === "Disney+")
+    // ) {
+    //   console.log("Creating transitionHistory for expense: ", expense?.name);
+    //   await prisma.transitionHistory.create({
+    //     data: {
+    //       name: expense?.name || undefined,
+    //       frequency:
+    //         (expense?.frequency as TransitionHistoryFrequency) || undefined,
+    //       paymentType: expense?.paymentType || undefined,
+    //       categoryId: expense?.categoryId,
+    //       creditCardId: expense?.creditCardId || undefined,
+    //       registrationDate: expense?.registrationDate || undefined,
+    //       amount: expense?.amount,
+    //       userId: expense?.userId,
+    //       type: "PAYMENT",
+    //       dueDate: new Date("2024-08-30 12:00"),
+    //       status: expense?.status,
+    //     },
+    //   });
+    // }
   }
 }
 main();
