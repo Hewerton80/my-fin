@@ -22,22 +22,20 @@ export function useGetTransiontionsHistoty() {
 
   const transionHistoriesQueryParams =
     useMemo<IGetTransionsHistoryParams>(() => {
-      const startPaidAt = searchParams.get("startPaidAt");
-      const endPaidAt = searchParams.get("endPaidAt");
+      const startDate = searchParams.get("startDate");
+      const endDate = searchParams.get("endDate");
       return {
         currentPage: isNumberable(searchParams.get("currentPage"))
           ? Number(searchParams.get("currentPage"))
           : 1,
         keyword: searchParams.get("keyword") || "",
         type: searchParams.get("type") || "",
-        startPaidAt:
-          startPaidAt && isValidDate(new Date(startPaidAt))
-            ? (startPaidAt as string)
+        startDate:
+          startDate && isValidDate(new Date(startDate))
+            ? (startDate as string)
             : "",
-        endPaidAt:
-          endPaidAt && isValidDate(new Date(endPaidAt))
-            ? (endPaidAt as string)
-            : "",
+        endDate:
+          endDate && isValidDate(new Date(endDate)) ? (endDate as string) : "",
         status: searchParams.get("status") || "",
         creditCardId: searchParams.get("creditCardId") || "",
       };
@@ -125,8 +123,8 @@ export function useGetTransiontionsHistoty() {
     ({ from, to }: { from?: Date; to?: Date }) => {
       setQueryParams({
         currentPage: 1,
-        startPaidAt: from ? from.toISOString() : "",
-        endPaidAt: to ? to.toISOString() : "",
+        startDate: from ? from.toISOString() : "",
+        endDate: to ? to.toISOString() : "",
       });
     },
     [setQueryParams]

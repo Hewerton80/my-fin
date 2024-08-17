@@ -16,8 +16,8 @@ export interface IGetTransionsHistoryParams extends IPaginateArgs {
   keyword?: string;
   type?: TransitionType | string;
   status?: TransitionHistoryStatus | string;
-  startPaidAt?: string;
-  endPaidAt?: string;
+  startDate?: string;
+  endDate?: string;
   creditCardId?: string;
 }
 

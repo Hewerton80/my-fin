@@ -6,10 +6,11 @@ import { TransitionType } from "@prisma/client";
 import { isValid as isValidDate } from "date-fns/isValid";
 import { CONSTANTS } from "../../shared/constants";
 import { endOfDay, isAfter, startOfYear, subDays } from "date-fns";
+import { CreditCardWitchComputedFields } from "../creditCard/types";
 
 const parseSearchParams = (searchParams: URLSearchParams) => {
-  const startPaidAt = searchParams.get("startPaidAt");
-  const endPaidAt = searchParams.get("endPaidAt");
+  const startDate = searchParams.get("startDate");
+  const endDate = searchParams.get("endDate");
 
   return {
     keyword: searchParams.get("keyword")?.trim() || "",
@@ -21,13 +22,13 @@ const parseSearchParams = (searchParams: URLSearchParams) => {
       TransitionHistoryStatus?.[
         searchParams.get("status")?.trim() as TransitionHistoryStatus
       ] || undefined,
-    startPaidAt:
-      startPaidAt && isValidDate(new Date(startPaidAt))
-        ? (startPaidAt as string)
+    startDate:
+      startDate && isValidDate(new Date(startDate))
+        ? (startDate as string)
         : startOfYear(new Date()),
-    endPaidAt:
-      endPaidAt && isValidDate(new Date(endPaidAt))
-        ? (endPaidAt as string)
+    endDate:
+      endDate && isValidDate(new Date(endDate))
+        ? (endDate as string)
         : undefined,
     currentPage: searchParams.get("currentPage") || 1,
     perPage: searchParams.get("perPage") || 25,
@@ -52,8 +53,8 @@ const getListByUserId = async (
     status,
     type,
     creditCardId,
-    startPaidAt,
-    endPaidAt,
+    startDate,
+    endDate,
   } = parseSearchParams(searchParams);
   const paginedTransitionsHistory = await prismaPagination<
     TransitionHistoryWitchConputedFields,
@@ -72,8 +73,9 @@ const getListByUserId = async (
         { creditCardId },
         {
           OR: [
-            { paidAt: { gte: startPaidAt, lte: endPaidAt } },
-            { registrationDate: { gte: startPaidAt, lte: endPaidAt } },
+            { paidAt: { gte: startDate, lte: endDate } },
+            { registrationDate: { gte: startDate, lte: endDate } },
+            { dueDate: { gte: startDate, lte: endDate } },
           ],
         },
       ],
@@ -102,18 +104,10 @@ const getStatusByDueDate = (dueDate?: Date) => {
   return TransitionHistoryStatus["ON_DAY"];
 };
 
-const getDueDateByRegistrationDateAndCreditCardId = async (
+const getDueDateByRegistrationDateAndCreditCard = (
   registrationDate: Date,
-  creditCardId: string
+  creditCard: CreditCardWitchComputedFields
 ) => {
-  const creditCard = await prisma.creditCard.findUnique({
-    where: { id: creditCardId },
-  });
-
-  if (!creditCard) {
-    throw new Error(CONSTANTS.API_RESPONSE_MESSAGES.CREDIT_CARD_NOT_FOUND);
-  }
-
   const currentDayOfMonth = registrationDate.getDate();
   const creditCardDueDay = creditCard?.dueDay!;
   const creditCardInvoiceClosingDay = creditCard?.invoiceClosingDay!;
@@ -136,8 +130,27 @@ const getDueDateByRegistrationDateAndCreditCardId = async (
   return endOfDay(handledDueDate);
 };
 
+const getDueDateByRegistrationDateAndCreditCardId = async (
+  registrationDate: Date,
+  creditCardId: string
+) => {
+  const creditCard = await prisma.creditCard.findUnique({
+    where: { id: creditCardId },
+  });
+
+  if (!creditCard) {
+    throw new Error(CONSTANTS.API_RESPONSE_MESSAGES.CREDIT_CARD_NOT_FOUND);
+  }
+
+  return getDueDateByRegistrationDateAndCreditCard(
+    registrationDate,
+    creditCard
+  );
+};
+
 export const TransitionHistoryService = {
   getListByUserId,
   getDueDateByRegistrationDateAndCreditCardId,
+  getDueDateByRegistrationDateAndCreditCard,
   getStatusByDueDate,
 };

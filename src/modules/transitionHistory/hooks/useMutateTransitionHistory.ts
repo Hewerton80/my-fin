@@ -48,9 +48,9 @@ export function useMutateTransitionHistory() {
     resolver: zodResolver(frontendFormTransitionHistoryReceiveSchema),
   });
 
-  // useEffect(() => {
-  //   console.log({ error: transitionHistoryFormState.errors });
-  // }, [transitionHistoryFormState.errors]);
+  useEffect(() => {
+    console.log({ error: transitionHistoryFormState.errors });
+  }, [transitionHistoryFormState.errors]);
 
   const {
     mutate: createTransitionHistory,

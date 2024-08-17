@@ -240,11 +240,11 @@ export const TransitionHistoryTable = ({
             <div className="ml-auto flex items-center gap-2 sm:gap-2 w-full sm:w-auto">
               <DateRangePicker
                 rangeDate={{
-                  from: transionHistoriesQueryParams?.startPaidAt
-                    ? new Date(transionHistoriesQueryParams?.startPaidAt)
+                  from: transionHistoriesQueryParams?.startDate
+                    ? new Date(transionHistoriesQueryParams?.startDate)
                     : undefined,
-                  to: transionHistoriesQueryParams?.endPaidAt
-                    ? new Date(transionHistoriesQueryParams?.endPaidAt)
+                  to: transionHistoriesQueryParams?.endDate
+                    ? new Date(transionHistoriesQueryParams?.endDate)
                     : undefined,
                 }}
                 onChange={(rangeDate) => {
