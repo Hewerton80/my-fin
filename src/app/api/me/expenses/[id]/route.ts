@@ -75,7 +75,7 @@ export async function PATCH(
     };
     if (updateExpenseData?.registrationDate) {
       updateExpenseData.dueDate =
-        await ExpenseServices.getDueDateByRegistrationDateAndCreditCardId(
+        await ExpenseServices.getDueDateAndReferenceMonthByRegistrationDateAndCreditCardId(
           updateExpenseData?.registrationDate,
           currentExpense?.creditCardId!
         );

@@ -145,6 +145,7 @@ model TransitionHistory {
     expense            Expense?                      @relation(fields: [expenseId], references: [id])
     userId             String?
     user               User?                         @relation(fields: [userId], references: [id])
+    referenceMonth     DateTime?                     @db.Date
     registrationDate   DateTime?
     dueDate            DateTime?
     paidAt             DateTime?

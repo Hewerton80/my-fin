@@ -27,18 +27,16 @@ export async function GET(request: NextRequest) {
   const creditCards = await CreditCardService.getListByUserId(userId);
   let graterDueDate = new Date();
   for (const creditCard of creditCards) {
-    const dueDate =
-      TransitionHistoryService.getDueDateByRegistrationDateAndCreditCard(
+    const { dueDate } =
+      TransitionHistoryService.getDueDateAndReferenceMonthByRegistrationDateAndCreditCard(
         startOfMonthDate,
         creditCard
       );
-    console.log({ graterDueDate, dueDate });
     if (graterDueDate < dueDate) {
       graterDueDate = dueDate;
     }
   }
   const formatedgraterDueDate = format(graterDueDate, "yyyy-MM-dd");
-  console.log({ formatedgraterDueDate });
   const oweCreditCardInsights =
     (await prisma.$queryRaw<CreditCardInsights[]>`
     SELECT CreditCard.name, CreditCard.color as color, ROUND(SUM(TransitionHistory.amount), 2) as amount, CAST(COUNT(TransitionHistory.id) AS CHAR(32)) as count

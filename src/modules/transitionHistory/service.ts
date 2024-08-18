@@ -104,7 +104,7 @@ const getStatusByDueDate = (dueDate?: Date) => {
   return TransitionHistoryStatus["ON_DAY"];
 };
 
-const getDueDateByRegistrationDateAndCreditCard = (
+const getDueDateAndReferenceMonthByRegistrationDateAndCreditCard = (
   registrationDate: Date,
   creditCard: CreditCardWitchComputedFields
 ) => {
@@ -116,21 +116,43 @@ const getDueDateByRegistrationDateAndCreditCard = (
     registrationDate.getMonth(),
     creditCardDueDay
   );
+  const handledReferenceMonth = new Date(
+    registrationDate.getFullYear(),
+    registrationDate.getMonth(),
+    15
+  );
   if (creditCardInvoiceClosingDay <= creditCardDueDay) {
     if (currentDayOfMonth > creditCardInvoiceClosingDay) {
       handledDueDate.setMonth(handledDueDate.getMonth() + 1);
+      handledReferenceMonth.setMonth(handledReferenceMonth.getMonth() + 1);
     }
   } else {
     if (currentDayOfMonth > creditCardInvoiceClosingDay) {
       handledDueDate.setMonth(handledDueDate.getMonth() + 2);
+      handledReferenceMonth.setMonth(handledReferenceMonth.getMonth() + 1);
     } else {
       handledDueDate.setMonth(handledDueDate.getMonth() + 1);
     }
   }
-  return endOfDay(handledDueDate);
+  return {
+    dueDate: endOfDay(handledDueDate),
+    referenceMonth: handledReferenceMonth,
+  };
 };
 
-const getDueDateByRegistrationDateAndCreditCardId = async (
+// const getDueDateAndReferenceMonthByRegistrationDateAndCreditCard = (
+//   registrationDate: Date,
+//   creditCard: CreditCardWitchComputedFields
+// ) => {
+//   const { dueDate } =
+//     getDueDateAndReferenceMonthByRegistrationDateAndCreditCard(
+//       registrationDate,
+//       creditCard
+//     );
+//   return dueDate;
+// };
+
+const getDueDateAndReferenceMonthByRegistrationDateAndCreditCardId = async (
   registrationDate: Date,
   creditCardId: string
 ) => {
@@ -142,7 +164,7 @@ const getDueDateByRegistrationDateAndCreditCardId = async (
     throw new Error(CONSTANTS.API_RESPONSE_MESSAGES.CREDIT_CARD_NOT_FOUND);
   }
 
-  return getDueDateByRegistrationDateAndCreditCard(
+  return getDueDateAndReferenceMonthByRegistrationDateAndCreditCard(
     registrationDate,
     creditCard
   );
@@ -150,7 +172,7 @@ const getDueDateByRegistrationDateAndCreditCardId = async (
 
 export const TransitionHistoryService = {
   getListByUserId,
-  getDueDateByRegistrationDateAndCreditCardId,
-  getDueDateByRegistrationDateAndCreditCard,
+  getDueDateAndReferenceMonthByRegistrationDateAndCreditCardId,
+  getDueDateAndReferenceMonthByRegistrationDateAndCreditCard,
   getStatusByDueDate,
 };

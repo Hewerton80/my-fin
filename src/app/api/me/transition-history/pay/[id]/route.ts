@@ -39,6 +39,7 @@ export async function PATCH(
 
   const transition = await prisma.transitionHistory.findUnique({
     where: { id: params?.id, userId },
+    include: { creditCard: true },
   });
 
   if (!transition) {
@@ -74,13 +75,33 @@ export async function PATCH(
 
   if (frequency === "MONTHLY" && dueDate && hasNotInstallments) {
     try {
-      const nextDueDate = addMonths(new Date(dueDate), 1);
+      const nextRegistrationDate = addMonths(
+        new Date(transition?.registrationDate!),
+        1
+      );
+      let nextDueDate = addMonths(new Date(dueDate), 1);
+      let nextReferenceMonth = addMonths(
+        new Date(transition?.referenceMonth!),
+        1
+      );
+      if (transition?.creditCard!) {
+        const { dueDate, referenceMonth } =
+          TransitionHistoryService.getDueDateAndReferenceMonthByRegistrationDateAndCreditCard(
+            nextRegistrationDate,
+            transition?.creditCard!
+          );
+        nextDueDate = dueDate;
+        nextReferenceMonth = referenceMonth;
+      }
       delete (transition as any)?.id;
       delete (transition as any)?.createdAt;
+      delete (transition as any)?.creditCard;
       await prisma.transitionHistory.create({
         data: {
-          ...transition,
+          ...(transition as any),
           dueDate: nextDueDate,
+          registrationDate: nextRegistrationDate,
+          referenceMonth: nextReferenceMonth,
           status: TransitionHistoryService.getStatusByDueDate(nextDueDate),
         },
       });

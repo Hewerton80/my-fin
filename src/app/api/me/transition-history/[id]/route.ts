@@ -98,12 +98,13 @@ export async function PATCH(
       updateTransitionData?.registrationDate &&
       currentTransition?.creditCardId
     ) {
-      updateTransitionData.dueDate =
-        await TransitionHistoryService.getDueDateByRegistrationDateAndCreditCardId(
+      const { dueDate, referenceMonth } =
+        await TransitionHistoryService.getDueDateAndReferenceMonthByRegistrationDateAndCreditCardId(
           updateTransitionData?.registrationDate,
           currentTransition?.creditCardId
         );
-
+      updateTransitionData.dueDate = dueDate;
+      updateTransitionData.referenceMonth = referenceMonth;
       updateTransitionData.status = TransitionHistoryService.getStatusByDueDate(
         new Date(currentTransition?.dueDate!)
       );

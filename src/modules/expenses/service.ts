@@ -47,7 +47,7 @@ const getListByUserId = async (
   return paginedExpenses;
 };
 
-const getDueDateByRegistrationDateAndCreditCardId = async (
+const getDueDateAndReferenceMonthByRegistrationDateAndCreditCardId = async (
   registrationDate: Date,
   creditCardId: string
 ) => {
@@ -98,5 +98,5 @@ const getOneById = async (id: string) => {
 export const ExpenseServices = {
   getOneById,
   getListByUserId,
-  getDueDateByRegistrationDateAndCreditCardId,
+  getDueDateAndReferenceMonthByRegistrationDateAndCreditCardId,
 };

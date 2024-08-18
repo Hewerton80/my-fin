@@ -96,17 +96,22 @@ export async function POST(request: NextRequest) {
         paymentType as TransitionHistoryPaymantType;
     }
 
-    if (creditCardId) {
+    const creditCard = await prisma.creditCard.findUnique({
+      where: { id: creditCardId },
+    });
+
+    if (creditCard) {
       createTranstionHistoryData.creditCardId = creditCardId;
       createTranstionHistoryData.paymentType =
         TransitionHistoryPaymantType.CREDIT_CARD;
 
-      createTranstionHistoryData.dueDate =
-        await TransitionHistoryService.getDueDateByRegistrationDateAndCreditCardId(
+      const { dueDate, referenceMonth } =
+        TransitionHistoryService.getDueDateAndReferenceMonthByRegistrationDateAndCreditCard(
           new Date(registrationDate),
-          creditCardId
+          creditCard
         );
-
+      createTranstionHistoryData.dueDate = dueDate;
+      createTranstionHistoryData.referenceMonth = referenceMonth;
       createTranstionHistoryData.status =
         TransitionHistoryService.getStatusByDueDate(
           new Date(createTranstionHistoryData.dueDate)
@@ -117,7 +122,7 @@ export async function POST(request: NextRequest) {
 
     if (
       !isPaid &&
-      createTranstionHistoryData?.creditCardId &&
+      creditCard &&
       createTranstionHistoryData?.frequency ===
         TransitionHistoryFrequency.MONTHLY &&
       isNumber(totalInstallments)
@@ -130,11 +135,22 @@ export async function POST(request: NextRequest) {
             new Date(createTranstionHistoryDataArray[0]?.dueDate),
             index + 1
           );
+          const newRegistrationDate = addMonths(
+            new Date(createTranstionHistoryDataArray[0]?.registrationDate),
+            index + 1
+          );
+          const { dueDate, referenceMonth } =
+            TransitionHistoryService.getDueDateAndReferenceMonthByRegistrationDateAndCreditCard(
+              newRegistrationDate,
+              creditCard
+            );
           const newStatus =
             TransitionHistoryService.getStatusByDueDate(newDueDate);
           createTranstionHistoryDataArray.push({
             ...createTranstionHistoryDataArray[0],
-            dueDate: newDueDate,
+            dueDate,
+            registrationDate: newRegistrationDate,
+            referenceMonth,
             status: newStatus,
             currentInstallment,
           });

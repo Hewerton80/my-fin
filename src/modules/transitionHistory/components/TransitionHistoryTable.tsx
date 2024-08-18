@@ -146,6 +146,14 @@ export const TransitionHistoryTable = ({
             : "-",
       },
       {
+        label: "Reference",
+        field: "referenceMonth",
+        onParse: (transitionHistory) =>
+          transitionHistory?.referenceMonth
+            ? format(new Date(transitionHistory?.referenceMonth), "MMM yy")
+            : "-",
+      },
+      {
         label: "Due Date",
         field: "dueDate",
         onParse: (transitionHistory) =>

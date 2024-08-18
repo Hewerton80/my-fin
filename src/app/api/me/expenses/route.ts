@@ -106,7 +106,7 @@ export async function POST(request: NextRequest) {
       createExpenseData.paymentType = PaymantType.CREDIT_CARD;
 
       createExpenseData.dueDate =
-        await ExpenseServices.getDueDateByRegistrationDateAndCreditCardId(
+        await ExpenseServices.getDueDateAndReferenceMonthByRegistrationDateAndCreditCardId(
           new Date(registrationDate!),
           createExpenseData?.creditCardId
         );

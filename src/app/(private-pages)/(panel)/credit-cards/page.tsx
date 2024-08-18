@@ -83,10 +83,6 @@ export default function CreditCardsPage() {
           );
         })}
       </Card.Root>
-      {/* <CreditCardInsightsCards.Paid
-        className="col-span-12 md:col-span-4"
-        paidCreditCardInsights={paidCreditCardInsights}
-      /> */}
       <CreditCardInsightsCards.Owe
         className="col-span-12 md:col-span-4"
         oweCreditCardInsights={oweCreditCardInsights}
