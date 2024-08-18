@@ -12,6 +12,7 @@ export function useGetTransiontionHistoty(id?: string) {
   const {
     data: transitionHisory,
     refetch: fetchTransiotionHistory,
+    error: errorTransiotionHistory,
     isLoading,
     isRefetching,
   } = useQuery({
@@ -29,6 +30,7 @@ export function useGetTransiontionHistoty(id?: string) {
     [isLoading, isRefetching]
   );
   return {
+    errorTransiotionHistory,
     transitionHisory,
     isLoadingTransiotionHistory,
     fetchTransiotionHistory,

@@ -25,6 +25,7 @@ import { getRange } from "@/shared/getRange";
 import { getCurrencyFormat } from "@/shared/getCurrencyFormat";
 import { useGetCreditCards } from "@/modules/creditCard/hooks/useGetCreditCards";
 import { useCacheTransitions } from "../hooks/useCacheTransitionHistory";
+import { FeedBackError } from "@/components/ui/feedback/FeedBackError";
 
 interface ModalTransitionHistoryFormProps {
   transictionHistoryId?: string;
@@ -62,6 +63,7 @@ export function ModalTransitionHistory({
   const {
     transitionHisory: currentTransitionHistory,
     isLoadingTransiotionHistory,
+    errorTransiotionHistory,
     fetchTransiotionHistory,
   } = useGetTransiontionHistoty(transictionHistoryId);
 
@@ -182,6 +184,8 @@ export function ModalTransitionHistory({
           <div className="flex items-center justify-center py-40">
             <Spinner size={64} />
           </div>
+        ) : errorTransiotionHistory ? (
+          <FeedBackError onTryAgain={fetchTransiotionHistory} />
         ) : (
           <>
             <Modal.Body asChild>
