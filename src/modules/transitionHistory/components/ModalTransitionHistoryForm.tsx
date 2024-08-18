@@ -96,10 +96,12 @@ export function ModalTransitionHistory({
     }
   }, [currentTransitionHistory, isCloning, resetTransitionHistoryForm]);
 
-  const isEdit = useMemo(
-    () => Boolean(transictionHistoryId) && !isCloning,
-    [transictionHistoryId, isCloning]
-  );
+  const isEdit = useMemo(() => {
+    console.log({
+      transictionHistoryIdToEditInModalForm: transictionHistoryId,
+    });
+    return Boolean(transictionHistoryId) && !isCloning;
+  }, [transictionHistoryId, isCloning]);
 
   const categoriesOptions = useMemo<SelectOption[]>(() => {
     if (

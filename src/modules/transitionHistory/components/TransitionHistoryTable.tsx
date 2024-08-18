@@ -166,17 +166,22 @@ export const TransitionHistoryTable = ({
       {
         label: "",
         field: "actions",
-        onParse: (transitionHistory) => (
-          <TableTransitionActionsButtons
-            transitionHistory={transitionHistory}
-            onClickToEdit={() => setTransitionIdToEdit(transitionHistory?.id)}
-            onClickToClone={() => {
-              setTransitionIdToEdit(transitionHistory?.id);
-              setIsCloningTransition(true);
-            }}
-            onSuccess={refetchTransitionHistorys}
-          />
-        ),
+        onParse: (transitionHistory) => {
+          return (
+            <TableTransitionActionsButtons
+              transitionHistory={transitionHistory}
+              onClickToEdit={() => {
+                console.log({ onToEditTransitionId: transitionHistory?.id });
+                setTransitionIdToEdit(transitionHistory?.id);
+              }}
+              onClickToClone={() => {
+                setTransitionIdToEdit(transitionHistory?.id);
+                setIsCloningTransition(true);
+              }}
+              onSuccess={refetchTransitionHistorys}
+            />
+          );
+        },
       },
     ];
     if (hideColumns?.length) {
