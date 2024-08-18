@@ -67,10 +67,14 @@ export const frontendFormTransitionHistoryReceiveSchema = z
       path: ["frequency"],
     }
   )
-  .refine(({ paymentType, isPaid }) => (isPaid ? paymentType : true), {
-    message: REQUIRED_FIELD,
-    path: ["paymentType"],
-  })
+  .refine(
+    ({ paymentType, isPaid, type }) =>
+      isPaid && type !== TransitionType.RECEIPT ? paymentType : true,
+    {
+      message: REQUIRED_FIELD,
+      path: ["paymentType"],
+    }
+  )
   .refine(
     ({ isPaid, creditCardId, type }) =>
       isPaid || type === TransitionType.RECEIPT ? true : creditCardId,
