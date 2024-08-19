@@ -1,12 +1,12 @@
 import prisma from "@/lib/prisma";
-import { CONSTANTS } from "@/shared/constants";
+import { CONSTANTS } from "@/utils/constants";
 import { NextRequest, NextResponse } from "next/server";
 import {
   CategoryInsights,
   HistoricPaymentsInsights,
   HistoricReceiptsInsights,
 } from "@/modules/dashboard/types";
-import { sortObjectsByProperty } from "@/shared/array";
+import { sortObjectsByProperty } from "@/utils/array";
 import { AuthService } from "@/modules/auth/service";
 import { CreditCardService } from "@/modules/creditCard/service";
 import { format, startOfYear, endOfYear } from "date-fns";

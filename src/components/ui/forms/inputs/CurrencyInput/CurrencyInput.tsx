@@ -1,7 +1,7 @@
-import { getCurrencyFormat } from "@/shared/getCurrencyFormat";
+import { getCurrencyFormat } from "@/utils/getCurrencyFormat";
 import { ChangeEvent, forwardRef, useCallback, useMemo } from "react";
 import { Input, InputProps } from "../Input";
-import { onlyNumbersMask } from "@/shared/mask";
+import { onlyNumbersMask } from "@/utils/mask";
 
 interface CurrencyInputProps extends Omit<InputProps, "value" | "onChange"> {
   value?: number;

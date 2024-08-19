@@ -6,8 +6,8 @@ import { useCallback, useEffect, useMemo } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAxios } from "@/hooks/useAxios";
 import { useRouter } from "next/navigation";
-import { CONSTANTS } from "@/shared/constants";
-import { handleErrorMessage } from "@/shared/handleErrorMessage";
+import { CONSTANTS } from "@/utils/constants";
+import { handleErrorMessage } from "@/utils/handleErrorMessage";
 import { useCookies } from "next-client-cookies";
 import { useGetLoggedUser } from "./useGetLoggedUser";
 

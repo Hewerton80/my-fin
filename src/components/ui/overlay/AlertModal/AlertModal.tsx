@@ -3,7 +3,7 @@ import React, { forwardRef, useContext } from "react";
 import { Modal, ModalProps } from "@/components/ui/overlay/Modal";
 import { twMerge } from "tailwind-merge";
 import { Button, ButtonVariantStyle } from "@/components/ui/buttons/Button";
-import { isString } from "@/shared/isType";
+import { isString } from "@/utils/isType";
 import { Spinner } from "../../feedback/Spinner";
 import { useAlertModal } from "@/hooks/useAlertModal";
 

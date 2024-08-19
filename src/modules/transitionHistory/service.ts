@@ -4,14 +4,14 @@ import { Prisma, TransitionHistoryStatus } from "@prisma/client";
 import { TransitionHistoryWitchConputedFields } from "./types";
 import { TransitionType } from "@prisma/client";
 import { isValid as isValidDate } from "date-fns/isValid";
-import { CONSTANTS } from "../../shared/constants";
+import { CONSTANTS } from "../../utils/constants";
 import { endOfDay, isAfter, startOfYear, subDays } from "date-fns";
 import { CreditCardWitchComputedFields } from "../creditCard/types";
 
 const parseSearchParams = (searchParams: URLSearchParams) => {
   const startDate = searchParams.get("startDate");
   const endDate = searchParams.get("endDate");
-
+  const referenceMonth = searchParams.get("referenceMonth");
   return {
     keyword: searchParams.get("keyword")?.trim() || "",
     type:
@@ -30,8 +30,12 @@ const parseSearchParams = (searchParams: URLSearchParams) => {
       endDate && isValidDate(new Date(endDate))
         ? (endDate as string)
         : undefined,
+    referenceMonth:
+      referenceMonth && isValidDate(new Date(referenceMonth))
+        ? new Date(referenceMonth as string).toISOString()
+        : undefined,
     currentPage: searchParams.get("currentPage") || 1,
-    perPage: searchParams.get("perPage") || 25,
+    perPage: searchParams.get("perPage") || 100000,
     orderBy: parseOrderBy(searchParams.get("orderBy") || undefined),
   };
 };
@@ -53,8 +57,7 @@ const getListByUserId = async (
     status,
     type,
     creditCardId,
-    startDate,
-    endDate,
+    referenceMonth,
   } = parseSearchParams(searchParams);
   const paginedTransitionsHistory = await prismaPagination<
     TransitionHistoryWitchConputedFields,
@@ -71,13 +74,7 @@ const getListByUserId = async (
         { type },
         { status },
         { creditCardId },
-        {
-          OR: [
-            { paidAt: { gte: startDate, lte: endDate } },
-            { registrationDate: { gte: startDate, lte: endDate } },
-            { dueDate: { gte: startDate, lte: endDate } },
-          ],
-        },
+        { referenceMonth },
       ],
       ...where,
     },
@@ -119,7 +116,7 @@ const getDueDateAndReferenceMonthByRegistrationDateAndCreditCard = (
   const handledReferenceMonth = new Date(
     registrationDate.getFullYear(),
     registrationDate.getMonth(),
-    15
+    1
   );
   if (creditCardInvoiceClosingDay <= creditCardDueDay) {
     if (currentDayOfMonth > creditCardInvoiceClosingDay) {

@@ -1,5 +1,5 @@
 "use client";
-import { navItems } from "@/shared/navItems";
+import { navItems } from "@/utils/navItems";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useMemo, forwardRef } from "react";

@@ -1,6 +1,6 @@
 import { Badge } from "@/components/ui/dataDisplay/Badge";
 import { BadgeVariatnsType } from "@/modules/expenses/types";
-import { capitalizeFisrtLetter } from "@/shared/string";
+import { capitalizeFisrtLetter } from "@/utils/string";
 import { TransitionHistoryStatus } from "@prisma/client";
 import { ReactNode, useCallback, useMemo } from "react";
 

@@ -1,7 +1,7 @@
 import prisma from "@/lib/prisma";
-import { CONSTANTS } from "@/shared/constants";
+import { CONSTANTS } from "@/utils/constants";
 import { Frequency, Prisma } from "@prisma/client";
-import { isNumber } from "@/shared/isType";
+import { isNumber } from "@/utils/isType";
 import { ExpenseUtils } from "@/modules/expenses/utils";
 import { NextRequest, NextResponse } from "next/server";
 import { payExpenseSchema } from "@/modules/expenses/schemas/apiFormExpenseSchema";

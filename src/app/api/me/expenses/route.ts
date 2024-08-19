@@ -1,11 +1,11 @@
 import prisma from "@/lib/prisma";
 import { handleZodValidationError } from "@/lib/zodHelpers";
-import { CONSTANTS } from "@/shared/constants";
+import { CONSTANTS } from "@/utils/constants";
 import { endOfDay } from "date-fns/endOfDay";
 import { ExpenseStatus, Frequency, PaymantType, Prisma } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { isNumber } from "@/shared/isType";
+import { isNumber } from "@/utils/isType";
 import { createApiExpenseSchema } from "@/modules/expenses/schemas/apiFormExpenseSchema";
 import { ExpenseServices } from "@/modules/expenses/service";
 import { AuthService } from "@/modules/auth/service";

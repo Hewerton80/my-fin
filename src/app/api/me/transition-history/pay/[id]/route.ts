@@ -1,6 +1,6 @@
 import prisma from "@/lib/prisma";
-import { CONSTANTS } from "@/shared/constants";
-import { isNull } from "@/shared/isType";
+import { CONSTANTS } from "@/utils/constants";
+import { isNull } from "@/utils/isType";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { handleZodValidationError } from "@/lib/zodHelpers";
@@ -84,6 +84,7 @@ export async function PATCH(
         new Date(transition?.referenceMonth!),
         1
       );
+      nextReferenceMonth.setDate(1);
       if (transition?.creditCard!) {
         const { dueDate, referenceMonth } =
           TransitionHistoryService.getDueDateAndReferenceMonthByRegistrationDateAndCreditCard(

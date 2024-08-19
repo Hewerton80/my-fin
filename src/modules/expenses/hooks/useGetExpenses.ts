@@ -6,13 +6,13 @@ import { IPaginatedDocs } from "@/lib/prismaHelpers";
 import {
   parseJsonToSearchParams,
   removeEmptyKeys,
-} from "@/shared/parseJsonToSearchParams";
+} from "@/utils/parseJsonToSearchParams";
 import {
   ExpenseQueryKeys,
   ExpenseWithComputedFields,
   IGetExpensesQueryParams,
 } from "../types";
-import { isNumberable } from "@/shared/isType";
+import { isNumberable } from "@/utils/isType";
 import { useDebouncedCallback } from "use-debounce";
 import { ExpenseStatus } from "@prisma/client";
 

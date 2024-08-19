@@ -19,6 +19,7 @@ export interface IGetTransionsHistoryParams extends IPaginateArgs {
   startDate?: string;
   endDate?: string;
   creditCardId?: string;
+  referenceMonth?: string;
 }
 
 export interface GetTransionsHistoryByCategoryParams {

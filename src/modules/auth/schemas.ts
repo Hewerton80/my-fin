@@ -1,4 +1,4 @@
-import { CONSTANTS } from "@/shared/constants";
+import { CONSTANTS } from "@/utils/constants";
 import { z } from "zod";
 
 export const loginFormSchema = z.object({

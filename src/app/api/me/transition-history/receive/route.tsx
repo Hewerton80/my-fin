@@ -1,7 +1,7 @@
 import { handleZodValidationError } from "@/lib/zodHelpers";
 import { AuthService } from "@/modules/auth/service";
 import { apiFormTransitionHistoryReceiveSchema } from "@/modules/transitionHistory/schemas/apiFormTransitionHistoryReceiveSchema";
-import { CONSTANTS } from "@/shared/constants";
+import { CONSTANTS } from "@/utils/constants";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import prisma from "@/lib/prisma";

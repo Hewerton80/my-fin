@@ -1,6 +1,6 @@
 "use client";
 import React, { useMemo, useCallback } from "react";
-import { getRange } from "@/shared/getRange";
+import { getRange } from "@/utils/getRange";
 import { Button } from "../../buttons/Button";
 import { IconButton } from "../../buttons/IconButton";
 import {

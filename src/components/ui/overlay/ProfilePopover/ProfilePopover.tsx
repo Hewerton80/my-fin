@@ -6,7 +6,7 @@ import { FiLogOut, FiUser } from "react-icons/fi";
 import { useTheme } from "@/hooks/useTheme";
 import { FaMoon, FaSun, FaChevronRight } from "react-icons/fa";
 import { LuPaintbrush2 } from "react-icons/lu";
-import { getContrastColor } from "@/shared/colors";
+import { getContrastColor } from "@/utils/colors";
 import { useGetLoggedUser } from "@/modules/auth/hooks/useGetLoggedUser";
 import { useAuthLogin } from "@/modules/auth/hooks/useAuthLogin";
 import { Dropdown } from "../Dropdown/Dropdown";

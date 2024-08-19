@@ -3,7 +3,7 @@ import { isAfter } from "date-fns/isAfter";
 import { subDays } from "date-fns/subDays";
 import { BadgeVariatnsType, ExpenseWithComputedFields } from "./types";
 import { Badge } from "@/components/ui/dataDisplay/Badge";
-import { capitalizeFisrtLetter } from "@/shared/string";
+import { capitalizeFisrtLetter } from "@/utils/string";
 
 const getExpenseStatusByDueDate = (
   expense: Partial<ExpenseWithComputedFields>

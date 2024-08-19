@@ -1,7 +1,7 @@
 import prisma from "@/lib/prisma";
 import { AuthService } from "@/modules/auth/service";
 import { CreditCardService } from "@/modules/creditCard/service";
-import { CONSTANTS } from "@/shared/constants";
+import { CONSTANTS } from "@/utils/constants";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {

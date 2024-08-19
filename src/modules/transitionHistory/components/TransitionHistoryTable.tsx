@@ -14,12 +14,13 @@ import { TableTransitionActionsButtons } from "@/modules/transitionHistory/compo
 import { TransitionStatusBadge } from "@/modules/transitionHistory/components/TransitionStatusBadge";
 import { useGetTransiontionsHistoty } from "@/modules/transitionHistory/hooks/useGetTransiontionsHistoty";
 import { TransitionHistoryWitchConputedFields } from "@/modules/transitionHistory/types";
-import { CONSTANTS } from "@/shared/constants";
-import { getCurrencyFormat } from "@/shared/getCurrencyFormat";
-import { isNumber, isUndefined } from "@/shared/isType";
-import { capitalizeFisrtLetter } from "@/shared/string";
+import { CONSTANTS } from "@/utils/constants";
+import { getCurrencyFormat } from "@/utils/getCurrencyFormat";
+import { isNumber, isUndefined } from "@/utils/isType";
+import { monthsOptions } from "@/utils/monthOptions";
+import { capitalizeFisrtLetter } from "@/utils/string";
 import { TransitionHistoryStatus, TransitionType } from "@prisma/client";
-import { format } from "date-fns";
+import { addHours, format } from "date-fns";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { twMerge } from "tailwind-merge";
 interface TransitionHistoryTableProps {
@@ -47,6 +48,7 @@ export const TransitionHistoryTable = ({
     changeDateRange,
     goToPage,
     changeTransitionHistoryStatus,
+    changeReferenceMonth,
   } = useGetTransiontionsHistoty();
 
   const [showTransitionFormModal, setShowTransitionFormModal] = useState(false);
@@ -150,7 +152,10 @@ export const TransitionHistoryTable = ({
         field: "referenceMonth",
         onParse: (transitionHistory) =>
           transitionHistory?.referenceMonth
-            ? format(new Date(transitionHistory?.referenceMonth), "MMM yy")
+            ? format(
+                addHours(new Date(transitionHistory?.referenceMonth), 12),
+                "MMM yy"
+              )
             : "-",
       },
       {
@@ -251,21 +256,12 @@ export const TransitionHistoryTable = ({
             />
 
             <div className="ml-auto flex items-center gap-2 sm:gap-2 w-full sm:w-auto">
-              <DateRangePicker
-                rangeDate={{
-                  from: transionHistoriesQueryParams?.startDate
-                    ? new Date(transionHistoriesQueryParams?.startDate)
-                    : undefined,
-                  to: transionHistoriesQueryParams?.endDate
-                    ? new Date(transionHistoriesQueryParams?.endDate)
-                    : undefined,
-                }}
-                onChange={(rangeDate) => {
-                  changeDateRange({
-                    from: rangeDate?.from,
-                    to: rangeDate?.to,
-                  });
-                }}
+              <Picker
+                value={transionHistoriesQueryParams?.referenceMonth}
+                onChange={(value) => changeReferenceMonth(value)}
+                label="Month"
+                showLabelInner
+                options={monthsOptions}
               />
               <Input
                 value={searchTransitionHistoryValue}

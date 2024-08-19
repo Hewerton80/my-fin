@@ -4,7 +4,7 @@ import { useMutateTransitionHistory } from "../hooks/useMutateTransitionHistory"
 import { Controller } from "react-hook-form";
 import { Input } from "@/components/ui/forms/inputs/Input";
 import { CurrencyInput } from "@/components/ui/forms/inputs/CurrencyInput";
-import { isBoolean, isNull, isNumber } from "@/shared/isType";
+import { isBoolean, isNull, isNumber } from "@/utils/isType";
 import { Button } from "@/components/ui/buttons/Button";
 import { useGetTransiontionHistoty } from "../hooks/useGetTransiontionHistoty";
 import { Spinner } from "@/components/ui/feedback/Spinner";
@@ -12,7 +12,7 @@ import { format } from "date-fns";
 import { Select, SelectOption } from "@/components/ui/forms/selects";
 import { useGetGroupCategories } from "@/modules/category/hooks/useGetGroupCategories";
 import { Radio } from "@/components/ui/forms/Radio";
-import { stringToBoolean } from "@/shared/stringToBoolean";
+import { stringToBoolean } from "@/utils/stringToBoolean";
 import {
   PaymantType,
   TransitionHistoryFrequency,
@@ -20,9 +20,9 @@ import {
   TransitionHistoryStatus,
   TransitionType,
 } from "@prisma/client";
-import { capitalizeFisrtLetter } from "@/shared/string";
-import { getRange } from "@/shared/getRange";
-import { getCurrencyFormat } from "@/shared/getCurrencyFormat";
+import { capitalizeFisrtLetter } from "@/utils/string";
+import { getRange } from "@/utils/getRange";
+import { getCurrencyFormat } from "@/utils/getCurrencyFormat";
 import { useGetCreditCards } from "@/modules/creditCard/hooks/useGetCreditCards";
 import { useCacheTransitions } from "../hooks/useCacheTransitionHistory";
 import { FeedBackError } from "@/components/ui/feedback/FeedBackError";

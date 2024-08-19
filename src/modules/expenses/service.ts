@@ -3,7 +3,7 @@ import { ExpenseUtils } from "./utils";
 import { ExpenseWithComputedFields } from "./types";
 import { parseOrderBy, prismaPagination } from "@/lib/prismaHelpers";
 import { ExpenseStatus, Prisma } from "@prisma/client";
-import { CONSTANTS } from "@/shared/constants";
+import { CONSTANTS } from "@/utils/constants";
 import { endOfDay } from "date-fns";
 
 const parseSearchParams = (searchParams: URLSearchParams) => {

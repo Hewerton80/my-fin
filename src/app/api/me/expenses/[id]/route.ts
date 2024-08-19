@@ -1,5 +1,5 @@
 import { ExpenseServices } from "@/modules/expenses/service";
-import { CONSTANTS } from "@/shared/constants";
+import { CONSTANTS } from "@/utils/constants";
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { handleZodValidationError } from "@/lib/zodHelpers";

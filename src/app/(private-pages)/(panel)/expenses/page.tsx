@@ -5,15 +5,15 @@ import {
   DataTable,
   IColmunDataTable,
 } from "@/components/ui/dataDisplay/DataTable";
-import { isNumber, isUndefined } from "@/shared/isType";
+import { isNumber, isUndefined } from "@/utils/isType";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useGetExpenses } from "@/modules/expenses/hooks/useGetExpenses";
-import { getCurrencyFormat } from "@/shared/getCurrencyFormat";
+import { getCurrencyFormat } from "@/utils/getCurrencyFormat";
 import { format } from "date-fns/format";
 import { ModalExpenseForm } from "../../../../modules/expenses/components/ModalExpenseForm";
 import { ExpenseWithComputedFields } from "@/modules/expenses/types";
 import { TableExpenseActionsButtons } from "@/modules/expenses/components/TableExpenseActionsButtons";
-import { capitalizeFisrtLetter } from "@/shared/string";
+import { capitalizeFisrtLetter } from "@/utils/string";
 import { ExpenseUtils } from "@/modules/expenses/utils";
 import { Input } from "@/components/ui/forms/inputs/Input";
 import { Tabs } from "@/components/ui/navigation/Tabs";

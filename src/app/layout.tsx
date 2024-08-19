@@ -9,7 +9,7 @@ import { ThemeTamplate } from "@/components/templates/ThemeTamplate";
 import { CookiesProvider } from "next-client-cookies/server";
 import "./globals.css";
 
-setDefaultOptions({ locale: ptBR });
+// setDefaultOptions({ locale: ptBR });
 
 const inter = Inter({
   subsets: ["latin"],

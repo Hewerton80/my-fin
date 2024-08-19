@@ -1,4 +1,4 @@
-import { CONSTANTS } from "@/shared/constants";
+import { CONSTANTS } from "@/utils/constants";
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { AuthService } from "@/modules/auth/service";
@@ -94,20 +94,26 @@ export async function PATCH(
         ? new Date(`${registrationDate!} 12:00`)
         : undefined,
     };
-    if (
-      updateTransitionData?.registrationDate &&
-      currentTransition?.creditCardId
-    ) {
-      const { dueDate, referenceMonth } =
-        await TransitionHistoryService.getDueDateAndReferenceMonthByRegistrationDateAndCreditCardId(
-          updateTransitionData?.registrationDate,
-          currentTransition?.creditCardId
+    if (updateTransitionData?.registrationDate) {
+      if (currentTransition?.creditCardId) {
+        const { dueDate, referenceMonth } =
+          await TransitionHistoryService.getDueDateAndReferenceMonthByRegistrationDateAndCreditCardId(
+            updateTransitionData?.registrationDate,
+            currentTransition?.creditCardId
+          );
+        updateTransitionData.dueDate = dueDate;
+        updateTransitionData.referenceMonth = referenceMonth;
+        updateTransitionData.status =
+          TransitionHistoryService.getStatusByDueDate(
+            new Date(currentTransition?.dueDate!)
+          );
+      } else {
+        updateTransitionData.referenceMonth = new Date(
+          updateTransitionData.registrationDate.getFullYear(),
+          updateTransitionData.registrationDate.getMonth(),
+          1
         );
-      updateTransitionData.dueDate = dueDate;
-      updateTransitionData.referenceMonth = referenceMonth;
-      updateTransitionData.status = TransitionHistoryService.getStatusByDueDate(
-        new Date(currentTransition?.dueDate!)
-      );
+      }
     }
     await prisma.transitionHistory.update({
       where: { id: params?.id },

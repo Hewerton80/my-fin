@@ -7,12 +7,13 @@ import {
 } from "../types";
 import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { isNumberable } from "@/shared/isType";
-import { removeEmptyKeys } from "@/shared/parseJsonToSearchParams";
+import { isNumberable } from "@/utils/isType";
+import { removeEmptyKeys } from "@/utils/parseJsonToSearchParams";
 import { IPaginatedDocs } from "@/lib/prismaHelpers";
 import { useDebouncedCallback } from "use-debounce";
 import { isValid as isValidDate } from "date-fns/isValid";
 import useQueryParams from "@/hooks/useQueryParams";
+import { format } from "date-fns";
 
 export function useGetTransiontionsHistoty() {
   const { apiBase } = useAxios();
@@ -24,6 +25,8 @@ export function useGetTransiontionsHistoty() {
     useMemo<IGetTransionsHistoryParams>(() => {
       const startDate = searchParams.get("startDate");
       const endDate = searchParams.get("endDate");
+      const referenceMonth = searchParams.get("referenceMonth");
+      const now = new Date();
       return {
         currentPage: isNumberable(searchParams.get("currentPage"))
           ? Number(searchParams.get("currentPage"))
@@ -36,6 +39,13 @@ export function useGetTransiontionsHistoty() {
             : "",
         endDate:
           endDate && isValidDate(new Date(endDate)) ? (endDate as string) : "",
+        referenceMonth:
+          referenceMonth && isValidDate(new Date(referenceMonth))
+            ? (referenceMonth as string)
+            : format(
+                new Date(now.getFullYear(), now.getMonth(), 1),
+                "yyyy-MM-dd"
+              ),
         status: searchParams.get("status") || "",
         creditCardId: searchParams.get("creditCardId") || "",
       };
@@ -130,12 +140,23 @@ export function useGetTransiontionsHistoty() {
     [setQueryParams]
   );
 
+  const changeReferenceMonth = useCallback(
+    (month: string) => {
+      setQueryParams({
+        currentPage: 1,
+        referenceMonth: month,
+      });
+    },
+    [setQueryParams]
+  );
+
   return {
     transitionsHistory,
     isLoadingTransitionsHistory,
     transionHistoriesQueryParams,
     transitionsHistoryError,
     searchTransitionHistoryValue,
+    changeReferenceMonth,
     changeSearcheInput,
     refetchTransitionHistorys,
     changeTransitionHistoryType,

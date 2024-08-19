@@ -99,7 +99,7 @@ export const Picker = forwardRef(
           <PickerPrimitive.Trigger
             className={twMerge(
               !value && "text-muted-foreground",
-              full ? "w-full" : "w-fit"
+              full ? "w-full" : "w-max"
             )}
             onBlur={onBlur}
             onFocus={onFocus}

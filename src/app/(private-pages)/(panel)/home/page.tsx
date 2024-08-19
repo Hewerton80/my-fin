@@ -10,7 +10,7 @@ import { FeedBackError } from "@/components/ui/feedback/FeedBackError";
 import { FeedBackLoading } from "@/components/ui/feedback/FeedBackLoading";
 import { useGetDashboard } from "@/modules/dashboard/hooks/useGetInsights";
 import { CategoryInsights } from "@/modules/dashboard/types";
-import { getCurrencyFormat } from "@/shared/getCurrencyFormat";
+import { getCurrencyFormat } from "@/utils/getCurrencyFormat";
 import { useMemo } from "react";
 import { TbCurrencyReal } from "react-icons/tb";
 import Link from "next/link";
@@ -18,7 +18,7 @@ import { IoEyeOutline } from "react-icons/io5";
 import { LineChart } from "@/components/ui/charts/LineChart";
 import { BsGraphUp } from "react-icons/bs";
 import { IconButton } from "@/components/ui/buttons/IconButton";
-import { isNumber } from "@/shared/isType";
+import { isNumber } from "@/utils/isType";
 import { twMerge } from "tailwind-merge";
 import { FaLongArrowAltUp } from "react-icons/fa";
 

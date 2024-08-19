@@ -1,4 +1,4 @@
-import { CONSTANTS } from "@/shared/constants";
+import { CONSTANTS } from "@/utils/constants";
 import { NextRequest, NextResponse } from "next/server";
 import { AuthService } from "@/modules/auth/service";
 import { TransitionHistoryService } from "@/modules/transitionHistory/service";
@@ -13,8 +13,8 @@ import prisma from "@/lib/prisma";
 import { z } from "zod";
 import { createApiTransitionHistorySchema } from "@/modules/transitionHistory/schemas/apiFormTransitionHistoryReceiveSchema";
 import { handleZodValidationError } from "@/lib/zodHelpers";
-import { isNumber } from "@/shared/isType";
-import { getRange } from "@/shared/getRange";
+import { isNumber } from "@/utils/isType";
+import { getRange } from "@/utils/getRange";
 import { addMonths } from "date-fns";
 
 const {
@@ -116,6 +116,12 @@ export async function POST(request: NextRequest) {
         TransitionHistoryService.getStatusByDueDate(
           new Date(createTranstionHistoryData.dueDate)
         );
+    } else {
+      createTranstionHistoryData.referenceMonth = new Date(
+        registrationDate.getFullYear(),
+        registrationDate.getMonth(),
+        1
+      );
     }
 
     const createTranstionHistoryDataArray = [createTranstionHistoryData];

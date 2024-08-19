@@ -1,8 +1,8 @@
 // import axios from "axios";
 import { hash } from "bcrypt";
 import prisma from "../lib/prisma";
-import { getRandomRGBColor } from "../shared/colors";
-import { isNumber } from "../shared/isType";
+import { getRandomRGBColor } from "../utils/colors";
+import { isNumber } from "../utils/isType";
 import { addMonths } from "date-fns";
 import { TransitionHistoryService } from "../modules/transitionHistory/service";
 import { TransitionHistoryFrequency } from "@prisma/client";
@@ -133,11 +133,12 @@ export async function main() {
     include: { creditCard: true },
   });
   for (const transition of allTransitionHistory) {
-    if (transition?.registrationDate) {
+    const registrationDate = transition?.registrationDate;
+    if (registrationDate) {
       if (transition?.creditCard) {
         const { referenceMonth } =
           TransitionHistoryService.getDueDateAndReferenceMonthByRegistrationDateAndCreditCard(
-            transition?.registrationDate,
+            registrationDate,
             transition?.creditCard
           );
         await prisma.transitionHistory.update({
@@ -149,13 +150,20 @@ export async function main() {
           referenceMonth: referenceMonth,
         });
       } else {
+        const referenceMonth = new Date(
+          registrationDate?.getFullYear(),
+          registrationDate?.getMonth(),
+          1
+        );
         await prisma.transitionHistory.update({
           where: { id: transition?.id },
-          data: { referenceMonth: new Date(transition?.registrationDate) },
+          data: {
+            referenceMonth,
+          },
         });
         console.log("Updated transitionHistory: ", {
           name: transition?.name,
-          referenceMonth: transition?.registrationDate,
+          referenceMonth,
         });
       }
     }

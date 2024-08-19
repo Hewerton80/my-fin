@@ -1,7 +1,7 @@
 import { JwtDto } from "./types";
 import { NextRequest } from "next/server";
 import * as jose from "jose";
-import { CONSTANTS } from "@/shared/constants";
+import { CONSTANTS } from "@/utils/constants";
 import prisma from "@/lib/prisma";
 import { UserWithComputedFields } from "../user/types";
 import { cookies } from "next/headers";

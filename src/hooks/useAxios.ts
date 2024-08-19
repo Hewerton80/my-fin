@@ -2,7 +2,7 @@ import axios from "axios";
 import { useMemo } from "react";
 import { axiosConfig } from "@/lib/axios";
 import { useCookies } from "next-client-cookies";
-import { CONSTANTS } from "@/shared/constants";
+import { CONSTANTS } from "@/utils/constants";
 
 export const useAxios = () => {
   const cookies = useCookies();
