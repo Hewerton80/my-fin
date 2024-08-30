@@ -15,7 +15,9 @@ import { isValid as isValidDate } from "date-fns/isValid";
 import useQueryParams from "@/hooks/useQueryParams";
 import { format } from "date-fns";
 
-export function useGetTransiontionsHistoty() {
+export function useGetTransiontionsHistoty(
+  defaultParams?: IGetTransionsHistoryParams
+) {
   const { apiBase } = useAxios();
   const { setQueryParams } = useQueryParams<IGetTransionsHistoryParams>();
 
@@ -26,11 +28,13 @@ export function useGetTransiontionsHistoty() {
       const startDate = searchParams.get("startDate");
       const endDate = searchParams.get("endDate");
       const referenceMonth = searchParams.get("referenceMonth");
-      const now = new Date();
       return {
         currentPage: isNumberable(searchParams.get("currentPage"))
           ? Number(searchParams.get("currentPage"))
           : 1,
+        perPage: isNumberable(searchParams.get("perPage"))
+          ? Number(searchParams.get("perPage"))
+          : 25,
         keyword: searchParams.get("keyword") || "",
         type: searchParams.get("type") || "",
         startDate:
@@ -42,14 +46,12 @@ export function useGetTransiontionsHistoty() {
         referenceMonth:
           referenceMonth && isValidDate(new Date(referenceMonth))
             ? (referenceMonth as string)
-            : format(
-                new Date(now.getFullYear(), now.getMonth(), 1),
-                "yyyy-MM-dd"
-              ),
+            : "",
         status: searchParams.get("status") || "",
         creditCardId: searchParams.get("creditCardId") || "",
+        ...(defaultParams || {}),
       };
-    }, [searchParams]);
+    }, [searchParams, defaultParams]);
 
   const [isSearching, setIsSearching] = useState(false);
 

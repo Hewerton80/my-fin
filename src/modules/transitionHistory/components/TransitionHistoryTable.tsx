@@ -13,7 +13,10 @@ import { ModalTransitionHistory } from "@/modules/transitionHistory/components/M
 import { TableTransitionActionsButtons } from "@/modules/transitionHistory/components/TableTransiotionActionsButtons";
 import { TransitionStatusBadge } from "@/modules/transitionHistory/components/TransitionStatusBadge";
 import { useGetTransiontionsHistoty } from "@/modules/transitionHistory/hooks/useGetTransiontionsHistoty";
-import { TransitionHistoryWitchConputedFields } from "@/modules/transitionHistory/types";
+import {
+  IGetTransionsHistoryParams,
+  TransitionHistoryWitchConputedFields,
+} from "@/modules/transitionHistory/types";
 import { CONSTANTS } from "@/utils/constants";
 import { getCurrencyFormat } from "@/utils/getCurrencyFormat";
 import { isNumber, isUndefined } from "@/utils/isType";
@@ -25,16 +28,26 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { twMerge } from "tailwind-merge";
 interface TransitionHistoryTableProps {
   hideTypeFilter?: boolean;
+  hideStatusFilter?: boolean;
   hideCreateButton?: boolean;
+  hideRangeDatePicker?: boolean;
+  hideMonthPicker?: boolean;
+  hideSearchInput?: boolean;
   hideColumns?: (keyof (TransitionHistoryWitchConputedFields & {
     actions: string;
   }))[];
+  defaultParams?: IGetTransionsHistoryParams;
 }
 
 export const TransitionHistoryTable = ({
   hideTypeFilter,
+  hideStatusFilter,
   hideCreateButton,
   hideColumns = [],
+  hideRangeDatePicker,
+  hideMonthPicker,
+  hideSearchInput,
+  defaultParams,
 }: TransitionHistoryTableProps) => {
   const {
     transitionsHistory,
@@ -49,7 +62,7 @@ export const TransitionHistoryTable = ({
     goToPage,
     changeTransitionHistoryStatus,
     changeReferenceMonth,
-  } = useGetTransiontionsHistoty();
+  } = useGetTransiontionsHistoty(defaultParams);
 
   const [showTransitionFormModal, setShowTransitionFormModal] = useState(false);
   const [transitionIdToEdit, setTransitionIdToEdit] = useState("");
@@ -129,14 +142,6 @@ export const TransitionHistoryTable = ({
             : "-",
       },
       {
-        label: "Paid at",
-        field: "paidAt",
-        onParse: (transitionHistory) =>
-          transitionHistory?.paidAt
-            ? format(new Date(transitionHistory?.paidAt), "dd/MM/yyyy")
-            : "-",
-      },
-      {
         label: "Registrated at",
         field: "registrationDate",
         onParse: (transitionHistory) =>
@@ -156,6 +161,14 @@ export const TransitionHistoryTable = ({
                 addHours(new Date(transitionHistory?.referenceMonth), 12),
                 "MMM yy"
               )
+            : "-",
+      },
+      {
+        label: "Paid at",
+        field: "paidAt",
+        onParse: (transitionHistory) =>
+          transitionHistory?.paidAt
+            ? format(new Date(transitionHistory?.paidAt), "dd/MM/yyyy")
             : "-",
       },
       {
@@ -208,6 +221,7 @@ export const TransitionHistoryTable = ({
   const handleCloseFormModal = useCallback(() => {
     setShowTransitionFormModal(false);
     setTransitionIdToEdit("");
+    setIsCloningTransition(false);
   }, []);
 
   return (
@@ -241,33 +255,57 @@ export const TransitionHistoryTable = ({
               />
             )}
 
-            <Picker
-              value={transionHistoriesQueryParams?.status}
-              onChange={(value) => changeTransitionHistoryStatus(value)}
-              label="Status"
-              showLabelInner
-              options={[
-                { label: "All", value: CONSTANTS.FIELDS_VALUES.ALL },
-                ...Object.values(TransitionHistoryStatus).map((status) => ({
-                  label: capitalizeFisrtLetter(status),
-                  value: status,
-                })),
-              ]}
-            />
+            {!hideStatusFilter && (
+              <Picker
+                value={transionHistoriesQueryParams?.status}
+                onChange={(value) => changeTransitionHistoryStatus(value)}
+                label="Status"
+                showLabelInner
+                options={[
+                  { label: "All", value: CONSTANTS.FIELDS_VALUES.ALL },
+                  ...Object.values(TransitionHistoryStatus).map((status) => ({
+                    label: capitalizeFisrtLetter(status),
+                    value: status,
+                  })),
+                ]}
+              />
+            )}
 
             <div className="ml-auto flex items-center gap-2 sm:gap-2 w-full sm:w-auto">
-              <Picker
-                value={transionHistoriesQueryParams?.referenceMonth}
-                onChange={(value) => changeReferenceMonth(value)}
-                label="Month"
-                showLabelInner
-                options={monthsOptions}
-              />
-              <Input
-                value={searchTransitionHistoryValue}
-                onChange={(e) => changeSearcheInput(e.target.value)}
-                placeholder="Search..."
-              />
+              {!hideRangeDatePicker && (
+                <DateRangePicker
+                  rangeDate={{
+                    from: transionHistoriesQueryParams?.startDate
+                      ? new Date(transionHistoriesQueryParams?.startDate)
+                      : undefined,
+                    to: transionHistoriesQueryParams?.endDate
+                      ? new Date(transionHistoriesQueryParams?.endDate)
+                      : undefined,
+                  }}
+                  onChange={(rangeDate) => {
+                    changeDateRange({
+                      from: rangeDate?.from,
+                      to: rangeDate?.to,
+                    });
+                  }}
+                />
+              )}
+              {!hideMonthPicker && (
+                <Picker
+                  value={transionHistoriesQueryParams?.referenceMonth}
+                  onChange={(value) => changeReferenceMonth(value)}
+                  label="Month"
+                  showLabelInner
+                  options={monthsOptions}
+                />
+              )}
+              {!hideSearchInput && (
+                <Input
+                  value={searchTransitionHistoryValue}
+                  onChange={(e) => changeSearcheInput(e.target.value)}
+                  placeholder="Search..."
+                />
+              )}
             </div>
           </div>
           <DataTable

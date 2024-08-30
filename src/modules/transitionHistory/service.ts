@@ -5,7 +5,7 @@ import { TransitionHistoryWitchConputedFields } from "./types";
 import { TransitionType } from "@prisma/client";
 import { isValid as isValidDate } from "date-fns/isValid";
 import { CONSTANTS } from "../../utils/constants";
-import { endOfDay, isAfter, startOfYear, subDays } from "date-fns";
+import { endOfDay, isAfter, subDays } from "date-fns";
 import { CreditCardWitchComputedFields } from "../creditCard/types";
 
 const parseSearchParams = (searchParams: URLSearchParams) => {
@@ -25,7 +25,7 @@ const parseSearchParams = (searchParams: URLSearchParams) => {
     startDate:
       startDate && isValidDate(new Date(startDate))
         ? (startDate as string)
-        : startOfYear(new Date()),
+        : undefined,
     endDate:
       endDate && isValidDate(new Date(endDate))
         ? (endDate as string)
@@ -35,7 +35,7 @@ const parseSearchParams = (searchParams: URLSearchParams) => {
         ? new Date(referenceMonth as string).toISOString()
         : undefined,
     currentPage: searchParams.get("currentPage") || 1,
-    perPage: searchParams.get("perPage") || 100000,
+    perPage: searchParams.get("perPage") || 25,
     orderBy: parseOrderBy(searchParams.get("orderBy") || undefined),
   };
 };
@@ -58,6 +58,8 @@ const getListByUserId = async (
     type,
     creditCardId,
     referenceMonth,
+    startDate,
+    endDate,
   } = parseSearchParams(searchParams);
   const paginedTransitionsHistory = await prismaPagination<
     TransitionHistoryWitchConputedFields,
@@ -75,6 +77,13 @@ const getListByUserId = async (
         { status },
         { creditCardId },
         { referenceMonth },
+        {
+          OR: [
+            { paidAt: { gte: startDate, lte: endDate } },
+            { registrationDate: { gte: startDate, lte: endDate } },
+            { dueDate: { gte: startDate, lte: endDate } },
+          ],
+        },
       ],
       ...where,
     },

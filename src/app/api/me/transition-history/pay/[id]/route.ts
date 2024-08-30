@@ -62,7 +62,10 @@ export async function PATCH(
   try {
     await prisma.transitionHistory.update({
       where: { id: params?.id },
-      data: { status: "PAID", paidAt: new Date() },
+      data: {
+        status: "PAID",
+        paidAt: new Date(`${transitionUpdateData?.paidAt} 12:00`),
+      },
     });
   } catch (error: any) {
     return NextResponse.json(error, { status: 500 });

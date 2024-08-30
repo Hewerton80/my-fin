@@ -104,9 +104,7 @@ export async function PATCH(
         updateTransitionData.dueDate = dueDate;
         updateTransitionData.referenceMonth = referenceMonth;
         updateTransitionData.status =
-          TransitionHistoryService.getStatusByDueDate(
-            new Date(currentTransition?.dueDate!)
-          );
+          TransitionHistoryService.getStatusByDueDate(new Date(dueDate));
       } else {
         updateTransitionData.referenceMonth = new Date(
           updateTransitionData.registrationDate.getFullYear(),

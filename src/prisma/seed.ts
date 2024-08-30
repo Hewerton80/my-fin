@@ -13,7 +13,10 @@ export async function main() {
 
   const allTransitionHistory = await prisma.transitionHistory.findMany({
     include: { creditCard: true },
-    orderBy: [{ registrationDate: "asc" }, { paidAt: "asc" }],
+    orderBy: [
+      { registrationDate: "asc" },
+      { paidAt: { sort: "asc", nulls: "last" } },
+    ],
   });
 
   const transitionObject: { [key: string]: Date } = {};
@@ -24,7 +27,10 @@ export async function main() {
       transition?.registrationDate
     ) {
       if (transitionObject?.[transition.name]) {
-        const newRegistrationDate = transitionObject[transition.name];
+        const newRegistrationDate = addMonths(
+          transitionObject[transition.name],
+          1
+        );
         console.log(
           "transition: ",
           transition.name,
@@ -37,7 +43,7 @@ export async function main() {
           where: { id: transition?.id },
           data: { registrationDate: newRegistrationDate },
         });
-        transitionObject[transition.name] = addMonths(newRegistrationDate, 1);
+        transitionObject[transition.name] = newRegistrationDate;
       } else {
         transitionObject[transition.name] = new Date(
           transition.registrationDate

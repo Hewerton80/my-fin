@@ -9,6 +9,7 @@ import { CreditCardInsightsCards } from "@/modules/creditCard/components/CreditC
 import { useGetCreditCardsInsights } from "@/modules/creditCard/hooks/useGetCreditCardsInsights";
 import { TransitionHistoryTable } from "@/modules/transitionHistory/components/TransitionHistoryTable";
 import { IGetTransionsHistoryParams } from "@/modules/transitionHistory/types";
+import { format } from "date-fns";
 import { Fragment, useEffect } from "react";
 
 export default function CreditCardsPage() {
@@ -26,8 +27,15 @@ export default function CreditCardsPage() {
 
   useEffect(() => {
     console.log("creditCards", creditCards);
+    const now = new Date();
     if (Number(creditCards?.length) > 0) {
-      setQueryParams({ creditCardId: creditCards?.[0]?.id as string });
+      setQueryParams({
+        creditCardId: creditCards?.[0]?.id as string,
+        referenceMonth: format(
+          new Date(now.getFullYear(), now.getMonth(), 1),
+          "yyyy-MM-dd"
+        ),
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [creditCards]);
@@ -112,7 +120,13 @@ export default function CreditCardsPage() {
             <TransitionHistoryTable
               hideTypeFilter
               hideCreateButton
+              hideRangeDatePicker
+              hideStatusFilter
+              hideSearchInput
               hideColumns={["creditCard", "actions"]}
+              defaultParams={{
+                perPage: 9999999,
+              }}
             />
           </div>
         </>
