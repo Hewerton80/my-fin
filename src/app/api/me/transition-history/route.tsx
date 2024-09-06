@@ -94,6 +94,7 @@ export async function POST(request: NextRequest) {
       createTranstionHistoryData.status = TransitionHistoryStatus.PAID;
       createTranstionHistoryData.paymentType =
         paymentType as TransitionHistoryPaymantType;
+      createTranstionHistoryData.paidAt = new Date(`${registrationDate} 12:00`);
     }
 
     const creditCard = await prisma.creditCard.findUnique({
