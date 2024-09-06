@@ -1,4 +1,4 @@
-import { memo, useCallback, useMemo, useState } from "react";
+import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { TransitionHistoryWitchConputedFields } from "../types";
 import { Dropdown } from "@/components/ui/overlay/Dropdown/Dropdown";
 import { IconButton } from "@/components/ui/buttons/IconButton";
@@ -11,6 +11,8 @@ import { Button } from "@/components/ui/buttons/Button";
 import { Input } from "@/components/ui/forms/inputs/Input";
 import { TransitionHistoryStatus } from "@prisma/client";
 import { MdPaid } from "react-icons/md";
+import { Checkbox } from "@/components/ui/forms/Checkbox";
+import { format } from "date-fns";
 
 interface TableTransitionActionsButtonsProps {
   transitionHistory?: TransitionHistoryWitchConputedFields;
@@ -31,13 +33,23 @@ export const TableTransitionActionsButtons = memo(
       payTransitionHistoryControl,
       resetPayTransitionHistoryForm,
       isPaying,
+      setPayTransitionHistoryValue,
     } = usePayTransitionHistory();
 
     const [showModalPaidAt, setShowModalPaidAt] = useState(false);
+    const [isToday, setIsToday] = useState(false);
+
+    useEffect(() => {
+      if (isToday) {
+        const now = new Date();
+        setPayTransitionHistoryValue("paidAt", format(now, "yyyy-MM-dd"));
+      }
+    }, [isToday, setPayTransitionHistoryValue]);
 
     const handleCloseModal = useCallback(() => {
       setShowModalPaidAt(false);
       resetPayTransitionHistoryForm({ paidAt: "" });
+      setIsToday(false);
     }, [resetPayTransitionHistoryForm]);
 
     const handlePayExpense = useCallback(() => {
@@ -87,7 +99,7 @@ export const TableTransitionActionsButtons = memo(
         </Dropdown.Root>
         <Modal.Root size="xs" show={showModalPaidAt} onClose={handleCloseModal}>
           <Modal.Title>Pay Expense</Modal.Title>
-          <Modal.Body>
+          <Modal.Body className="gap-4">
             <Controller
               control={payTransitionHistoryControl}
               name="paidAt"
@@ -102,6 +114,12 @@ export const TableTransitionActionsButtons = memo(
                   />
                 );
               }}
+            />
+            <Checkbox
+              id="today"
+              checked={isToday}
+              onCheckedChange={(checked) => setIsToday(checked === true)}
+              label="To day"
             />
           </Modal.Body>
           <Modal.Footer className="gap-2">

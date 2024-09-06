@@ -22,6 +22,7 @@ export function usePayTransitionHistory() {
     getValues: getPayTransitionHistoryValues,
     reset: resetPayTransitionHistoryForm,
     trigger: triggerPayTransitionHistoryForm,
+    setValue: setPayTransitionHistoryValue,
   } = useForm<InferPayTransitionHistoryFormSchema>({
     defaultValues: { paidAt: "" },
     mode: "onTouched",
@@ -84,5 +85,6 @@ export function usePayTransitionHistory() {
     payTransitionHistoryFormState,
     getPayTransitionHistoryValues,
     resetPayTransitionHistoryForm,
+    setPayTransitionHistoryValue,
   };
 }

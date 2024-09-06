@@ -118,8 +118,8 @@ export async function POST(request: NextRequest) {
         );
     } else {
       createTranstionHistoryData.referenceMonth = new Date(
-        registrationDate.getFullYear(),
-        registrationDate.getMonth(),
+        new Date(registrationDate).getFullYear(),
+        new Date(registrationDate).getMonth(),
         1
       );
     }
