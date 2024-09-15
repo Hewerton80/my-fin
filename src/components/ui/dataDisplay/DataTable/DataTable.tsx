@@ -51,25 +51,25 @@ export function DataTable({
     ));
   }, [data, columns]);
 
-  const handledMobileData = useMemo(() => {
-    return data?.map((cellData, i) => (
-      <div className="flex flex-col text-xs py-2" key={`${i}-resposive`}>
-        {columns.map((column, j) => (
-          <div
-            className="flex gap-1 p-1 odd:bg-muted/50 rounded"
-            key={`column-${i}-${j}-responsive`}
-          >
-            {columns[j].label && (
-              <div className="font-bold">{columns[j].label}:</div>
-            )}
-            <div className="text-right ml-auto">
-              {column?.onParse?.(cellData) || cellData?.[column.field] || ""}
-            </div>
-          </div>
-        ))}
-      </div>
-    ));
-  }, [data, columns]);
+  // const handledMobileData = useMemo(() => {
+  //   return data?.map((cellData, i) => (
+  //     <div className="flex flex-col text-xs py-2" key={`${i}-resposive`}>
+  //       {columns.map((column, j) => (
+  //         <div
+  //           className="flex gap-1 p-1 odd:bg-muted/50 rounded"
+  //           key={`column-${i}-${j}-responsive`}
+  //         >
+  //           {columns[j].label && (
+  //             <div className="font-bold">{columns[j].label}:</div>
+  //           )}
+  //           <div className="text-right ml-auto">
+  //             {column?.onParse?.(cellData) || cellData?.[column.field] || ""}
+  //           </div>
+  //         </div>
+  //       ))}
+  //     </div>
+  //   ));
+  // }, [data, columns]);
 
   if (isError) {
     return <FeedBackError onTryAgain={onTryAgainIfError} />;
@@ -81,7 +81,7 @@ export function DataTable({
 
   return (
     <>
-      <Table.Container className="hidden sm:flex flex-col" {...restProps}>
+      <Table.Container className="flex flex-col" {...restProps}>
         <Table>
           <Table.Head>
             <Table.Row>
@@ -98,12 +98,12 @@ export function DataTable({
           </div>
         )}
       </Table.Container>
-      <div
+      {/* <div
         className="flex sm:hidden flex-col divide-y divide-border dark:divide-muted"
         role="table"
       >
         {handledMobileData}
-      </div>
+      </div> */}
       {paginationConfig && Number(data?.length) > 0 && (
         <div className="flex w-full justify-end mt-4 sm:mt-8">
           <PaginationBar
