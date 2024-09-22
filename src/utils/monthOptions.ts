@@ -25,5 +25,4 @@ while (loopYear < currentYear || loopMonth <= currnetMonth) {
     loopMonth += 1;
   }
 }
-console.log({ monthsOptions });
 export { monthsOptions };

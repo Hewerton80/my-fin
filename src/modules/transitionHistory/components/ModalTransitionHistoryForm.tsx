@@ -14,10 +14,8 @@ import { useGetGroupCategories } from "@/modules/category/hooks/useGetGroupCateg
 import { Radio } from "@/components/ui/forms/Radio";
 import { stringToBoolean } from "@/utils/stringToBoolean";
 import {
-  PaymantType,
   TransitionHistoryFrequency,
   TransitionHistoryPaymantType,
-  TransitionHistoryStatus,
   TransitionType,
 } from "@prisma/client";
 import { capitalizeFisrtLetter } from "@/utils/string";
@@ -26,6 +24,10 @@ import { getCurrencyFormat } from "@/utils/getCurrencyFormat";
 import { useGetCreditCards } from "@/modules/creditCard/hooks/useGetCreditCards";
 import { useCacheTransitions } from "../hooks/useCacheTransitionHistory";
 import { FeedBackError } from "@/components/ui/feedback/FeedBackError";
+import {
+  Picker,
+  PickerOption,
+} from "@/components/ui/forms/selects/Picker/Picker";
 
 interface ModalTransitionHistoryFormProps {
   transictionHistoryId?: string;
@@ -131,7 +133,7 @@ export function ModalTransitionHistory({
     })) as SelectOption[];
   }, [groupCategories, currentTransitionHistory]);
 
-  const creditCardsOptions = useMemo<SelectOption[]>(() => {
+  const creditCardsOptions = useMemo<PickerOption[]>(() => {
     if (
       currentTransitionHistory?.creditCard?.id &&
       !Array.isArray(creditCards)
@@ -149,7 +151,7 @@ export function ModalTransitionHistory({
     return creditCards.map((creditCard) => ({
       label: creditCard?.name || "",
       value: creditCard?.id,
-    })) as SelectOption[];
+    })) as PickerOption[];
   }, [creditCards, currentTransitionHistory]);
 
   const handleFocusCategoriesSelect = useCallback(() => {
@@ -329,7 +331,9 @@ export function ModalTransitionHistory({
                                 .filter(
                                   (paymentType) =>
                                     paymentType !==
-                                    String(PaymantType.CREDIT_CARD)
+                                    String(
+                                      TransitionHistoryPaymantType.CREDIT_CARD
+                                    )
                                 )
                                 .map((key) => (
                                   <Radio.Item
@@ -421,19 +425,15 @@ export function ModalTransitionHistory({
                             control={transitionHistoryFormControl}
                             name="creditCardId"
                             render={({
-                              field: { value, onChange, ...restField },
+                              field: { value, ...restField },
                               fieldState,
                             }) => (
-                              <Select
+                              <Picker
                                 {...restField}
                                 required
-                                isClearable
                                 value={String(value || "")}
                                 label="Credit Card"
                                 isLoading={isLoadingCreditCards}
-                                onChange={(option) =>
-                                  onChange(String(option?.value))
-                                }
                                 onFocus={handleFocusCreditCardsSelect}
                                 options={creditCardsOptions}
                                 error={fieldState.error?.message}

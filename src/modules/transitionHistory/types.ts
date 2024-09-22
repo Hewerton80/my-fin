@@ -1,5 +1,4 @@
 import { TransitionHistory, TransitionHistoryStatus } from "@prisma/client";
-import { ExpenseWithComputedFields } from "../expenses/types";
 import { IPaginateArgs } from "@/lib/prismaHelpers";
 import { TransitionType } from "@prisma/client";
 import { CategoryWitchComputedFields } from "../category/types";
@@ -7,7 +6,6 @@ import { CreditCardWitchComputedFields } from "../creditCard/types";
 
 export interface TransitionHistoryWitchConputedFields
   extends TransitionHistory {
-  expense?: ExpenseWithComputedFields;
   category?: CategoryWitchComputedFields;
   creditCard?: CreditCardWitchComputedFields;
 }

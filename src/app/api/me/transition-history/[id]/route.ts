@@ -35,7 +35,6 @@ export async function GET(
       userId: loggedUser.id,
     },
     include: {
-      expense: { select: { id: true, name: true } },
       category: { select: { id: true, name: true, iconName: true } },
       creditCard: { select: { id: true, name: true, color: true } },
     },

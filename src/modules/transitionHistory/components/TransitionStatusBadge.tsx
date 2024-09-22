@@ -1,8 +1,7 @@
 import { Badge } from "@/components/ui/dataDisplay/Badge";
-import { BadgeVariatnsType } from "@/modules/expenses/types";
 import { capitalizeFisrtLetter } from "@/utils/string";
 import { TransitionHistoryStatus } from "@prisma/client";
-import { ReactNode, useCallback, useMemo } from "react";
+import { useMemo } from "react";
 
 type StatusType = keyof typeof TransitionHistoryStatus;
 interface TransitionStatusBadgeProps {

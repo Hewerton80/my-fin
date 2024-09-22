@@ -33,7 +33,7 @@ export const Picker = forwardRef(
     {
       placeholder = "Select...",
       options = [],
-      full,
+      full = true,
       isLoading,
       label,
       showLabelInner,
@@ -144,8 +144,8 @@ export const Picker = forwardRef(
                 )}
               >
                 {isLoading ? (
-                  <div className="flex w-full justify-center">
-                    <Spinner size={18} />
+                  <div className="flex w-full justify-center py-4">
+                    <Spinner size={24} />
                   </div>
                 ) : (
                   handledOptionsElement

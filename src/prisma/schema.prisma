@@ -29,14 +29,6 @@ enum TransitionType {
     RECEIPT
 }
 
-enum ExpenseStatus {
-    OVERDUE
-    PENDING
-    ON_DAY
-    PAID
-    CANCELED
-}
-
 enum TransitionHistoryStatus {
     OVERDUE
     PENDING
@@ -65,32 +57,8 @@ model User {
     password          String
     avatarBgColor     String
     createdAt         DateTime            @default(now())
-    expenses          Expense[]
     creditCards       CreditCard[]
     TransitionHistory TransitionHistory[]
-}
-
-model Expense {
-    id                 String              @id @default(cuid())
-    name               String
-    description        String?
-    amount             Float?
-    isPaid             Boolean             @default(false)
-    status             ExpenseStatus?
-    dueDate            DateTime?
-    registrationDate   DateTime?
-    creditCardId       String?
-    userId             String
-    frequency          Frequency?
-    totalInstallments  Int?
-    currentInstallment Int?
-    user               User                @relation(fields: [userId], references: [id])
-    paymentType        PaymantType
-    creditCard         CreditCard?         @relation(fields: [creditCardId], references: [id])
-    createdAt          DateTime            @default(now())
-    transitionHistory  TransitionHistory[]
-    category           Category?           @relation(fields: [categoryId], references: [id])
-    categoryId         String?
 }
 
 model CreditCard {
@@ -103,7 +71,6 @@ model CreditCard {
     createdAt         DateTime            @default(now())
     userId            String
     user              User                @relation(fields: [userId], references: [id])
-    expenses          Expense[]
     TransitionHistory TransitionHistory[]
 }
 
@@ -123,7 +90,6 @@ model Category {
     groupCategory     GroupCategory       @relation(fields: [groupCategoryId], references: [id])
     groupCategoryId   String
     createdAt         DateTime            @default(now())
-    expenses          Expense[]
     TransitionHistory TransitionHistory[]
 }
 
@@ -141,8 +107,6 @@ model TransitionHistory {
     creditCardId       String?
     creditCard         CreditCard?                   @relation(fields: [creditCardId], references: [id])
     type               TransitionType                @default(PAYMENT)
-    expenseId          String?
-    expense            Expense?                      @relation(fields: [expenseId], references: [id])
     userId             String?
     user               User?                         @relation(fields: [userId], references: [id])
     referenceMonth     DateTime?                     @db.Date
