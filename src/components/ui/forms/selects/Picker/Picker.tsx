@@ -33,7 +33,7 @@ export const Picker = forwardRef(
     {
       placeholder = "Select...",
       options = [],
-      full = true,
+      full,
       isLoading,
       label,
       showLabelInner,

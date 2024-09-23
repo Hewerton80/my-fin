@@ -431,6 +431,7 @@ export function ModalTransitionHistory({
                               <Picker
                                 {...restField}
                                 required
+                                full
                                 value={String(value || "")}
                                 label="Credit Card"
                                 isLoading={isLoadingCreditCards}
