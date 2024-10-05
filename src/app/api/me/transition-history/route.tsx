@@ -97,9 +97,12 @@ export async function POST(request: NextRequest) {
       createTranstionHistoryData.paidAt = new Date(`${registrationDate} 12:00`);
     }
 
-    const creditCard = await prisma.creditCard.findUnique({
-      where: { id: creditCardId },
-    });
+    let creditCard;
+    if (creditCardId) {
+      creditCard = await prisma.creditCard.findUnique({
+        where: { id: creditCardId },
+      });
+    }
 
     if (creditCard) {
       createTranstionHistoryData.creditCardId = creditCardId;
@@ -165,6 +168,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    console.log({ createTranstionHistoryDataArray });
     await prisma.transitionHistory.createMany({
       data: createTranstionHistoryDataArray,
     });
