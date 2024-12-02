@@ -10,9 +10,9 @@ const now = new Date();
 const currentYear = now.getFullYear() + 1;
 const currnetMonth = now.getMonth();
 
-while (loopYear < currentYear || loopMonth <= currnetMonth) {
+while (loopYear < currentYear || loopMonth < currnetMonth) {
   const currentMonthDate = new Date(loopYear, loopMonth, 1);
-
+  console.log({loopYear,loopMonth, currentMonthDate});
   monthsOptions.push({
     value: format(currentMonthDate, "yyyy-MM-dd"),
     label: format(currentMonthDate, "MMM yyyy"),

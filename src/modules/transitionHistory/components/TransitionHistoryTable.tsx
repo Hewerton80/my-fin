@@ -20,7 +20,7 @@ import {
 import { CONSTANTS } from "@/utils/constants";
 import { getCurrencyFormat } from "@/utils/getCurrencyFormat";
 import { isNumber, isUndefined } from "@/utils/isType";
-import { monthsOptions } from "@/utils/monthOptions";
+// import { monthsOptions } from "@/utils/monthOptions";
 import { capitalizeFisrtLetter } from "@/utils/string";
 import { TransitionHistoryStatus, TransitionType } from "@prisma/client";
 import { addHours, format } from "date-fns";
@@ -290,7 +290,7 @@ export const TransitionHistoryTable = ({
                   }}
                 />
               )}
-              {!hideMonthPicker && (
+              {/* {!hideMonthPicker && (
                 <Picker
                   value={transionHistoriesQueryParams?.referenceMonth}
                   onChange={(value) => changeReferenceMonth(value)}
@@ -298,7 +298,7 @@ export const TransitionHistoryTable = ({
                   showLabelInner
                   options={monthsOptions}
                 />
-              )}
+              )} */}
               {!hideSearchInput && (
                 <Input
                   value={searchTransitionHistoryValue}
