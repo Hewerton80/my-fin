@@ -21,13 +21,20 @@ import { IconButton } from "@/components/ui/buttons/IconButton";
 import { isNumber } from "@/utils/isType";
 import { twMerge } from "tailwind-merge";
 import { FaLongArrowAltUp } from "react-icons/fa";
-
+import { yearOptions } from "@/utils/yearOptions";
 import assets from "../../../../../assets.json";
 import { CreditCardInsightsCards } from "@/modules/creditCard/components/CreditCardInsightsCards";
+import { Picker } from "@/components/ui/forms/selects/Picker/Picker";
 
 export default function HomePage() {
-  const { dashboard, isLoadingDashboard, dashboardError, refetchDashboard } =
-    useGetDashboard();
+  const {
+    dashboard,
+    isLoadingDashboard,
+    dashboardError,
+    dashBoardQueryParams,
+    changeYearQueryParams,
+    refetchDashboard,
+  } = useGetDashboard();
 
   const categoryInsights = useMemo(() => {
     return dashboard?.categoryInsights;
@@ -139,101 +146,112 @@ export default function HomePage() {
   }
 
   return (
-    <div className="grid grid-cols-12 gap-4">
-      {Number(totalPaymentsAmount) > 0 && (
-        <CardStats.Root className="col-span-12 md:col-span-4">
-          <CardStats.Header icon={<TbCurrencyReal />}>
-            Total paid expenses amount
-          </CardStats.Header>
-          <CardStats.Body>
-            <span className="text-lg md:text-2xl font-bold">
-              {getCurrencyFormat(totalPaymentsAmount!)}
-            </span>
-          </CardStats.Body>
-        </CardStats.Root>
-      )}
-
-      {Number(totalReceiptsAmount) > 0 && (
-        <CardStats.Root className="col-span-12 md:col-span-4">
-          <CardStats.Header icon={<TbCurrencyReal />}>
-            Total receipts amount
-          </CardStats.Header>
-          <CardStats.Body>
-            <span className="text-lg md:text-2xl font-bold">
-              {getCurrencyFormat(totalReceiptsAmount!)}
-            </span>
-          </CardStats.Body>
-        </CardStats.Root>
-      )}
-
-      {isNumber(proft) && (
-        <CardStats.Root className="col-span-12 md:col-span-4">
-          <CardStats.Header icon={<TbCurrencyReal />}>Balance</CardStats.Header>
-          <CardStats.Body>
-            <span
-              className={twMerge(
-                "inline-flex items-center text-lg md:text-2xl font-bold gap-1",
-                proft! > 0 && "text-success",
-                proft! < 0 && "text-danger"
-              )}
-            >
-              {proft! > 0 && <FaLongArrowAltUp className="text-xl" />}
-              {proft! < 0 && (
-                <FaLongArrowAltUp className="text-xl rotate-180" />
-              )}
-              {getCurrencyFormat(proft!)}
-            </span>
-          </CardStats.Body>
-        </CardStats.Root>
-      )}
-
-      <CreditCardInsightsCards.Paid
-        className="col-span-12 md:col-span-6"
-        paidCreditCardInsights={paidCreditCardInsights}
+    <div className="flex flex-col gap-4">
+      <Picker
+        value={dashBoardQueryParams.year}
+        onChange={changeYearQueryParams}
+        options={yearOptions}
       />
-      <CreditCardInsightsCards.Owe
-        className="col-span-12 md:col-span-6"
-        oweCreditCardInsights={oweCreditCardInsights}
-      />
+      <div className="grid grid-cols-12 gap-4">
+        {Number(totalPaymentsAmount) > 0 && (
+          <CardStats.Root className="col-span-12 md:col-span-4">
+            <CardStats.Header icon={<TbCurrencyReal />}>
+              Total paid expenses amount
+            </CardStats.Header>
+            <CardStats.Body>
+              <span className="text-lg md:text-2xl font-bold">
+                {getCurrencyFormat(totalPaymentsAmount!)}
+              </span>
+            </CardStats.Body>
+          </CardStats.Root>
+        )}
 
-      {historicInsights && (
-        <CardStats.Root className="col-span-12">
-          <CardStats.Header icon={<BsGraphUp />}>
-            Historics Insights
-          </CardStats.Header>
-          <CardStats.Body>
-            <LineChart
-              data={
-                historicInsights?.map((insight) => ({
-                  "Receipts Amount": insight?.receiptsAmount,
-                  "Payments Amount": insight?.paymentsAmount,
-                  Balance: Number(
-                    insight?.receiptsAmount - insight?.paymentsAmount
-                  ).toFixed(2),
-                  name: insight?.name,
-                })) || []
-              }
-              lineDataKeys={[
-                {
-                  name: "Receipts Amount",
-                  color: assets.colors.success.DEFAULT,
-                },
-                {
-                  name: "Payments Amount",
-                  color: assets.colors.danger.DEFAULT,
-                },
-              ]}
-              xAxisDataKey="name"
-            />
-          </CardStats.Body>
-        </CardStats.Root>
-      )}
-      <div className="col-span-12">
-        <DataTable
-          columns={colsCategories}
-          data={categoryInsights}
-          isLoading={isLoadingDashboard || !categoryInsights}
+        {Number(totalReceiptsAmount) > 0 && (
+          <CardStats.Root className="col-span-12 md:col-span-4">
+            <CardStats.Header icon={<TbCurrencyReal />}>
+              Total receipts amount
+            </CardStats.Header>
+            <CardStats.Body>
+              <span className="text-lg md:text-2xl font-bold">
+                {getCurrencyFormat(totalReceiptsAmount!)}
+              </span>
+            </CardStats.Body>
+          </CardStats.Root>
+        )}
+
+        {!!proft && isNumber(proft) && (
+          <CardStats.Root className="col-span-12 md:col-span-4">
+            <CardStats.Header icon={<TbCurrencyReal />}>
+              Balance
+            </CardStats.Header>
+            <CardStats.Body>
+              <span
+                className={twMerge(
+                  "inline-flex items-center text-lg md:text-2xl font-bold gap-1",
+                  proft! > 0 && "text-success",
+                  proft! < 0 && "text-danger"
+                )}
+              >
+                {proft! > 0 && <FaLongArrowAltUp className="text-xl" />}
+                {proft! < 0 && (
+                  <FaLongArrowAltUp className="text-xl rotate-180" />
+                )}
+                {getCurrencyFormat(proft!)}
+              </span>
+            </CardStats.Body>
+          </CardStats.Root>
+        )}
+
+        <CreditCardInsightsCards.Paid
+          className="col-span-12 md:col-span-6"
+          paidCreditCardInsights={paidCreditCardInsights}
         />
+        <CreditCardInsightsCards.Owe
+          className="col-span-12 md:col-span-6"
+          oweCreditCardInsights={oweCreditCardInsights}
+        />
+
+        {!!historicInsights?.length && (
+          <CardStats.Root className="col-span-12">
+            <CardStats.Header icon={<BsGraphUp />}>
+              Historics Insights
+            </CardStats.Header>
+            <CardStats.Body>
+              <LineChart
+                data={
+                  historicInsights?.map((insight) => ({
+                    "Receipts Amount": insight?.receiptsAmount,
+                    "Payments Amount": insight?.paymentsAmount,
+                    Balance: Number(
+                      insight?.receiptsAmount - insight?.paymentsAmount
+                    ).toFixed(2),
+                    name: insight?.name,
+                  })) || []
+                }
+                lineDataKeys={[
+                  {
+                    name: "Receipts Amount",
+                    color: assets.colors.success.DEFAULT,
+                  },
+                  {
+                    name: "Payments Amount",
+                    color: assets.colors.danger.DEFAULT,
+                  },
+                ]}
+                xAxisDataKey="name"
+              />
+            </CardStats.Body>
+          </CardStats.Root>
+        )}
+        {!!categoryInsights?.length && (
+          <div className="col-span-12">
+            <DataTable
+              columns={colsCategories}
+              data={categoryInsights}
+              isLoading={isLoadingDashboard || !categoryInsights}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

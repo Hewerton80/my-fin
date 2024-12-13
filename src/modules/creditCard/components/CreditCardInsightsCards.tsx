@@ -20,6 +20,7 @@ function Paid({
   paidCreditCardInsights,
   className,
 }: PaidCreditCardInsightsProps) {
+  if (!paidCreditCardInsights?.length) return <></>;
   return (
     paidCreditCardInsights && (
       <CardStats.Root className={className}>
@@ -41,6 +42,7 @@ function Paid({
 }
 
 function Owe({ oweCreditCardInsights, className }: OweCreditCardInsightsProps) {
+  if (!oweCreditCardInsights?.length) return <></>;
   return (
     oweCreditCardInsights && (
       <CardStats.Root className={className}>

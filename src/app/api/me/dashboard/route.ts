@@ -19,8 +19,9 @@ export async function GET(request: NextRequest) {
       { status: 401 }
     );
   }
+  const {searchParams} = new URL(request.url);
+  const year = Number(searchParams.get("year") || new Date().getFullYear());
   const userId = loggedUser?.id;
-  const year = new Date().getFullYear();
   const date = new Date();
   date.setFullYear(year);
 
