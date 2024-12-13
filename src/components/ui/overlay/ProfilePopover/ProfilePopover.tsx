@@ -5,7 +5,7 @@ import Link from "next/link";
 import { FiLogOut, FiUser } from "react-icons/fi";
 import { useTheme } from "@/hooks/useTheme";
 import { FaMoon, FaSun, FaChevronRight } from "react-icons/fa";
-import { LuPaintbrush2 } from "react-icons/lu";
+import { LuPaintbrush } from "react-icons/lu";
 import { getContrastColor } from "@/utils/colors";
 import { useGetLoggedUser } from "@/modules/auth/hooks/useGetLoggedUser";
 import { useAuthLogin } from "@/modules/auth/hooks/useAuthLogin";
@@ -48,7 +48,7 @@ export function ProfilePopover() {
         </Dropdown.Item>
         <Dropdown.Sub>
           <Dropdown.SubTrigger>
-            <LuPaintbrush2 className="mr-2" size={20} /> Tema
+            <LuPaintbrush className="mr-2" size={20} /> Tema
             <FaChevronRight className="ml-auto text-primary" />
           </Dropdown.SubTrigger>
           <Dropdown.SubContent>
