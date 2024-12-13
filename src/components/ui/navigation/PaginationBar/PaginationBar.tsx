@@ -1,12 +1,10 @@
 "use client";
 import React, { useMemo, useCallback } from "react";
 import { getRange } from "@/utils/getRange";
-import { Button } from "../../buttons/Button";
 import { IconButton } from "../../buttons/IconButton";
 import {
   LuChevronLeft as ChevronLeft,
   LuChevronRight as ChevronRight,
-  LuMoreHorizontal as MoreHorizontal,
 } from "react-icons/lu";
 
 export interface PaginationBarProps {
