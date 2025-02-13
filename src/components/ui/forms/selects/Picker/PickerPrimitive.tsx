@@ -22,7 +22,7 @@ const Trigger = forwardRef(
         className={twMerge(
           "flex h-10 w-full items-center justify-between rounded-md border border-input",
           "bg-background px-3 py-2 text-sm placeholder:text-muted-foreground ease-linear duration-200",
-          "data-[state=open]:outline-none data-[state=open]:ring-4 data-[state=open]:ring-primary/40",
+          "data-[state=open]:outline-hidden data-[state=open]:ring-4 data-[state=open]:ring-primary/40",
           "disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1",
           className
         )}
@@ -101,8 +101,8 @@ const Item = forwardRef(
         ref={ref}
         className={twMerge(
           "relative flex w-full cursor-default select-none items-center rounded-lg py-1.5 pl-8",
-          "pr-2 text-sm outline-none focus:bg-accent focus:text-accent-foreground",
-          "data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+          "pr-2 text-sm outline-hidden focus:bg-accent focus:text-accent-foreground",
+          "data-disabled:pointer-events-none data-disabled:opacity-50",
           className
         )}
         {...props}

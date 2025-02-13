@@ -9,7 +9,7 @@ import {
 } from "react";
 import { twMerge } from "tailwind-merge";
 import { Slot } from "@radix-ui/react-slot";
-import spinnerStyle from "./spinner.module.css";
+import { spinnerStyle } from "./spinnerStyle";
 
 interface ButtonStyle {
   bg: string;
@@ -174,7 +174,7 @@ export const Button = forwardRef(
         className={twMerge(
           "inline-flex items-center justify-center relative whitespace-nowrap",
           "h-10 px-4 py-2 w-fit sm:px-2.5 sm:py-1.5",
-          "cursor-pointer ease-linear duration-200 border rounded-lg outline-none",
+          "cursor-pointer ease-linear duration-200 border rounded-lg outline-hidden",
           "text-xs sm:text-sm font-medium leading-none",
           "disabled:pointer-events-none disabled:opacity-50",
           "focus:ring-4 active:ring-4",

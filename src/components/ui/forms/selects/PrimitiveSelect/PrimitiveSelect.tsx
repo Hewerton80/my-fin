@@ -105,7 +105,6 @@ export const PrimitiveSelect = forwardRef(
           ref={ref}
           onMenuOpen={() => _setMenuIsOpen(true)}
           menuIsOpen={_menuIsOpen}
-          // menuIsOpen={true}
           onMenuClose={() => _setMenuIsOpen(false)}
           required={required}
           placeholder={placeholder}
@@ -122,6 +121,22 @@ export const PrimitiveSelect = forwardRef(
             // CrossIcon: () => <FaChevronDown className="text-red-500" />,
             // DownChevron: () => <FaChevronDown className="text-red-500" />,
             ClearIndicator: () => null,
+            // Control: ({ children, ...restProps }) => (
+            //   <components.Control
+            //     className={
+            //       twMerge(
+            //         "w-full rounded-md min-h-9 shadow-sm bg-transparent",
+            //         "border-border hover:border-border ring-primary/40"
+            //       )
+            //       // styled.control,
+            //       // error && styled["control--error"],
+            //       // disabled && styled["control--disabled"]
+            //     }
+            //     {...restProps}
+            //   >
+            //     {children}
+            //   </components.Control>
+            // ),
             Menu: ({ children, ...restProps }) => (
               <components.Menu
                 className={

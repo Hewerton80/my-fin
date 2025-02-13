@@ -2,7 +2,6 @@
 import * as RadixAvatar from "@radix-ui/react-avatar";
 import { useMemo, ComponentProps } from "react";
 import { twMerge } from "tailwind-merge";
-import assets from "../../../../../assets.json";
 import colors from "tailwindcss/colors";
 
 export interface AvatarProps extends ComponentProps<typeof RadixAvatar.Root> {

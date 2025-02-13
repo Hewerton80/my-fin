@@ -1,3 +1,5 @@
+@reference '../../../../app/globals.css';
+
 .root:global(.Toastify__toast-container) :global(.Toastify__toast) {
   @apply bg-success;
 }

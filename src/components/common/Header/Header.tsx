@@ -21,7 +21,7 @@ export function Header() {
   }, []);
 
   return (
-    <header className="bg-card h-20 shadow-sm border-b">
+    <header className="bg-card h-20 shadow-xs border-b">
       <div className="flex items-center h-full px-4 sm:px-8">
         <Popover.Root>
           <Popover.Trigger asChild>
@@ -31,7 +31,7 @@ export function Header() {
             sideOffset={8}
             align="end"
             className={twMerge(
-              "z-[99999] outline-none",
+              "z-99999 outline-hidden",
               "bg-card shadow-lg",
               "origin-top-left",
               slideAndFadeANimation.root

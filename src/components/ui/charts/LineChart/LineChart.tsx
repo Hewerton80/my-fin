@@ -103,7 +103,7 @@ export function LineChart({
     ));
   }, [lineDataKeys]);
   return (
-    <ChartContainer className="!min-h-[450px]">
+    <ChartContainer className="min-h-[450px]!">
       <LineChartRecharts
         data={data}
         margin={{ top: 60, right: 30, left: 0, bottom: 20 }}

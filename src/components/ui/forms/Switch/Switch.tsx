@@ -47,7 +47,7 @@ export const Switch = forwardRef(
           <RadixSwitch.Thumb
             className={twMerge(
               "absolute left-0 -top-[3px] duration-100",
-              "block w-5 h-5 rounded-full bg-gray-400 shadow-sm",
+              "block w-5 h-5 rounded-full bg-gray-400 shadow-xs",
               "data-[state=checked]:left-4 data-[state=checked]:bg-primary",
               "data-[state=checked]:shadow-primary"
             )}

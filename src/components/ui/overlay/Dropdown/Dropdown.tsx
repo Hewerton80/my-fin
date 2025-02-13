@@ -61,7 +61,7 @@ const SubTrigger = (
     <PrimitiveDropdown.SubTrigger
       className={twMerge(
         "flex cursor-default select-none items-center rounded-md px-2 py-1.5 text-sm",
-        "outline-none focus:bg-accent data-[state=open]:bg-accent",
+        "outline-hidden focus:bg-accent data-[state=open]:bg-accent",
         className
       )}
       ref={ref}
@@ -124,8 +124,8 @@ const Item = (
       ref={ref}
       className={twMerge(
         "relative flex cursor-default select-none items-center rounded-md",
-        "px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent",
-        "focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+        "px-2 py-1.5 text-sm outline-hidden transition-colors focus:bg-accent",
+        "focus:text-accent-foreground data-disabled:pointer-events-none data-disabled:opacity-50",
         className
       )}
       {...restProps}

@@ -67,7 +67,7 @@ export function Sidebar() {
     return (
       <aside
         className={twMerge(
-          "bg-card shadow-sm",
+          "bg-card shadow-xs",
           "duration-100 ease-linear overflow-hidden",
           "border-r dark:border-muted"
         )}
@@ -89,8 +89,8 @@ export function Sidebar() {
           }}
           handleWrapperClass={twMerge(
             "[&>div]:duration-100 [&>div]:ease-linear",
-            "[&>div]:border-r-8 [&>div]:border-r-card [&>div]:dark:border-r-card/70",
-            "[&>div]:hover:border-r-primary",
+            "[&>div]:border-r-8 [&>div]:border-r-card dark:[&>div]:border-r-card/70",
+            "hover:[&>div]:border-r-primary",
             resizingSideBar && "[&>div]:border-r-primary"
           )}
         >
@@ -133,14 +133,14 @@ export function Sidebar() {
     <>
       {/* {showSideBar && (
         <div
-          className="block md:hidden fixed inset-0 bg-black/50 z-[9998]"
+          className="block md:hidden fixed inset-0 bg-black/50 z-9998"
           onClick={() => setShowSideBar(false)}
         />
       )} */}
       <Slot className="hidden md:flex">{sideBarElement}</Slot>
       {/* <Slot
         className={twMerge(
-          "flex md:hidden fixed top-0 left-0 -translate-x-full z-[9999]",
+          "flex md:hidden fixed top-0 left-0 -translate-x-full z-9999",
           showSideBar && "translate-x-0"
         )}
       >

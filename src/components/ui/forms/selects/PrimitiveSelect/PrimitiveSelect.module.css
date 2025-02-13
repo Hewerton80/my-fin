@@ -1,7 +1,10 @@
+@reference '../../../../../app/globals.css';
+
 .root :global(.select__control) {
-  @apply w-full rounded-md min-h-9 shadow-sm bg-transparent
+  @apply w-full min-h-9 shadow-sm bg-transparent
   border border-border hover:border-border ring-primary/40;
 }
+
 .root.error :global(.select__control) {
   @apply border-danger ring-danger/40 ring-2;
 }
@@ -36,11 +39,7 @@
 
 .root :global(.select__menu) {
   @apply min-w-[8rem] rounded-md border bg-popover text-popover-foreground px-1
-  shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out mt-1 mb-0
-  data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95
-  data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2
-  data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2
-  data-[side=top]:slide-in-from-bottom-2;
+  shadow-md;
 }
 
 .root :global(.select__menu-list) {

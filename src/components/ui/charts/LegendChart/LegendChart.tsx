@@ -8,7 +8,7 @@ export function LegendChart(props: ComponentProps<typeof Legend>) {
       {payload?.map((data, i) => (
         <div key={`legend-chart-${i}`} className="flex gap-2">
           <span
-            className="h-4 w-4 rounded-sm"
+            className="h-4 w-4 rounded-xs"
             style={{ backgroundColor: data?.color }}
           />
           <span className="text-xs">{data.value} </span>

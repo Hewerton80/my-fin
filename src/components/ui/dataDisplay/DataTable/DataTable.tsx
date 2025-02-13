@@ -56,7 +56,7 @@ export function DataTable({
   //     <div className="flex flex-col text-xs py-2" key={`${i}-resposive`}>
   //       {columns.map((column, j) => (
   //         <div
-  //           className="flex gap-1 p-1 odd:bg-muted/50 rounded"
+  //           className="flex gap-1 p-1 odd:bg-muted/50 rounded-sm"
   //           key={`column-${i}-${j}-responsive`}
   //         >
   //           {columns[j].label && (

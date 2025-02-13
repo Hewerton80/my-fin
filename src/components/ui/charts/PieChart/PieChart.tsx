@@ -28,7 +28,7 @@ const CustomTooltip = ({ active, payload }: ComponentProps<typeof Tooltip>) => {
         <Card.Root className="p-1 flex-row" style={{ opacity: 1 }}>
           <div className="flex gap-2">
             <span
-              className="h-4 w-4 rounded-sm"
+              className="h-4 w-4 rounded-xs"
               style={{ backgroundColor: data?.fill }}
             />
             <span className="text-xs">{data.name} </span>
@@ -78,7 +78,7 @@ export const PieChart = ({ data, labelType = "lined" }: PieChartProps) => {
   }, [data]);
 
   return (
-    <ChartContainer className="!min-w-[150px] !min-h-[150px] lg:!min-w-[300px]  lg:!min-h-[300px]">
+    <ChartContainer className="min-w-[150px]! min-h-[150px]! lg:min-w-[300px]!  lg:min-h-[300px]!">
       <PieChartRecharts>
         <Tooltip content={<CustomTooltip />} />
         <Pie

@@ -22,7 +22,6 @@ import { isNumber } from "@/utils/isType";
 import { twMerge } from "tailwind-merge";
 import { FaLongArrowAltUp } from "react-icons/fa";
 import { yearOptions } from "@/utils/yearOptions";
-import assets from "../../../../../assets.json";
 import { CreditCardInsightsCards } from "@/modules/creditCard/components/CreditCardInsightsCards";
 import { Picker } from "@/components/ui/forms/selects/Picker/Picker";
 
@@ -231,11 +230,11 @@ export default function HomePage() {
                 lineDataKeys={[
                   {
                     name: "Receipts Amount",
-                    color: assets.colors.success.DEFAULT,
+                    color: "var(--color-success)",
                   },
                   {
                     name: "Payments Amount",
-                    color: assets.colors.danger.DEFAULT,
+                    color: "var(--color-danger)",
                   },
                 ]}
                 xAxisDataKey="name"

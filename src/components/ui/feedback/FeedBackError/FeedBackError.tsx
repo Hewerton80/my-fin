@@ -24,7 +24,7 @@ export function FeedBackError({ onTryAgain }: FeedBackErrorProps) {
         priority
       />
       <Button
-        className="mx-auto !px-2 !py-1 !text-xs"
+        className="mx-auto px-2! py-1! text-xs!"
         rightIcon={<IoReload />}
         onClick={onTryAgain}
       >

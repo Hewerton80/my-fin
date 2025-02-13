@@ -1,3 +1,5 @@
+@reference '../../app/globals.css';
+
 @keyframes slideAndFade {
   from {
     opacity: 0;

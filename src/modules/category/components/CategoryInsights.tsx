@@ -10,7 +10,7 @@ import { format } from "date-fns/format";
 import { useMemo } from "react";
 import { MdPayment } from "react-icons/md";
 import { TbCurrencyReal } from "react-icons/tb";
-import assets from "../../../../assets.json";
+
 interface CategoryInsightsProps {
   transitionsHistory?: TransitionHistoryWitchConputedFields[];
   isLoadingTransitionsHistory?: boolean;
@@ -101,9 +101,7 @@ export function CategoryInsights({
         <Card.Body>
           <LineChart
             data={parsedDataChart}
-            lineDataKeys={[
-              { name: "amount", color: assets.colors.primary.DEFAULT },
-            ]}
+            lineDataKeys={[{ name: "amount", color: "var(--color-primary)" }]}
             xAxisDataKey="date"
           />
         </Card.Body>
@@ -117,9 +115,7 @@ export function CategoryInsights({
             data={Object.entries(transitionsHistoryAgroupedByMonth || {}).map(
               ([date, amount]) => ({ date, amount })
             )}
-            lineDataKeys={[
-              { name: "amount", color: assets.colors.primary.DEFAULT },
-            ]}
+            lineDataKeys={[{ name: "amount", color: "var(--color-primary)" }]}
             xAxisDataKey="date"
           />
         </Card.Body>

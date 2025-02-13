@@ -44,15 +44,15 @@ const Root = ({
     <Dialog.Root open={show}>
       <Dialog.Portal>
         <Dialog.Overlay
-          className="z-[10000] fixed inset-0 bg-black/70"
+          className="z-10000 fixed inset-0 bg-black/70"
           onClick={() => !disableBackdropClick && onClose?.()}
         />
         <Card.Root
           asChild
           className={twMerge(
-            "fixed z-[10001] top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]",
+            "fixed z-10001 top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]",
             "w-[calc(100vw-2rem)] max-h-[calc(100vh-2rem)] overflow-visible",
-            "focus:outline-none",
+            "focus:outline-hidden",
             sizes[size],
             className
           )}
